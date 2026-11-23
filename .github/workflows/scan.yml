@@ -1,0 +1,34 @@
+
+name: JARVIS 15-minute market scan
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jarvis-market-scan
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-slim
+    timeout-minutes: 4
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run read-only market scan
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MOVE_ALERT_THRESHOLD_PCT: '0.8'
+        run: python scanner.py
