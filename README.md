@@ -1,53 +1,37 @@
-# JARVIS Markets — fast MVP
+# JARVIS Markets — Build 02
 
-A free, experimental Streamlit dashboard for 15-minute direction estimates on BTC, ETH, SOL, gold futures, silver futures, and WTI crude futures.
+A read-only market dashboard and optional 15-minute background scanner for Kalshi public markets, crypto, stocks, and commodity futures.
 
-## Run locally (Windows)
+## What's included
 
-1. Install Python 3.11 or newer from https://www.python.org/downloads/ (check "Add Python to PATH").
-2. Extract this folder.
-3. Open PowerShell in this folder.
-4. Run:
+- Dark JARVIS-style Streamlit dashboard.
+- Public Kalshi event/market snapshots (no Kalshi account credentials).
+- Crypto, equity, and commodity snapshots through Yahoo Finance via `yfinance`.
+- Separate GitHub Actions workflow scheduled every 15 minutes.
+- Optional Telegram alerts for unusually large ~15-minute price moves.
+- No automated betting/trading, brokerage connection, deposits, or withdrawals.
 
-```powershell
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-streamlit run app.py
-```
+## Update the existing Streamlit app
 
-5. Open the local URL Streamlit prints (usually http://localhost:8501).
+Upload/replace the project files in the root of your existing private GitHub repository. Keep `app.py`, `requirements.txt`, `README.md`, `scanner.py`, `requirements-scanner.txt`, and `.github/workflows/scan.yml` at the repository root / listed paths. Streamlit Community Cloud should continue using `app.py` as its main file.
 
-## iPhone access
+## Enable background scans
 
-For a quick local test, your iPhone and laptop must be on the same Wi-Fi. Find the laptop's local IP with `ipconfig`, then run:
+1. In your private GitHub repo, open **Settings → Secrets and variables → Actions**.
+2. Add repository secrets `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` (optional; omit them to run scans without push alerts).
+3. Open **Actions** and enable workflows if GitHub prompts you.
+4. Open **JARVIS 15-minute market scan** and choose **Run workflow** for a manual test.
+5. Scheduled runs use `*/15 * * * *` and run from the default branch. GitHub may delay scheduled jobs during busy periods; this is not an exact real-time guarantee.
 
-```powershell
-streamlit run app.py --server.address 0.0.0.0
-```
+## Telegram setup
 
-Open `http://LAPTOP-IP:8501` on the iPhone. This is local-network access only; it is not available when the laptop is off or away from Wi-Fi.
+Create a bot with Telegram's official `@BotFather`, open the bot and press **Start**, then obtain your chat ID. Never paste the bot token into `app.py`, commit it to GitHub, or share it in chat. Store it only as a GitHub Actions secret.
 
-For internet access, deploy the folder to a GitHub repository and connect it to Streamlit Community Cloud: https://share.streamlit.io/. The free service may sleep when inactive and is not a guaranteed always-on alert server.
+## Data and signal limitations
 
-## Free iPhone push alerts
-
-This MVP sends alerts through Telegram (free). This avoids relying on iOS web-push support inside Streamlit.
-
-1. In Telegram, message `@BotFather`, create a bot with `/newbot`, and copy the bot token.
-2. Open your new bot and press Start.
-3. Find your numeric chat ID using a trusted Telegram bot such as `@userinfobot`, or use Telegram's `getUpdates` API after messaging your bot.
-4. Enter the bot token and chat ID in the app sidebar; enable alerts.
-
-Do not share your bot token. If deploying publicly, do not put the token in source code. Use Streamlit Secrets or enter it in the app session. The current sidebar entry is session-only.
-
-## Important limitations
-
-- Yahoo Finance intraday data through `yfinance` is unofficial, can be delayed, incomplete, rate-limited, or unavailable for particular symbols.
-- Gold, silver, and WTI tickers are futures proxies, not every broker's spot/CFD instrument.
-- The model uses 5-minute bars and predicts whether the close three bars later is above the current close.
-- The reported test metrics use a chronological holdout, but this is not a full walk-forward test and does not include fees, spread, slippage, execution, or changing market regimes.
-- A probability is not a guarantee and should not be treated as a trade recommendation.
-- The app does not place trades and does not request exchange credentials or brokerage access.
-- The open dashboard refreshes every 60 seconds and checks for alert conditions. Free hosting is not suitable for guaranteed 24/7 alerts. A later version can add scheduled background jobs and a more reliable market-data provider.
+- Kalshi uses its public read-only events endpoint. The YES quote is a market quote, not an independent JARVIS probability.
+- Yahoo Finance data can be delayed, incomplete, rate-limited, or unavailable. Futures tickers are proxies.
+- Asset alerts trigger on absolute price movement of at least 0.8% over approximately 15 minutes. This is a configurable threshold, not a prediction or a validated edge.
+- The dashboard's 15-minute refresh is separate from GitHub Actions background scans.
+- The workflow uses the lightweight `ubuntu-slim` runner. GitHub Free currently includes $12/month of compute usage for eligible private-repository Actions; actual use depends on run duration and any other Actions usage. A 15-minute schedule means up to 2,880 runs/month, so check usage and enable a hard $0 extra-spend budget before leaving it on. If the included allowance is exhausted, runs may stop rather than incur extra charges when no payment method is on file.
+- This project is experimental and paper-only. It does not place trades or bets.

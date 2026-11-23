@@ -1,7 +1,6 @@
-streamlit>=1.38
-yfinance>=0.2.40
+streamlit>=1.38,<2
 pandas>=2.1
 numpy>=1.26
-scikit-learn>=1.4
 requests>=2.31
+yfinance>=0.2.40
 streamlit-autorefresh>=1.0.1
