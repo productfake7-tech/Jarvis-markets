@@ -1,804 +1,804 @@
 {
   "scanner": "JARVIS Markets",
-  "timestamp": "2026-11-24 01:25 UTC",
+  "timestamp": "2026-11-24 01:27 UTC",
   "mode": "READ ONLY - NO AUTOMATIC BETS",
   "markets_scanned": 100,
   "markets": [
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026HJM2MI6G6NJDTHQH-VHJZULANM",
-      "title": "yes Cincinnati,no Ja'Marr Chase: 180+,no Mike Gesicki: 60+,no Chig Okonkwo: 100+,no Rachaad White: 25+,no Treylon Burks: 90+,no Chase Brown: 90+,no Joe Burrow: 40+,no Samaje Perine: 60+,no Austin Ekeler: 40+,no Jacory Croskey-Merritt: 90+,no Jayden Daniels: 70+,no Rachaad White: 40+,no Chase Brown: 3+,no CIN Bengals D/ST: 1+,no Dohnte Meyers: 1+,no Drew Sample: 1+,no Joe Burrow: 1+,no Ja'Marr Chase: 3+,no Jack Endries: 1+,no Mike Gesicki: 2+,no Samaje Perine: 3+,no Tee Higgins: 3+,no Austin Ekeler: 1+,no Antonio Williams: 1+,no Ben Sinnott: 1+,no Chig Okonkwo: 3+,no Jacory Croskey-Merritt: 3+,no Jayden Daniels: 3+,no Rachaad White: 3+,no Stefon Diggs: 3+,no Treylon Burks: 1+,no Van Jefferson: 1+,no WAS Commanders D/ST: 1+,no Over 61.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026MUCMFEYRALXTLRBL-TUDFS3TUF",
+      "title": "yes Kenrich Williams: 20+,yes Jaylen Brown: 25+,yes Deni Avdija: 35+,yes Damian Lillard: 20+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S202655MMRYNGNYKTXPJK-3JTDYTJFP",
-      "title": "yes Pedro Liborio,yes Hoedt / Tse,yes Varvara Panshina,yes Chengyiyi Yuan,yes Aoi Ito,yes Hayu Kinoshita,yes Hikaru Sato,yes Emerson Jones",
+      "ticker": "KXMVECROSSCATEGORY-S2026US6TH5KHN2GIQ4CT-SODB4OGSK",
+      "title": "yes Green Bay,yes George Washington,yes Jackson St.,yes Marquette,yes Prairie View A&M,yes Radford,yes Saint Peter's,yes Tennessee Tech,yes Xavier",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026IOS2ER7TDRNP4LSE-RP3UMOSKC",
-      "title": "yes Minnesota,yes Cleveland,yes Houston,yes Toronto,yes Indiana,yes San Antonio,yes Los Angeles L,yes Wichita St.,yes FDU,yes Northern Kentucky,yes Santa Clara,yes North Carolina A&T,yes Binghamton,yes Marquette,yes Cincinnati,yes New Jersey,yes Ottawa,yes Los Angeles,yes Minnesota,yes New York I",
+      "ticker": "KXMVECROSSCATEGORY-S2026S6K6NQJH3VP36SNL-DM57QNBQZ",
+      "title": "yes Target Price: $3.0061,yes Target Price: $72.3348",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S20262JRTBGVFGOIQEAH2-QAOV7IQFH",
-      "title": "yes Target Price: $560.09,yes Target Price: $0.0568126,yes Target Price: $1,716.11,yes Target Price: $3.0061,yes Target Price: $72.3348",
+      "ticker": "KXMVECROSSCATEGORY-S2026HZQKFERH4XXUNFKO-7S4ODPUPG",
+      "title": "yes Arsenal,yes Bodoe/Glimt,yes Como,yes Real Madrid,yes Atletico,yes Liverpool,yes Stuttgart,yes Bayern Munich,yes Barcelona,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored,yes Over 0.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026DJ5VHW36MZDLPDCM-AXXWBWXIV",
-      "title": "yes Over 20.5 points,yes Over 6.5 points,yes Cincinnati",
+      "ticker": "KXMVECROSSCATEGORY-S2026RXBLJWQ4DPJG4NQZ-J2ORY66BH",
+      "title": "yes Cincinnati wins by over 4.5 points,yes Tee Higgins: 1+,yes Over 49.5 points",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026NL775OJ6LOKHHSJI-KLZNNHWDW",
-      "title": "yes San Antonio,yes Alperen Sengun: 15+,yes Kevin Durant: 15+,no Chicago wins by over 8.5 points,no Charlotte wins by over 9.5 points,no Indiana wins by over 10.5 points,no New Orleans wins by over 9.5 points,no Portland wins by over 8.5 points,no Utah wins by over 5.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026DNEPMDMZTHLCYZBT-6MV6E2XHF",
+      "title": "no Hamburg,yes Mainz,yes Over 1.5 goals scored,yes Leeds United,yes Brighton,yes Over 1.5 goals scored,yes Atletico,yes Real Betis,yes Real Madrid,yes Barcelona,yes Nice,yes PSG,yes Inter,yes Roma,yes Como,yes Leipzig,yes Real Madrid,yes Atletico,yes Liverpool,yes Inter,yes Barcelona,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored,yes Over 2.5 goals scored,yes Over 2.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026JPKKQZHJPDZD65SV-2JSZJHTFJ",
-      "title": "no Over 100.5 points,yes Over 12.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026QFEKRRQTA53RHLAC-IVMBF6O6T",
+      "title": "no Chase Brown: 10+,yes Cincinnati wins by over 4.5 points,yes Ja'Marr Chase: 1+,yes Tee Higgins: 1+,yes Jayden Daniels: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026JJAVHA6LH667TNDF-ZF2XT3ETG",
-      "title": "yes Joe Burrow: 2+,yes Jayden Daniels: 1+,yes Joe Burrow: 250+,yes Jayden Daniels: 200+,yes Ja'Marr Chase: 50+,yes Mike Gesicki: 10+,yes Tee Higgins: 40+,yes Chig Okonkwo: 15+,yes Treylon Burks: 10+",
+      "ticker": "KXMVECROSSCATEGORY-S2026UJHO2CJIR7MIPTZR-57TAOUMEG",
+      "title": "no Amen Thompson: 25+,no Jabari Smith Jr.: 25+,no Kevin Durant: 30+,no Marcus Smart: 15+,no Max Strus: 20+,no Rui Hachimura: 20+,no Darius Acuff Jr.: 30+,no De'Andre Hunter: 25+,no Zach LaVine: 25+,no Stephon Castle: 30+,no Victor Wembanyama: 40+,yes Brook Lopez: 10+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026RNB773P5QF5KAOON-3AQH7CWYU",
-      "title": "yes Coby White: 15+,yes Naz Reid: 20+,yes Cedric Coward: 15+,yes Ty Jerome: 25+,yes Jaylen Brown: 25+,yes LeBron James: 20+,yes Deni Avdija: 35+,yes Damian Lillard: 20+",
+      "ticker": "KXMVECROSSCATEGORY-S202662VAHTVXGWACS2XH-JLAZO7FSQ",
+      "title": "yes Real Madrid,yes Barcelona,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Paris FC,yes PSG,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Dallas,yes Cincinnati,yes Jacksonville,yes Como,yes Roma,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Arsenal,yes Manchester City,yes Real Madrid,yes Atletico,yes Bayern Munich,yes PSG,yes Barcelona,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 1.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026XDZGFJCSS73SRPYG-W36EQXK7B",
-      "title": "yes Levante,yes Memphis,yes Indiana,yes Portland",
+      "ticker": "KXMVECROSSCATEGORY-S20263P4UO7JAVQ5LC2IM-G7PWHWYX7",
+      "title": "yes Julius Randle: 15+,yes Bones Hyland: 15+,yes Terrence Shannon Jr.: 10+,yes Matas Buzelis: 10+,yes Nic Claxton: 5+,yes Jarrett Allen: 10+,yes Sam Merrill: 10+,yes Derik Queen: 5+,yes Trey Murphy III: 10+,yes Dillon Brooks: 10+,yes Jalen Green: 10+,yes Miles Bridges: 10+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026B6JRGZUZHBGWKVXP-ICTFJ3KVN",
-      "title": "no Joe Burrow: 325+,yes Jayden Daniels: 150+,no Drew Sample: 4+,no Ja'Marr Chase: 12+,no Samaje Perine: 4+,no Tee Higgins: 9+,no Ben Sinnott: 4+,no Chig Okonkwo: 8+,yes Stefon Diggs: 2+,no Treylon Burks: 6+,no Van Jefferson: 4+,yes Chase Brown: 10+,yes Jacory Croskey-Merritt: 15+,yes Jayden Daniels: 15+,yes Rachaad White: 10+,yes Stefon Diggs: 1+",
+      "ticker": "KXMVECROSSCATEGORY-S2026PSFYMFSTFY6HTOIC-KQNSEMHJ5",
+      "title": "yes Domantas Sabonis,yes Victor Wembanyama,no Luka Don\u010di\u0107: 10+,yes Cleveland,yes Houston,yes Phoenix,yes San Antonio,yes Los Angeles L,yes Stephon Castle: 15+,yes Victor Wembanyama: 25+,yes Luka Don\u010di\u0107: 30+,yes Walker Kessler: 10+,yes Joe Burrow: 250+,yes Jayden Daniels: 175+,yes Ja'Marr Chase: 80+,yes Stefon Diggs: 40+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026AGS635LT6LTQTRDK-XPIIPYCNN",
-      "title": "no Joe Burrow: 325+,yes Jayden Daniels: 225+,no Ja'Marr Chase: 10+,yes Mike Gesicki: 2+,no Over 55.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026CDN4IUHU2WGTG3VH-TBHRXV5J5",
+      "title": "no Julius Randle: 5+,no Ayo Dosunmu: 5+,no Jonathan Kuminga: 5+,no LaMelo Ball: 6+,no Terrence Shannon Jr.: 5+,no Brandon Miller: 6+,no Coby White: 5+,no Naz Reid: 5+,no Royce O'Neale: 5+,no Sion James: 5+,no Cedric Coward: 5+,no Cam Spencer: 5+,no Jaylen Wells: 5+,no Taylor Hendricks: 4+,no Brayden Burries: 5+,no Kyle Kuzma: 5+,no Ryan Rollins: 5+,no Collin Murray-Boyles: 4+,no Immanuel Quickley: 5+,no Ja'Kobe Walter: 5+,no Scottie Barnes: 4+,no Herbert Jones: 5+,no Jeremiah Fears: 5+,no Saddiq Bey: 5+,no Collin Gillespie: 5+,no Devin Booker: 5+,no Dillon Brooks: 5+,no Jordan Goodwin: 5+,no Jalen Green: 5+,no Miles Bridges: 5+,no Anfernee Simons: 5+,no Jaylen Brown: 5+,no LeBron James: 5+,no VJ Edgecombe: 5+,no Donovan Clingan: 4+,no Damian Lillard: 6+,no Sidy Cissoko: 5+,no Scoot Henderson: 5+,no Toumani Camara: 5+,no Darius Acuff Jr.: 5+,no De'Andre Hunter: 5+,no Domantas Sabonis: 4+,no Keegan Murray: 5+,no Zach LaVine: 5+,no De'Aaron Fox: 5+,no Devin Vassell: 5+,no Stephon Castle: 5+,no Victor Wembanyama: 5+,no Michael Porter Jr.: 6+,no Ayo Dosunmu: 8+,no Jaden McDaniels: 8+,no Rudy Gobert: 6+,no Brandon Miller: 8+,no Coby White: 8+,no Moussa Diabat\u00e9: 6+,no Naz Reid: 6+,no Royce O'Neale: 6+,no Sion James: 8+,no Cedric Coward: 8+,no Brayden Burries: 6+,no Kyle Kuzma: 6+,no Ryan Rollins: 8+,no Collin Murray-Boyles: 6+,no Jakob Poeltl: 6+,no Ja'Kobe Walter: 6+,no Derik Queen: 6+,no Collin Gillespie: 8+,no Jalen Green: 8+,no Oso Ighodaro: 8+,no Anfernee Simons: 6+,no Jaylen Brown: 8+,no Donovan Clingan: 6+,no Damian Lillard: 8+,no Jrue Holiday: 8+,no Sidy Cissoko: 6+,no Keegan Murray: 6+,no De'Aaron Fox: 10+,no Stephon Castle: 12+,no Victor Wembanyama: 8+,no Moussa Diabat\u00e9: 20+,no Ryan Kalkbrenner: 15+,no Cedric Coward: 25+,no Cam Spencer: 20+,no Jaylen Wells: 20+,no Taylor Hendricks: 15+,no Zach Edey: 20+,no Brandon Miller: 8+,no Coby White: 6+,no Naz Reid: 12+,no Ryan Kalkbrenner: 8+,no Royce O'Neale: 8+,no Sion James: 8+,no Cam Spencer: 6+,no Isaiah Stewart: 8+,no Taylor Hendricks: 8+,no Ty Jerome: 8+,no Tyler Herro: 8+,no Allen Graves: 8+,no Immanuel Quickley: 8+,no Ja'Kobe Walter: 8+,no Scottie Barnes: 12+,no Anfernee Simons: 6+,no Tyrese Maxey: 8+,no Deni Avdija: 10+,no Damian Lillard: 8+,no Jrue Holiday: 8+,no Sidy Cissoko: 8+,no Scoot Henderson: 6+,no Toumani Camara: 8+,no Darius Acuff Jr.: 8+,no Zach LaVine: 8+,no De'Aaron Fox: 8+,no Devin Vassell: 8+,no Chase Brown: 3+,no Dohnte Meyers: 2+,no Drew Sample: 2+,no Joe Burrow: 3+,no Ja'Marr Chase: 3+,no Jack Endries: 2+,no Mike Gesicki: 2+,no Austin Ekeler: 3+,no Antonio Williams: 3+,no Ben Sinnott: 2+,no Chig Okonkwo: 2+,no Jayden Daniels: 2+,no Rachaad White: 3+,no Stefon Diggs: 3+,no Treylon Burks: 3+,no Van Jefferson: 2+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026PR7Z6NSWPMZLHC43-EBVGD63XA",
-      "title": "yes Bodoe/Glimt,yes Como,yes Real Madrid,yes Atletico,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026WYXPSRNLFYOZVJB5-MAWGXNKBM",
+      "title": "yes Houston,yes Phoenix,yes San Antonio,yes Alperen Sengun: 15+,yes Kevin Durant: 15+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026CNR3DOJXRYZ7Q6YA-WAHL5J254",
-      "title": "yes Cincinnati,yes Joe Burrow: 4+,yes Joe Burrow: 350+,yes Tee Higgins: 6+,yes Stefon Diggs: 6+,yes Tee Higgins: 70+,yes Stefon Diggs: 70+,yes Chase Brown: 13+,yes Jacory Croskey-Merritt: 13+,yes Chase Brown: 50+,yes Joe Burrow: 15+,yes Samaje Perine: 20+,yes Jacory Croskey-Merritt: 50+,yes Chase Brown: 2+,yes Joe Burrow: 1+,yes Tee Higgins: 1+,yes Jacory Croskey-Merritt: 1+",
+      "ticker": "KXMVECROSSCATEGORY-S20267AHQDLNIXDXWUY4Y-MEK2RAL4M",
+      "title": "no Christian Watson: 3+,no Kaleb Johnson: 3+,no Matthew Golden: 3+,no MarShawn Lloyd: 2+,no Tucker Kraft: 3+,no Blake Corum: 3+,no CJ Daniels: 2+,no Colby Parkinson: 3+,no Davis Allen: 1+,no Konata Mumpfield: 2+,no Matthew Stafford: 1+,no Ronnie Rivers: 1+,no Tutu Atwell: 2+,no Tyler Higbee: 3+,no Xavier Smith: 2+,no Colston Loveland: 3+,no Caleb Williams: 2+,no D'Andre Swift: 3+,no Kyle Monangai: 2+,no Kalif Raymond: 2+,no Luther Burden III: 3+,no Rome Odunze: 2+,no Amon-Ra St. Brown: 3+,no Isaac TeSlaa: 2+,no Jahmyr Gibbs: 3+,no Jameson Williams: 3+,no Sam LaPorta: 3+,no Sione Vaki: 2+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S20267BVIIUTY6J5WKLLP-6IUGD6PGZ",
-      "title": "yes Texas Tech over 20.5 points,yes Iowa over 22.5 points,yes Minnesota,yes Cleveland,yes New England,yes San Francisco,yes Washington,yes Carolina,yes Los Angeles R over 7.5 points,yes Chicago over 7.5 points,no Kansas City over 28.5 points,yes Philadelphia over 10.5 points,no Denver over 14.5 points,yes Cincinnati over 17.5 points,yes New York G over 10.5 points,yes Miami over 7.5 points,yes Tennessee over 10.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026KHIUZDPHU4357BEW-FQJZDICST",
+      "title": "no Coby White: 20+,no Moussa Diabat\u00e9: 15+,yes Naz Reid: 20+,yes Sion James: 5+,yes Cedric Coward: 15+,no Cam Spencer: 15+,no Isaiah Stewart: 10+,no Jaylen Wells: 15+,yes Ty Jerome: 25+,yes Zach Edey: 5+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026EOD6FCQB2YTGFLLF-CXVCXK4YX",
-      "title": "yes Julius Randle: 20+,yes Ayo Dosunmu: 10+,yes Jonathan Kuminga: 10+,yes Jaden McDaniels: 15+,yes Matas Buzelis: 10+,yes James Harden: 10+,yes Alperen Sengun: 15+,yes Amen Thompson: 10+,yes Kevin Durant: 15+,yes Brook Lopez: 10+,yes Naz Reid: 20+,yes Ty Jerome: 25+,yes Brayden Burries: 10+,yes Scottie Barnes: 15+,yes Pascal Siakam: 15+,yes Ajay Mitchell: 10+,yes Shai Gilgeous-Alexander: 25+,yes Miles Bridges: 10+,yes Jaylen Brown: 25+,yes LeBron James: 20+,yes Tyrese Maxey: 15+,yes Deni Avdija: 30+,yes Damian Lillard: 15+",
+      "ticker": "KXMVECROSSCATEGORY-S2026KC2TTAXJO2GG6CGQ-R67SUPZJH",
+      "title": "yes Darius Acuff Jr.: 25+,yes Domantas Sabonis: 10+,yes Zach LaVine: 15+,yes Stephon Castle: 15+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026GQS6XYBP4J65RWE5-5XQBI65B4",
-      "title": "yes Both Teams To Score,yes Arsenal,yes Bodoe/Glimt,yes Como,yes Porto,yes Galatasaray,yes Manchester City,yes Leipzig,yes Real Madrid,yes Real Betis,no Over 5.5 goals scored,yes Over 1.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026UJ7FWAOVJRIT7LAG-AUOYSP57Q",
+      "title": "yes Van Jefferson: 10+,no Jayden Daniels: 25+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026PVLFUPWIWFITOJTB-VWLPMPW2O",
-      "title": "yes Both Teams To Score,yes 7+ corners,yes Arsenal,yes Como,yes Real Madrid,yes Real Betis,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026YPIAVW2T6CR4NCZI-657MUPQBF",
+      "title": "yes Julius Randle: 15+,yes Bones Hyland: 10+,yes Jonathan Kuminga: 10+,yes Jaden McDaniels: 15+,yes Matas Buzelis: 10+,yes Sam Merrill: 10+,yes Coby White: 15+,yes Naz Reid: 20+,yes Ty Jerome: 20+,yes Jaime Jaquez Jr.: 10+,yes Kel'el Ware: 5+,yes Myles Turner: 20+,yes Jamal Shead: 10+,yes Scottie Barnes: 15+,yes Pascal Siakam: 15+,yes Kenrich Williams: 15+,yes Trey Murphy III: 10+,yes Zion Williamson: 15+,yes Devin Booker: 20+,yes Dillon Brooks: 10+,yes Jalen Green: 10+,no Dean Wade: 15+,yes Jaylen Brown: 20+,no Kentavious Caldwell-Pope: 15+,yes LeBron James: 20+,yes Tyrese Maxey: 15+,yes Deni Avdija: 30+,yes Donovan Clingan: 15+,yes Damian Lillard: 15+,no Scoot Henderson: 20+,yes Alperen Sengun: 15+,yes Jabari Smith Jr.: 10+,yes Kevin Durant: 15+,yes Darius Garland: 10+,yes Rui Hachimura: 10+,yes Victor Wembanyama: 20+,yes Luka Don\u010di\u0107: 30+,yes Quentin Grimes: 10+,yes Walker Kessler: 10+,yes Keyonte George: 15+,yes Jonathan Kuminga: 6+,yes Zach Edey: 8+,yes Ivica Zubac: 4+,yes Trey Murphy III: 4+,yes Oso Ighodaro: 4+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026MX5MMBJHBM32GIH2-XV5MBR7Y4",
-      "title": "yes Joe Burrow: 225+,yes Jayden Daniels: 150+,yes Tee Higgins: 50+,yes Chig Okonkwo: 25+,yes Stefon Diggs: 30+,yes Washington wins by over 2.5 points,yes Tee Higgins: 1+",
+      "ticker": "KXMVECROSSCATEGORY-S2026QQZAHF53HD4ZT7ZN-SD7NCBGCF",
+      "title": "yes Samaje Perine: 4+,yes Chase Brown: 25+,yes Samaje Perine: 10+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S20267ESR35H4PPTL7WIZ-3WKUEXCZM",
-      "title": "yes Darius Garland: 1+,yes Naz Reid: 1+,yes Immanuel Quickley: 1+,yes Zach LaVine: 1+,yes Julian Champagnie: 1+,yes James Harden: 4+,yes Fred VanVleet: 2+,yes Darius Garland: 4+,yes Tyler Herro: 2+,yes Immanuel Quickley: 4+,yes Andrew Nembhard: 4+,yes LeBron James: 4+,yes Deni Avdija: 4+,yes Luka Don\u010di\u0107: 4+,yes Keyonte George: 4+,yes Minnesota,yes Cleveland,yes Houston,yes Toronto,yes San Antonio,yes Los Angeles L,yes Jaden McDaniels: 20+,yes Jaden McDaniels: 10+,yes James Harden: 10+,yes Alperen Sengun: 15+,yes Darius Garland: 10+,yes Immanuel Quickley: 10+,yes Pascal Siakam: 15+,yes Tyrese Maxey: 15+,yes Stephon Castle: 10+,yes Alperen Sengun: 6+,yes Naz Reid: 4+,yes Jakob Poeltl: 4+,yes Scottie Barnes: 4+,yes Domantas Sabonis: 8+,yes Cincinnati,yes Jayden Daniels: 150+,yes Chase Brown: 2+,yes Ja'Marr Chase: 5+,yes Ja'Marr Chase: 50+,yes Chase Brown: 20+,yes Arsenal,yes Como,yes Real Madrid,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026SXG27TEH2KLQFJ4J-U5EEGLFHI",
+      "title": "yes Minnesota,yes Cleveland,yes Houston,yes Memphis,yes Toronto,yes Phoenix,yes San Antonio,yes Los Angeles L,yes Wichita St.,yes Central Arkansas,yes FDU,yes Northern Kentucky,yes Santa Clara,yes North Carolina A&T,yes Youngstown St.,yes Green Bay,yes Marquette,yes Radford,yes Cincinnati",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026NTFDBTCXNO4UH32E-4HAHJCDMP",
-      "title": "no Joe Burrow: 38+,no Jayden Daniels: 32+,no Joe Burrow: 1+,no Jayden Daniels: 1+,no Joe Burrow: 3+,no Jayden Daniels: 2+,no Joe Burrow: 300+,no Jayden Daniels: 225+",
+      "ticker": "KXMVECROSSCATEGORY-S20264U537UJ3CC3U2TAB-FVDAHYWI7",
+      "title": "yes Bayern Munich,yes Atletico,yes Real Madrid,yes Barcelona,yes Toluca,yes Guadalajara,yes PSG",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S20265CVZNJ7HOVCYSB7E-36IBZBL2O",
-      "title": "no Danny Wolf: 10+,no Egor D\u00ebmin: 15+,no Julius Randle: 25+,no Mikel Brown Jr.: 25+,yes Moritz Wagner: 10+,no Bones Hyland: 20+,no Jonathan Kuminga: 20+,yes Jaden McDaniels: 20+",
+      "ticker": "KXMVECROSSCATEGORY-S2026L6CMSKF3PMNCK7Y2-EKI7N6VUV",
+      "title": "yes Both Teams To Score,yes Como,no Tie,yes Manchester City,yes Leipzig,yes Real Madrid,yes Atletico,no Tie,no Over 4.5 goals scored,no Over 5.5 goals scored,no Over 4.5 goals scored,no Over 4.5 goals scored,no Over 5.5 goals scored,no Over 5.5 goals scored,no Over 4.5 goals scored,no Over 5.5 goals scored,no Over 5.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026I364CIOTFLPJVY7F-5IXBJ63KG",
-      "title": "yes Yun Seong Chung,yes Omar Jasika,yes Hayato Matsuoka,yes Yosuke Watanuki,yes Li Tu",
+      "ticker": "KXMVECROSSCATEGORY-S2026MCYKXZBU2S7O3GAN-DDLQP7TW6",
+      "title": "no Calgary wins by over 2.5 goals,no Montreal wins by over 2.5 goals,no Toronto wins by over 2.5 goals,no Utah wins by over 2.5 goals",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026RMG3HSLFUQGIUZPX-2QK5QGZBH",
-      "title": "yes Darius Acuff Jr.: 2+,yes Zach LaVine: 1+,yes Julian Champagnie: 1+,yes Victor Wembanyama: 1+,yes Darius Acuff Jr.: 4+,yes De'Aaron Fox: 4+,yes Stephon Castle: 6+,yes Darius Acuff Jr.: 20+,yes Zach LaVine: 10+,yes Victor Wembanyama: 30+,yes Domantas Sabonis: 12+,yes Victor Wembanyama: 12+",
+      "ticker": "KXMVECROSSCATEGORY-S2026UDME5B23X6TC473Z-6KJR7DYAR",
+      "title": "yes Bayern Munich,yes West Ham,yes Brighton,yes Real Betis,yes Barcelona,yes Inter,yes Roma,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 0.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored,yes Over 1.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026OMVZP27DVNWI7TCR-KTM3STA3Y",
-      "title": "yes Jaden McDaniels: 4+,yes Josh Giddey: 6+,yes Coby White: 2+,yes Moussa Diabat\u00e9: 4+,yes Ty Jerome: 4+,yes Tyler Herro: 4+,yes Pascal Siakam: 4+,yes Shai Gilgeous-Alexander: 4+,yes Jaylen Brown: 4+,yes LeBron James: 4+,yes Jaden McDaniels: 1+,yes Jarrett Allen: 1+,yes James Harden: 1+,yes Brandon Miller: 1+,yes Moussa Diabat\u00e9: 1+,yes Ajay Mitchell: 1+,yes Jared McCain: 2+,yes Jeremiah Fears: 1+,yes Trey Murphy III: 2+,yes Devin Booker: 1+,yes Tyrese Maxey: 1+,yes VJ Edgecombe: 2+",
+      "ticker": "KXMVECROSSCATEGORY-S2026B4Z6JSODJEVRWWU4-NYR4PXJIR",
+      "title": "no Anfernee Simons: 5+,no Dean Wade: 5+,no VJ Edgecombe: 5+,no Damian Lillard: 6+,no Sidy Cissoko: 4+,no Scoot Henderson: 5+,no Pascal Siakam: 8+,no Quenton Jackson: 6+,no Ajay Mitchell: 6+,no Isaiah Hartenstein: 8+,no Jared McCain: 4+,no Kenrich Williams: 4+,no Anfernee Simons: 6+,no Jaylen Brown: 8+,no Jrue Holiday: 6+,no Sidy Cissoko: 6+,no LeBron James: 2+,no Tyrese Maxey: 2+,no VJ Edgecombe: 2+,no Donovan Clingan: 3+,no Day'Ron Sharpe: 15+,no Danny Wolf: 20+,no Egor D\u00ebmin: 20+,no LaMelo Ball: 30+,no Rudy Gobert: 20+,no Trey Lyles: 15+,no Terrence Shannon Jr.: 25+,no Ivica Zubac: 20+,no Pascal Siakam: 30+,no Quenton Jackson: 20+,no Bennett Stirtz: 20+,no Isaiah Hartenstein: 20+,no Jared McCain: 25+,no Shai Gilgeous-Alexander: 40+,no Kentavious Caldwell-Pope: 15+,no Tyrese Maxey: 35+,no VJ Edgecombe: 20+,yes Donovan Clingan: 10+,no Scoot Henderson: 20+,no Shai Gilgeous-Alexander: 8+,no Jabari Walker: 10+,no LeBron James: 12+,no VJ Edgecombe: 10+,no Damian Lillard: 8+,no Jrue Holiday: 8+,no Scoot Henderson: 6+,no Jaylen Brown: 3+,no LeBron James: 3+,no Tyrese Maxey: 3+,no Damian Lillard: 2+,no Toumani Camara: 3+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026R5M5I7TBDWQ5FVT2-WACLQLMLZ",
-      "title": "yes Cincinnati,no Tee Higgins: 120+,yes Chig Okonkwo: 25+,yes Samaje Perine: 10+",
+      "ticker": "KXMVECROSSCATEGORY-S20262E5BRUXUGLSAQPPO-Y2XHZ4LAZ",
+      "title": "no Aston Villa wins the 1H by more than 1.5 goals,no Bodoe/Glimt wins by more than 1.5 goals,no Aston Villa wins by more than 1.5 goals,no Leipzig wins by more than 2.5 goals,no Real Betis wins by more than 1.5 goals,no Over 4.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026NRTSL4CQWY7PF5LU-QYPQV7SAI",
-      "title": "yes Minnesota,yes Cleveland,yes Houston,yes Los Angeles L,yes San Antonio wins by over 6.5 points,yes North Carolina,yes Cincinnati",
+      "ticker": "KXMVECROSSCATEGORY-S2026N5T42FKIM4U2KISE-PJUTXJ5BM",
+      "title": "yes Minnesota,yes Memphis,yes Toronto,no Indiana wins by over 8.5 points,yes Cincinnati",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026X7RGPONE536E3SKU-ZGU33TN3B",
-      "title": "yes Over 5.5 goals scored,yes Over 4.5 goals scored,yes Over 4.5 goals scored,yes Over 9.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026727AEPS6AQNE3NPB-M4SIXMJEL",
+      "title": "yes Memphis,yes Central Arkansas,yes Arizona,yes Kansas,yes Illinois,yes Cincinnati,yes Ja'Marr Chase: 50+,yes Stefon Diggs: 20+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026SFMDYJWLILLCPCDC-6HGZK3MWK",
-      "title": "yes 7+ corners,yes Arsenal,yes Como,yes Manchester City,yes Real Madrid,yes Real Betis,yes Over 1.5 goals scored,yes Over 0.5 goals scored,yes Over 2.5 goals scored,yes Over 0.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 0.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026P45ZFU4S5RAH73D6-UINJB5ENF",
+      "title": "yes Mike Gesicki,no Arsenal wins the 1H by more than 1.5 goals,no Over 2.5 1H goals scored,no Over 2.5 1H goals scored,yes Dortmund,yes Bodoe/Glimt,yes Real Madrid,no Como wins by more than 2.5 goals,no Manchester City wins by more than 2.5 goals",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026UXA32EKSXVBR2R7P-KFNPOCDT4",
-      "title": "yes Minnesota,yes Memphis,yes Oklahoma City,yes Seattle,yes Montreal,yes Minnesota,yes New York I,yes Utah",
+      "ticker": "KXMVECROSSCATEGORY-S2026CMTDUTZXXGTTIJCF-AC5LJVDSG",
+      "title": "yes $61,500 or above,yes $1,720 or above,yes $0.93991 or above",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026NWC37KEQYCJAGEI6-GE7AHYIOI",
-      "title": "yes Wichita St.,yes Kansas,yes FDU,yes Northern Kentucky,yes Santa Clara,yes North Carolina,yes North Carolina A&T,yes Youngstown St.,yes Marquette,yes Radford,yes FDU",
+      "ticker": "KXMVECROSSCATEGORY-S2026ZAREUJZZMRCXXVWV-VGGJTYUHG",
+      "title": "yes Memphis,yes Oklahoma City,yes Philadelphia,yes FDU,yes North Carolina A&T,yes Youngstown St.,yes Radford,yes New Jersey,yes Ottawa,yes Los Angeles",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026JWZJJ52T6D6MS5TY-CNFFNZWVO",
-      "title": "no Anfernee Simons: 2+,no Donovan Clingan: 6+,no Sidy Cissoko: 2+,yes Scoot Henderson: 2+",
+      "ticker": "KXMVECROSSCATEGORY-S2026TKCGBEZRCBNZ2CDT-ZCNEUP3L7",
+      "title": "yes Alperen Sengun: 6+,yes Darius Garland: 6+,yes Alperen Sengun: 15+,yes Amen Thompson: 10+,yes Jabari Smith Jr.: 10+,yes Kevin Durant: 15+,yes Brandon Ingram: 10+,yes Brook Lopez: 10+,yes Darius Garland: 15+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026CIHEVMQ3YKRGBRAB-HBK7DS2ZM",
-      "title": "yes 7+ corners,yes 8+ corners,yes 7+ corners,yes 7+ corners,yes 7+ corners,yes 7+ corners,yes 8+ corners,yes 9+ corners,yes 7+ corners",
+      "ticker": "KXMVECROSSCATEGORY-S2026KKWVJZDTYXO5S7WQ-WHB2N4FK4",
+      "title": "yes Target Price: $560.09,no Target Price: $86.55,yes Target Price: $61,432.60,yes Target Price: $0.0568126,yes Target Price: $1,716.11,yes Target Price: $64.2470,yes Target Price: $3.0061,yes Target Price: $1,330.414,yes Target Price: $72.3348,yes Target Price: $0.9481,yes Target Price: $783.8689",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026SHP2JJJCSMTD3YQE-QLJXEHCDB",
-      "title": "yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored,yes Over 0.5 goals scored,yes Over 1.5 goals scored,yes Over 0.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored,yes Over 2.5 goals scored,yes Over 1.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026GFT66GXSSM4HM46L-BO54KR5AX",
+      "title": "yes Target price: 0.66336,yes Target Price: $560.09,no Target Price: $86.55,yes Target Price: $0.0568126,yes Target Price: $3,660.90,yes Target Price: $43.519,yes Target Price: $72.3348,no Target price: 158.916,yes Target Price: $783.8689",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026APE5JPKQU4S77CZY-JFTILBCI5",
-      "title": "yes Minnesota,yes Houston,yes Memphis,yes Phoenix,yes Philadelphia,yes San Antonio,yes Los Angeles L,no LaMelo Ball: 25+,yes Shai Gilgeous-Alexander: 25+,yes Tyrese Maxey: 20+,yes Toronto wins by over 1.5 points,yes Over 223.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026PQEHN2SN44574E5W-IW6IRX5MF",
+      "title": "yes Naoya Honda,yes Tristan Schoolkate,no Brandon Miller: 4+,no Naz Reid: 4+,no Cam Spencer: 4+,no Pascal Siakam: 5+,no Jared McCain: 5+,no Naz Reid: 6+,no Royce O'Neale: 4+,no Sion James: 8+,no Cedric Coward: 6+,yes Cam Spencer: 4+,no Jared McCain: 6+,yes Shai Gilgeous-Alexander: 4+,no Ivica Zubac: 20+,no Pascal Siakam: 30+,no Shai Gilgeous-Alexander: 40+,no Brandon Miller: 8+,yes Moussa Diabat\u00e9: 6+,yes Cedric Coward: 6+,no Isaiah Stewart: 8+,no Jared McCain: 6+,no Shai Gilgeous-Alexander: 6+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026E5FA7VHCYTGXEETO-WGUHKZBJY",
-      "title": "no Joe Burrow: 325+,no Jayden Daniels: 275+,no Tee Higgins: 90+,no Chig Okonkwo: 50+",
+      "ticker": "KXMVECROSSCATEGORY-S2026XCEHLNKC2T5XSWKA-JUP3GGQFS",
+      "title": "no Jake LaRavia: 4+,no Luka Don\u010di\u0107: 12+,no Quentin Grimes: 8+,no Keyonte George: 12+,no Julius Randle: 30+,no LaMelo Ball: 25+,no Rudy Gobert: 15+,no Buddy Hield: 20+,no Josh Giddey: 20+,no Alperen Sengun: 30+,no Kevin Durant: 30+,no Naz Reid: 30+,no Isaiah Stewart: 15+,no Kyle Kuzma: 20+,no Tyler Herro: 25+,no Jakob Poeltl: 20+,no Scottie Barnes: 30+,no Andrew Nembhard: 20+,no Ivica Zubac: 15+,no Shai Gilgeous-Alexander: 40+,no Zion Williamson: 30+,no Jalen Green: 20+,no Jaylen Brown: 35+,no Tyrese Maxey: 30+,no Donovan Clingan: 20+,yes Darius Acuff Jr.: 15+,no Domantas Sabonis: 20+,no Zach LaVine: 25+,no De'Aaron Fox: 25+,yes Victor Wembanyama: 20+,no Collin Sexton: 20+,no Luka Don\u010di\u0107: 45+,no Quentin Grimes: 25+,no Walker Kessler: 20+,no Ziaire Williams: 15+,yes Keyonte George: 15+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026GSLH4M37VYIZCPLD-YKAJOK5UM",
-      "title": "yes Coby White: 20+,yes Stonehill",
+      "ticker": "KXMVECROSSCATEGORY-S2026ZL3PWH6MGIOHOXAI-IOZVLHRKC",
+      "title": "yes Fred VanVleet: 1+,yes Jabari Smith Jr.: 1+,yes Darius Acuff Jr.: 2+,yes Julian Champagnie: 1+,yes Darius Acuff Jr.: 4+,yes Stephon Castle: 4+,yes Minnesota,yes Cleveland,yes Memphis,yes Ayo Dosunmu: 10+,yes Matas Buzelis: 10+,yes Alperen Sengun: 15+,yes Amen Thompson: 10+,yes Darius Garland: 15+,yes Walker Kessler: 10+,no Toronto wins by over 8.5 points,no Oklahoma City wins by over 5.5 points,no Philadelphia wins by over 7.5 points,no Los Angeles L wins by over 20.5 points,yes Tee Higgins: 4+,yes Stefon Diggs: 3+,yes Jayden Daniels: 20+,no Cincinnati wins by over 14.5 points,yes Ja'Marr Chase: 1+,yes Stefon Diggs: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026U73WYU32SQK65ZGY-SHOXGVI3B",
-      "title": "yes Houston,yes Phoenix,yes Brook Lopez: 10+,yes Stephon Castle: 20+,yes Keyonte George: 20+",
+      "ticker": "KXMVECROSSCATEGORY-S20267UKM3BIET6XOC5NZ-SQJYOJXF4",
+      "title": "no Joe Burrow: 325+,no Jayden Daniels: 300+,no Ja'Marr Chase: 120+,no Mike Gesicki: 50+,yes Chig Okonkwo: 15+,no Treylon Burks: 50+,yes Cincinnati wins by over 2.5 points,yes Over 37.5 points",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026PWEIQ2VQZU6BZ5JT-SCISEA3TH",
-      "title": "yes LeBron James: 4+,yes Minnesota,yes Cleveland,yes Houston,yes Memphis,yes Toronto,yes Portland,yes Los Angeles L,yes Julius Randle: 15+,yes Jaden McDaniels: 10+,yes James Harden: 10+,yes Alperen Sengun: 15+,yes Jabari Smith Jr.: 10+,yes Cedric Coward: 10+,yes Myles Turner: 20+,yes Ajay Mitchell: 10+,yes Shai Gilgeous-Alexander: 25+,yes Zion Williamson: 15+,yes Tyrese Maxey: 15+,yes Day'Ron Sharpe: 4+,yes Ivica Zubac: 4+,yes Isaiah Hartenstein: 8+,yes Yves Missi: 4+,yes Zion Williamson: 2+,yes Oso Ighodaro: 2+,yes Donovan Clingan: 6+,yes Walker Kessler: 6+,yes Cincinnati,yes Joe Burrow: 2+,yes Ja'Marr Chase: 50+,yes Tee Higgins: 40+",
+      "ticker": "KXMVECROSSCATEGORY-S20265UIALDGXIKABEGLA-DYC4OWEO5",
+      "title": "yes Naoya Honda,yes Christian Langmo,yes Tristan Schoolkate,yes Varvara Panshina,yes Aoi Ito,yes Minnesota,yes Cleveland,yes Houston,yes Memphis,yes Toronto,yes Phoenix,yes San Antonio,yes Los Angeles L,yes Over 213.5 points,yes Over 198.5 points,yes Over 207.5 points,yes Over 199.5 points,yes Over 205.5 points,yes Over 229.5 points,yes Over 198.5 points,yes Over 202.5 points,yes Cincinnati,yes New Jersey,yes Ottawa,yes New York I,yes Winnipeg,yes Over 3.5 goals scored,yes Over 3.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026TAKA4L7SEBECI335-BN6S26YPT",
-      "title": "yes Minnesota,yes Houston,yes Toronto,no Kevin Durant: 25+,yes Tyrese Maxey: 20+,yes Moussa Diabat\u00e9: 6+,no Jalen Green: 6+,yes Cincinnati,yes Joe Burrow: 2+",
+      "ticker": "KXMVECROSSCATEGORY-S20266W6XGEU3PVM37M44-6RI32ITB3",
+      "title": "yes Cincinnati,no Chase Brown: 60+,no Dohnte Meyers: 50+,no Ja'Marr Chase: 180+,no Mike Gesicki: 60+,no Samaje Perine: 25+,no Tee Higgins: 140+,no Austin Ekeler: 40+,no Antonio Williams: 70+,no Ben Sinnott: 30+,no Chig Okonkwo: 100+,no Rachaad White: 25+,no Stefon Diggs: 100+,no Treylon Burks: 90+,no Van Jefferson: 30+,no Chase Brown: 90+,no Joe Burrow: 40+,no Samaje Perine: 60+,no Austin Ekeler: 40+,no Jacory Croskey-Merritt: 90+,no Jayden Daniels: 70+,no Rachaad White: 40+,no Chase Brown: 3+,no CIN Bengals D/ST: 1+,no Dohnte Meyers: 1+,no Drew Sample: 1+,no Joe Burrow: 1+,no Ja'Marr Chase: 3+,no Jack Endries: 1+,no Mike Gesicki: 2+,no Samaje Perine: 3+,no Tee Higgins: 3+,no Austin Ekeler: 1+,no Antonio Williams: 1+,no Ben Sinnott: 1+,no Chig Okonkwo: 3+,no Jacory Croskey-Merritt: 3+,no Jayden Daniels: 3+,no Rachaad White: 3+,no Stefon Diggs: 3+,no Treylon Burks: 1+,no Van Jefferson: 1+,no WAS Commanders D/ST: 1+,no Over 61.5 points",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026YDFMDB4DBRACSHRL-D3ZT5S3DG",
-      "title": "yes Walker Kessler: 2+,yes Milwaukee,yes Luka Don\u010di\u0107: 35+",
+      "ticker": "KXMVECROSSCATEGORY-S2026IH5UMHVK3OAULCTA-4WITRZ6EP",
+      "title": "yes Over 10.5 points,yes Cincinnati wins by over 3.5 points,yes Ja'Marr Chase: 1+,yes Tee Higgins: 1+,yes Over 40.5 points",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026HCAPKYZIL2OG5YZ5-VTOP36IBO",
-      "title": "yes Over 126.5 points,yes Over 131.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S20267KMOEADYQF2CKMRJ-WDK3XTK7A",
+      "title": "yes Cincinnati,yes Chase Brown: 25+,no Over 61.5 points",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026QJNVIGNXMMQZDYN7-LKOMZZ7VO",
-      "title": "yes Minnesota wins by over 4.5 points,no Charlotte wins by over 4.5 points,no Milwaukee wins by over 4.5 points,no Indiana wins by over 14.5 points,no Portland wins by over 12.5 points,yes Over 220.5 points,yes Over 211.5 points,yes Over 197.5 points,yes Over 209.5 points,yes Over 233.5 points",
+      "ticker": "KXMVECROSSCATEGORY0-S2026J6X2RRHOSKR6PKHX-O4D4AJIIY",
+      "title": "yes Los Angeles R,yes Detroit,yes Buffalo,yes Denver,yes Minnesota,yes Houston,yes Cleveland,yes New England,yes Cincinnati,yes New York G,yes New York J,yes Seattle,yes Jacksonville",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026TRBMH2LHPMZWQ2KB-U33JTXEH5",
-      "title": "yes Alperen Sengun: 20+,yes Quentin Grimes: 10+,yes Houston over 110.5 points,yes San Antonio over 112.5 points,yes Joe Burrow: 33+",
+      "ticker": "KXMVECROSSCATEGORY-S2026DNFISXMAGSCZM5EO-WXF6CX57C",
+      "title": "yes Arsenal,yes Como,yes Galatasaray,yes Manchester City,yes Leipzig,yes Real Madrid,yes Real Betis,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 0.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026WFBGNAUUX3ZJAPF2-7WLJXWPVB",
-      "title": "yes Both Teams To Score,yes Arsenal,yes Galatasaray,yes Manchester City,yes Real Madrid,yes Real Betis,yes Over 3.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S20264IABLUHGNVS23Q6K-AW3ZJ5GLZ",
+      "title": "yes Julian Champagnie: 1+,yes Minnesota,yes Cleveland,yes Houston,yes Toronto,yes Phoenix,yes San Antonio,yes Los Angeles L,yes Domantas Sabonis: 10+,yes De'Aaron Fox: 10+,yes Victor Wembanyama: 20+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026GIBT76PXLK7D267H-P5LSKNFXK",
-      "title": "yes Leeds United,yes Barcelona,yes Real Madrid wins by more than 1.5 goals,yes Minnesota,yes Cleveland,yes Houston,yes Phoenix,yes San Antonio,yes Los Angeles L,yes Julius Randle: 15+,yes Mikel Brown Jr.: 10+,no Michael Porter Jr.: 25+,yes Jonathan Kuminga: 10+,yes Jaden McDaniels: 15+,no LaMelo Ball: 20+,yes Jalen Smith: 10+,yes Matas Buzelis: 15+,yes James Harden: 10+,yes Meleek Thomas: 5+,yes Amen Thompson: 10+,yes Jabari Smith Jr.: 10+,yes Kevin Durant: 15+,yes Darius Garland: 15+,yes Naz Reid: 15+,yes Cedric Coward: 10+,yes Cam Spencer: 10+,yes Jaylen Wells: 10+,no Jaime Jaquez Jr.: 20+,no Tyler Herro: 25+,yes Immanuel Quickley: 10+,yes Scottie Barnes: 15+,yes Andrew Nembhard: 10+,no Kelly Oubre Jr.: 20+,no Obi Toppin: 20+,yes Pascal Siakam: 15+,yes Ajay Mitchell: 10+,yes Bennett Stirtz: 5+,yes Jared McCain: 10+,yes Jeremiah Fears: 10+,no Saddiq Bey: 25+,yes Trey Murphy III: 10+,no Zion Williamson: 30+,no Dillon Brooks: 20+,no Miles Bridges: 20+,yes Tyrese Maxey: 15+,yes Damian Lillard: 15+,yes Darius Acuff Jr.: 15+,yes Stephon Castle: 10+,yes Victor Wembanyama: 20+,no Ace Bailey: 20+,no Darryn Peterson: 25+,no Keyonte George: 30+,yes Cincinnati,yes Inter,yes Roma,yes Arsenal,yes Como,yes Real Madrid,yes Real Betis,no Slavia Prague,no Bayern Munich wins by more than 2.5 goals,no PSG wins by more than 2.5 goals,yes Barcelona wins by more than 1.5 goals,no Manchester United wins by more than 1.5 goals",
+      "ticker": "KXMVECROSSCATEGORY-S2026UMB4R3W6MDWOZCQK-YDOXO3NGJ",
+      "title": "yes LaMelo Ball: 2+,yes Donovan Mitchell: 1+,yes James Harden: 1+,yes Meleek Thomas: 1+,yes Fred VanVleet: 1+,yes Jabari Smith Jr.: 1+,yes Darius Garland: 1+,yes Tyrese Maxey: 1+,yes Damian Lillard: 2+,yes Toumani Camara: 1+,yes Julian Champagnie: 1+,yes Josh Giddey: 4+,yes Jamal Shead: 2+,yes Julius Randle: 15+,yes Matas Buzelis: 10+,yes Donovan Mitchell: 20+,yes Alperen Sengun: 15+,yes Kevin Durant: 15+,yes Brook Lopez: 10+,yes Darius Garland: 10+,yes Cedric Coward: 10+,yes Scottie Barnes: 15+,yes Pascal Siakam: 15+,yes Shai Gilgeous-Alexander: 25+,yes Jeremiah Fears: 10+,yes Zion Williamson: 15+,yes Devin Booker: 20+,yes Tyrese Maxey: 20+,yes Darius Acuff Jr.: 15+,yes Stephon Castle: 10+,yes Luka Don\u010di\u0107: 30+,yes Quentin Grimes: 10+,yes Keyonte George: 15+,yes Jarrett Allen: 6+,yes Alperen Sengun: 6+,yes Rui Hachimura: 2+,yes Naz Reid: 4+,yes Jakob Poeltl: 4+,yes LeBron James: 4+,yes Donovan Clingan: 6+,yes Walker Kessler: 6+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026PBGBF7BDT2JAKN4W-5E2OKPOUG",
-      "title": "yes Both Teams To Score,yes Both Teams To Score,yes Both Teams To Score,yes Arsenal,yes Bodoe/Glimt,yes Como,yes Leipzig,yes Real Madrid,yes Real Betis,yes Over 2.5 goals scored,yes Over 2.5 goals scored,yes Over 2.5 goals scored,yes Over 3.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S20267IFYDCJBXNQUSPI3-YHE43ETVP",
+      "title": "yes Houston wins by over 13.5 points,yes Los Angeles L wins by over 13.5 points,yes Over 159.5 points,yes Over 152.5 points,yes Over 153.5 points",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026D252LW55IHMQFEGC-KHV5JYWUN",
-      "title": "yes LeBron James: 4+,yes Tyrese Maxey: 6+,yes Deni Avdija: 6+,yes Jaylen Brown: 25+,yes LeBron James: 20+,yes Tyrese Maxey: 20+,yes VJ Edgecombe: 10+,yes Damian Lillard: 15+,yes Jrue Holiday: 10+",
+      "ticker": "KXMVECROSSCATEGORY-S2026FUDESGV2GBBVWMIB-T7ZZ7ZDFH",
+      "title": "no Fabian Zetterlund: 1+,no Nick Cousins: 1+,no Ridly Greig: 1+,no Stephen Halliday: 1+,no Viggo Bjorck: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026HURHVAPIWLTK2WLU-PPA5TV6FG",
-      "title": "yes Over 0.5 1H goals scored,no Tie,yes Leipzig,yes Real Betis,no Stuttgart,no Galatasaray wins by more than 1.5 goals,yes Barcelona wins by more than 1.5 goals,no Dortmund over 2.5 goals,no AEK Athens over 2.5 goals,no Galatasaray over 2.5 goals,no Napoli over 2.5 goals,no Lens over 2.5 goals,no Eindhoven over 2.5 goals,no Slovan Bratislava over 1.5 goals,no Club Brugge over 2.5 goals,no Stuttgart over 2.5 goals,no Sabah Masazir over 1.5 goals,no Sporting CP over 2.5 goals,yes Over 1.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026KD7ZYQQQDKYMXGI4-OAZTCP5ZR",
+      "title": "yes Alperen Sengun: 4+,yes Fred VanVleet: 4+,yes Darius Garland: 4+,yes Alperen Sengun: 15+,yes Kevin Durant: 15+,yes Brandon Ingram: 10+,yes Darius Garland: 10+,yes Alperen Sengun: 6+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026JTSI4TC5SG4TE3E6-TVIUUE26N",
-      "title": "yes Darius Garland: 1+,yes Darius Acuff Jr.: 1+,yes Julian Champagnie: 1+,yes Keyonte George: 1+,yes Oklahoma City",
+      "ticker": "KXMVECROSSCATEGORY-S2026VKG2TJUCTJ5U6YTI-SM45K34YO",
+      "title": "yes Donovan Mitchell: 1+,yes Ty Jerome: 6+,yes Pascal Siakam: 15+,yes Tyrese Maxey: 20+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S202632LM6I7M5364HVTI-IBWX4XDEQ",
-      "title": "yes Minnesota,yes Cleveland,yes Houston,yes Toronto,yes Phoenix,yes San Antonio,yes Los Angeles L,yes Cincinnati,no Joe Burrow: 400+,yes Jayden Daniels: 150+,yes Ja'Marr Chase: 70+,yes Tee Higgins: 50+,yes Stefon Diggs: 25+",
+      "ticker": "KXMVECROSSCATEGORY-S2026LGPLYGMQLASWMLQC-UW4IGZ6EQ",
+      "title": "yes Both Teams To Score,yes Both Teams To Score,yes Both Teams To Score,yes Como,yes Over 0.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026I7DNCBQEA4YQLQN6-ZLCBSHEUY",
-      "title": "yes Joe Burrow: 300+,yes Chase Brown: 15+,yes Ja'Marr Chase: 100+,yes Mike Gesicki: 25+,yes Tee Higgins: 50+,yes Stefon Diggs: 40+,yes Chase Brown: 30+,yes Ja'Marr Chase: 1+,yes Mike Gesicki: 1+,yes Stefon Diggs: 1+",
+      "ticker": "KXMVECROSSCATEGORY-S2026TC5ACL2WVS5KHNYQ-OWA7CA6TI",
+      "title": "yes Alperen Sengun: 4+,yes Fred VanVleet: 2+,yes Alperen Sengun: 15+,yes Amen Thompson: 10+,yes Darius Garland: 10+,yes Darius Acuff Jr.: 15+,yes Victor Wembanyama: 20+,yes Walker Kessler: 10+,yes Keyonte George: 15+,yes Alperen Sengun: 6+,yes Luka Don\u010di\u0107: 4+,yes Walker Kessler: 6+,yes Mo Bamba: 6+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026TPZYK4IWF37MV6Z7-ZENP4S623",
-      "title": "yes Darius Acuff Jr.: 6+,yes Devin Vassell: 2+,yes Julian Champagnie: 2+,yes Darius Acuff Jr.: 25+,yes De'Andre Hunter: 10+,yes Keegan Murray: 10+,yes Precious Achiuwa: 5+,yes Zach LaVine: 10+,yes Devin Vassell: 10+,yes Julian Champagnie: 15+,yes Darius Acuff Jr.: 2+,yes Domantas Sabonis: 8+,yes Precious Achiuwa: 4+,yes Devin Vassell: 4+",
+      "ticker": "KXMVECROSSCATEGORY-S2026K5YBU3EFPPXFYFAV-2MP6GIHGJ",
+      "title": "yes Josh Giddey: 4+,yes Ty Jerome: 4+,yes Shai Gilgeous-Alexander: 4+,yes Jeremiah Fears: 2+,yes Devin Booker: 2+,yes Tyrese Maxey: 4+,yes Deni Avdija: 4+,yes Luka Don\u010di\u0107: 4+,yes Julius Randle: 15+,yes Ayo Dosunmu: 10+,yes Bones Hyland: 10+,yes Jonathan Kuminga: 10+,yes Jaden McDaniels: 20+,yes Rudy Gobert: 5+,yes Matas Buzelis: 10+,yes James Harden: 10+,yes Alperen Sengun: 15+,yes Darius Garland: 10+,yes Naz Reid: 15+,yes Ty Jerome: 20+,no Scottie Barnes: 35+,yes Andrew Nembhard: 10+,yes Jalen Green: 10+,yes Miles Bridges: 10+,yes Donovan Clingan: 10+,yes Stephon Castle: 10+,yes Victor Wembanyama: 20+,yes Walker Kessler: 10+,yes Nic Claxton: 2+,yes Jarrett Allen: 6+,yes Alperen Sengun: 6+,yes Amen Thompson: 4+,yes Brook Lopez: 2+,yes Naz Reid: 4+,yes Jakob Poeltl: 6+,yes Pascal Siakam: 4+,yes Isaiah Hartenstein: 8+,yes Yves Missi: 4+,yes Zion Williamson: 2+,yes LeBron James: 2+,yes Donovan Clingan: 6+,yes Domantas Sabonis: 8+,yes Stephon Castle: 2+,yes Victor Wembanyama: 8+,yes Luka Don\u010di\u0107: 4+,yes Walker Kessler: 6+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026QUGI7ZLMQ3L2KS3S-62CWW6IDM",
-      "title": "no Tie,yes Los Angeles L,yes Walker Kessler: 10+,yes Cincinnati,yes Over 30.5 points,yes 8+ corners,yes 7+ corners,yes 7+ corners,yes 7+ corners,yes 8+ corners,yes 7+ corners,yes Como,yes Manchester City,yes Leipzig,yes Real Madrid,yes Over 1.5 goals scored,yes Over 1.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026KMIS4CFD7GTTCABV-VZWIBTHZL",
+      "title": "yes Cincinnati,yes Joe Burrow: 225+,yes Jayden Daniels: 175+,yes Chase Brown: 5+,yes Ja'Marr Chase: 6+,yes Tee Higgins: 50+,yes Chase Brown: 50+,yes Chase Brown: 1+,yes Ja'Marr Chase: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026QO3DXEHXEZHC3LHF-YFQELTNZB",
-      "title": "yes Jayden Daniels: 228+,no Jayden Daniels: 403+",
+      "ticker": "KXMVECROSSCATEGORY-S2026FWNTU4JVQY7R4MBY-WXLM72FFT",
+      "title": "yes Atletico,yes Bilbao,yes Real Betis,yes Real Madrid,yes Minnesota,yes Cleveland,yes Houston,yes Memphis,yes Toronto,yes Phoenix,yes San Antonio,yes Los Angeles L,yes Boston,yes Denver,yes Detroit",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026FCK7GX53IJ5OSTKY-FBVQJ6FU6",
-      "title": "yes Fred VanVleet: 1+,yes Darius Acuff Jr.: 1+,yes Keyonte George: 1+,yes Darius Acuff Jr.: 4+,yes Stephon Castle: 4+,yes Luka Don\u010di\u0107: 4+,yes Keyonte George: 4+,yes Houston,yes San Antonio,yes Los Angeles L,yes Alperen Sengun: 15+,yes Brandon Ingram: 10+,yes Darius Acuff Jr.: 15+,yes Zach LaVine: 10+,yes Stephon Castle: 10+,yes Victor Wembanyama: 20+,yes Luka Don\u010di\u0107: 30+,yes Darryn Peterson: 10+,yes Keyonte George: 15+,yes Amen Thompson: 4+,yes Victor Wembanyama: 8+,yes Walker Kessler: 6+",
+      "ticker": "KXMVECROSSCATEGORY-S20263UYFSSAVGYURM4HT-HHCE4OX2V",
+      "title": "no Julius Randle: 5+,no Ayo Dosunmu: 5+,no Jonathan Kuminga: 5+,no Jaden McDaniels: 5+,no LaMelo Ball: 6+,no Terrence Shannon Jr.: 5+,no Brandon Miller: 6+,no Coby White: 5+,no Naz Reid: 5+,no Royce O'Neale: 5+,no Sion James: 5+,no Cedric Coward: 5+,no Cam Spencer: 5+,no Jaylen Wells: 5+,no Taylor Hendricks: 4+,no Brayden Burries: 5+,no Kyle Kuzma: 5+,no Myles Turner: 5+,no Ryan Rollins: 5+,no Collin Murray-Boyles: 4+,no Immanuel Quickley: 5+,no Ja'Kobe Walter: 5+,no Scottie Barnes: 4+,no Herbert Jones: 5+,no Jeremiah Fears: 5+,no Saddiq Bey: 5+,no Trey Murphy III: 5+,no Devin Booker: 5+,no Dillon Brooks: 5+,no Jordan Goodwin: 5+,no Jalen Green: 5+,no Miles Bridges: 5+,no Anfernee Simons: 5+,no Jaylen Brown: 5+,no LeBron James: 5+,no Tyrese Maxey: 5+,no VJ Edgecombe: 5+,no Donovan Clingan: 4+,no Damian Lillard: 6+,no Sidy Cissoko: 5+,no Scoot Henderson: 5+,no Toumani Camara: 5+,no Darius Acuff Jr.: 5+,no Domantas Sabonis: 4+,no Keegan Murray: 5+,no Zach LaVine: 5+,no De'Aaron Fox: 5+,no Devin Vassell: 5+,no Stephon Castle: 5+,no Victor Wembanyama: 5+,no Day'Ron Sharpe: 8+,no Michael Porter Jr.: 6+,no Ayo Dosunmu: 8+,no Jaden McDaniels: 8+,no Rudy Gobert: 6+,no Brandon Miller: 8+,no Coby White: 8+,no Moussa Diabat\u00e9: 6+,no Naz Reid: 6+,no Royce O'Neale: 6+,no Sion James: 8+,no Cedric Coward: 8+,no Brayden Burries: 6+,no Kyle Kuzma: 6+,no Ryan Rollins: 8+,no Tyler Herro: 8+,no Collin Murray-Boyles: 6+,no Jakob Poeltl: 6+,no Ja'Kobe Walter: 6+,no Collin Gillespie: 8+,no Jalen Green: 8+,no Anfernee Simons: 6+,no Jaylen Brown: 8+,no Donovan Clingan: 6+,no Damian Lillard: 8+,no Jrue Holiday: 8+,no Sidy Cissoko: 6+,no Victor Wembanyama: 8+,no Moussa Diabat\u00e9: 20+,no Ryan Kalkbrenner: 15+,no Cedric Coward: 25+,no Cam Spencer: 20+,no Isaiah Stewart: 15+,no Jaylen Wells: 20+,no Taylor Hendricks: 15+,no Zach Edey: 20+,no Brandon Miller: 8+,no Coby White: 6+,no Naz Reid: 12+,no Ryan Kalkbrenner: 8+,no Royce O'Neale: 8+,no Sion James: 8+,no Cam Spencer: 6+,no Isaiah Stewart: 8+,no Taylor Hendricks: 8+,no Ty Jerome: 8+,no Tyler Herro: 8+,no Allen Graves: 8+,no Immanuel Quickley: 8+,no Jakob Poeltl: 12+,no Ja'Kobe Walter: 8+,no Scottie Barnes: 12+,no Anfernee Simons: 6+,no Tyrese Maxey: 8+,no Deni Avdija: 10+,no Damian Lillard: 8+,no Jrue Holiday: 8+,no Sidy Cissoko: 8+,no Scoot Henderson: 6+,no Toumani Camara: 8+,no Darius Acuff Jr.: 8+,no Zach LaVine: 8+,no Devin Vassell: 8+,no Chase Brown: 3+,no Dohnte Meyers: 2+,no Drew Sample: 2+,no Joe Burrow: 3+,no Ja'Marr Chase: 3+,no Jack Endries: 2+,no Mike Gesicki: 2+,no Austin Ekeler: 3+,no Antonio Williams: 3+,no Ben Sinnott: 2+,no Chig Okonkwo: 2+,no Jayden Daniels: 2+,no Rachaad White: 3+,no Stefon Diggs: 3+,no Treylon Burks: 3+,no Van Jefferson: 2+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026NOGNNP4LG2Z3ZPUP-JUXQNKV2X",
-      "title": "yes Luka Don\u010di\u0107: 4+,yes Houston,yes Los Angeles L,yes Devin Vassell: 10+,yes Alperen Sengun: 6+,yes Domantas Sabonis: 10+,yes Walker Kessler: 8+,no San Antonio wins by over 15.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026ARC3DYXXLYYXE27X-YNBT2VNDS",
+      "title": "no Santa Clara wins by over 3.5 points,no Utah Valley wins by over 3.5 points,no Illinois wins by over 40.5 points",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026ZB6MWMMYELVCZSK4-5LMJ2FOAR",
-      "title": "yes LeBron James: 4+,yes Damian Lillard: 3+,yes Tyrese Maxey: 6+,yes VJ Edgecombe: 8+,yes Damian Lillard: 25+",
+      "ticker": "KXMVECROSSCATEGORY-S2026FSG4ITK2YTIY4QIS-AHYUBHHOC",
+      "title": "yes Dougie Hamilton: 1+,yes Quinton Byfield: 1+,yes Connor Brown: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026VT5SOZWTDWE3LDKR-WDZGJLADM",
-      "title": "yes Joe Burrow: 1+,yes Jayden Daniels: 1+,yes Jayden Daniels: 175+,yes Chig Okonkwo: 20+,yes Stefon Diggs: 50+,yes Treylon Burks: 10+,yes Chase Brown: 20+,yes Jacory Croskey-Merritt: 25+,yes Washington wins by over 2.5 points,yes Stefon Diggs: 1+",
+      "ticker": "KXMVECROSSCATEGORY-S2026TTW6FCGITU7TE2EA-YGVW6WKK3",
+      "title": "yes Jeremiah Fears: 4+,yes Devin Booker: 6+,yes Dillon Brooks: 2+,yes Mikel Brown Jr.: 15+,yes Ayo Dosunmu: 10+,yes Bones Hyland: 15+,yes Jonathan Kuminga: 10+,yes Jaden McDaniels: 20+,yes LaMelo Ball: 10+,yes Terrence Shannon Jr.: 15+,yes Matas Buzelis: 10+,yes James Harden: 10+,yes Myles Turner: 25+,yes Immanuel Quickley: 10+,yes Jamal Shead: 10+,yes Scottie Barnes: 15+,yes Jeremiah Fears: 20+,yes Devin Booker: 20+,yes Dillon Brooks: 10+,yes Jeremiah Fears: 6+,yes Yves Missi: 8+,yes Devin Booker: 4+,yes Miles Bridges: 4+,yes Oso Ighodaro: 4+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026YOIIJMLJJ2LT4S3C-BI5VURU7L",
-      "title": "yes Jaylen Brown: 25+,yes Jabari Walker: 10+,yes LeBron James: 20+,yes Tyrese Maxey: 20+,yes Deni Avdija: 35+,yes Donovan Clingan: 15+,yes Damian Lillard: 20+,no Anfernee Simons: 4+,no Jaylen Brown: 8+,yes LeBron James: 4+,no Donovan Clingan: 14+",
+      "ticker": "KXMVECROSSCATEGORY-S2026ERMGTH3G4SLYVOSP-2TOJQIMLE",
+      "title": "yes Jeremiah Fears: 4+,yes Minnesota,yes Memphis,yes Julius Randle: 15+,yes Matas Buzelis: 10+,yes Naz Reid: 20+,yes Ty Jerome: 25+,yes Jaylen Brown: 20+,yes LeBron James: 20+,yes Naz Reid: 6+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026THGM5MWDFUI5WICC-A4LFR3V4N",
-      "title": "yes Cleveland,no Over 134.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S20267UCQNSLKXWFPYTDH-67463X3SQ",
+      "title": "yes Minnesota,yes Cleveland,yes Houston,yes Memphis,yes Toronto,yes Oklahoma City,yes Phoenix,yes Philadelphia,yes San Antonio,yes Los Angeles L,yes Wichita St.,yes Arizona,yes Kansas,yes UNLV,yes FDU,yes Seattle,yes Utah Valley,yes Youngstown St.,yes George Washington,yes Marquette,yes Xavier,yes Cincinnati",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026NZ2HYMFHOQKYNEAG-AUWPVDLDE",
-      "title": "yes Joe Burrow: 1+,yes Jayden Daniels: 1+,yes Joe Burrow: 225+,yes Jayden Daniels: 175+,yes Ja'Marr Chase: 50+,yes Antonio Williams: 15+,yes Chig Okonkwo: 20+,yes Stefon Diggs: 30+,yes Treylon Burks: 20+,yes Chase Brown: 20+,yes Jacory Croskey-Merritt: 15+,yes Rachaad White: 10+",
+      "ticker": "KXMVECROSSCATEGORY-S2026R6SA5GT2D3YARNKC-XAERVDSE4",
+      "title": "yes Both Teams To Score,no LASK,yes Como,yes Manchester City,yes Real Madrid,yes Real Betis,yes Atletico,yes Liverpool,yes Inter,yes Barcelona,yes Arsenal over 0.5 goals,yes LASK over 0.5 goals,yes Lille over 0.5 goals,yes Over 2.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026ORZCEOQV2FJASJV3-3R4KXNUML",
-      "title": "yes Real Madrid,yes Barcelona,yes Houston,yes San Antonio,yes Los Angeles L,yes Buffalo,yes Memphis,yes Navy,yes New England,yes Jacksonville,yes Como,yes Real Madrid,yes Barcelona",
+      "ticker": "KXMVECROSSCATEGORY-S2026SQHKDASCOUQJXZGJ-LY6VVOHHH",
+      "title": "yes Barcelona,yes Arsenal,yes Bodoe/Glimt,yes Como,yes Porto,yes Aston Villa,yes Manchester City,yes Leipzig,yes Real Madrid,yes Real Betis",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026NHID3SZO6MKMDIKN-5UXWKRACT",
-      "title": "yes Gremio,yes Both Teams To Score,yes Saint Louis,yes Minnesota",
+      "ticker": "KXMVECROSSCATEGORY-S2026OUIZZSJFKMWVSFG3-ZDSSXP6Z2",
+      "title": "yes Minnesota,yes Cleveland,yes Houston,yes Toronto,yes San Antonio,yes Los Angeles L,yes Day'Ron Sharpe: 15+,yes Julius Randle: 25+,yes LaMelo Ball: 25+,yes Isaac Okoro: 10+,yes Keaton Wagler: 10+,yes Rui Hachimura: 15+,yes Naz Reid: 25+,yes Ty Jerome: 25+,yes Scottie Barnes: 30+,yes Pascal Siakam: 25+,yes Ajay Mitchell: 20+,yes Jared McCain: 15+,yes Devin Booker: 30+,yes Jordan Goodwin: 10+,yes Tyrese Maxey: 25+,yes VJ Edgecombe: 15+,yes Deni Avdija: 30+,yes Luka Don\u010di\u0107: 45+,yes Quentin Grimes: 20+,yes Walker Kessler: 20+,yes Julius Randle: 20+,yes Alperen Sengun: 15+,yes Kevin Durant: 15+,yes Brook Lopez: 10+,yes Coby White: 15+,yes Myles Turner: 20+,yes Scottie Barnes: 15+,yes Obi Toppin: 15+,yes Kenrich Williams: 15+,yes LeBron James: 20+,yes Damian Lillard: 15+,yes Quentin Grimes: 15+,yes Cincinnati",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S202635D4GU5QDIK247K7-RPCTXMPZB",
-      "title": "yes Chase Brown: 45+,yes Jacory Croskey-Merritt: 40+,yes Chase Brown: 10+,yes Jacory Croskey-Merritt: 10+,yes Chase Brown: 60+,yes Jacory Croskey-Merritt: 50+",
+      "ticker": "KXMVECROSSCATEGORY-S2026VIVSI3OKFVNIEBSP-6GVRWBADH",
+      "title": "yes Chase Brown: 40+,yes Ja'Marr Chase: 110+,yes Stefon Diggs: 50+,yes Chase Brown: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026PKNAKAN2IZAHX62L-A2ASXDCOX",
-      "title": "yes Cincinnati,yes Joe Burrow: 1+,yes Joe Burrow: 300+,yes Ja'Marr Chase: 1+,yes Stefon Diggs: 1+",
+      "ticker": "KXMVECROSSCATEGORY-S2026JHJYATTL6IMOZYAX-SMX6FIZ5Y",
+      "title": "yes Minnesota,yes Cleveland,yes Houston,yes Memphis,yes Toronto,yes Phoenix,yes San Antonio,yes Los Angeles L,yes Boston,yes Denver,yes Detroit,yes Youngstown St.",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026GZAWJWTHEIUEO5AV-CD7YJ67PN",
-      "title": "yes Julius Randle: 20+,yes Bones Hyland: 15+,yes Jonathan Kuminga: 15+,yes Buddy Hield: 10+,yes Donovan Mitchell: 20+,yes James Harden: 15+,yes Naz Reid: 25+,yes Myles Turner: 20+,no Immanuel Quickley: 20+,yes Scottie Barnes: 15+,yes Obi Toppin: 15+,yes Pascal Siakam: 15+,yes Kenrich Williams: 20+,yes Shai Gilgeous-Alexander: 25+,yes Saddiq Bey: 10+,yes Zion Williamson: 15+,yes Dillon Brooks: 10+,yes Miles Bridges: 10+,yes Jaylen Brown: 25+,yes LeBron James: 20+,yes Deni Avdija: 30+,yes Damian Lillard: 25+,yes Alperen Sengun: 20+,yes Kevin Durant: 20+,yes Brandon Ingram: 10+,yes Darius Garland: 15+,yes Darius Acuff Jr.: 20+,yes De'Andre Hunter: 10+,yes Stephon Castle: 10+,yes Victor Wembanyama: 25+,yes Luka Don\u010di\u0107: 30+,yes Darryn Peterson: 10+,yes Keyonte George: 15+",
+      "ticker": "KXMVECROSSCATEGORY-S2026DHY5BB6KT5PFA2VD-DGHVNISW3",
+      "title": "yes Minnesota,yes San Antonio,no Julian Champagnie: 20+,yes Jaden McDaniels: 15+,yes Stefon Diggs: 50+,yes Ja'Marr Chase: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026P7AICQSTOQZRONML-ECEHKK7FD",
-      "title": "yes Cincinnati over 21.5 points,yes Washington over 20.5 points,no Over 51.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S20263XEXZHCFSHKJY5LE-7H4BSF7UN",
+      "title": "yes Cincinnati,yes Ja'Marr Chase: 70+,yes Minnesota,yes New York I",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026JYFNTDQD465WCMDN-V2WHZAOP7",
-      "title": "yes Naz Reid: 8+,yes Cedric Coward: 8+,yes Zach Edey: 8+",
+      "ticker": "KXMVECROSSCATEGORY-S2026PSNMIMBVRWDCPED7-4FJNGPCH3",
+      "title": "no Danny Wolf: 5+,no Trey Lyles: 4+,no Peyton Watson: 5+,no Tyrese Proctor: 5+,no Brandon Miller: 6+,no Royce O'Neale: 5+,no Sion James: 5+,no Cedric Coward: 5+,no Jaylen Wells: 5+,no Taylor Hendricks: 5+,yes Ty Jerome: 4+,no Kel'el Ware: 5+,no Nate Ament: 4+,no Collin Murray-Boyles: 4+,no Quenton Jackson: 5+,no Ajay Mitchell: 5+,no Bennett Stirtz: 5+,no Anfernee Simons: 5+,no Dean Wade: 5+,no Kentavious Caldwell-Pope: 4+,no Sidy Cissoko: 5+,no Scoot Henderson: 5+,no Coby White: 8+,no Naz Reid: 6+,no Royce O'Neale: 6+,yes Los Angeles L,no Ryan Kalkbrenner: 15+,no Taylor Hendricks: 20+,no Anfernee Simons: 20+,no Buddy Hield: 8+,no James Harden: 8+,no Tyrese Proctor: 8+,no Royce O'Neale: 8+,no Cam Spencer: 8+,no Isaiah Stewart: 8+,no Taylor Hendricks: 8+,no Ryan Rollins: 8+,no Allen Graves: 8+,no Immanuel Quickley: 8+,no Jamison Battle: 8+,no Dean Wade: 8+,no Jaylen Brown: 10+,no Jabari Walker: 10+,no Tyrese Maxey: 8+,no Damian Lillard: 8+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026D3FABEBTMMZYVNSY-OA66NYBDZ",
-      "title": "yes Joe Burrow: 2+,yes Jayden Daniels: 1+,yes Tee Higgins: 60+,yes Antonio Williams: 30+,yes Chase Brown: 1+",
+      "ticker": "KXMVECROSSCATEGORY-S2026C43KAGXUFTWDBAUH-RVNWDLBR6",
+      "title": "no Collin Sexton: 4+,no Josh Green: 4+,no Mo Bamba: 3+,yes Ayo Dosunmu: 4+,yes Tyler Herro: 2+,no Julius Randle: 35+,yes Moritz Wagner: 2+,no LaMelo Ball: 6+,no Naz Reid: 10+,yes Deni Avdija: 4+,no Donovan Clingan: 12+,yes Ja'Marr Chase: 7+,no Drew Sample: 15+,no Samaje Perine: 20+,yes Stefon Diggs: 20+,no Jayden Daniels: 50+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026BIC2RWZUVK23YKNP-UAW2PLEE2",
-      "title": "no LaMelo Ball: 4+,yes Darius Garland: 1+,no Brandon Miller: 4+,no Naz Reid: 4+,no Sion James: 3+,no Saddiq Bey: 3+,yes Minnesota,yes Cleveland,yes Houston,yes Toronto,yes San Antonio,yes Los Angeles L,yes Naz Reid: 20+",
+      "ticker": "KXMVECROSSCATEGORY-S20266R5434F22DFN7OO5-7TCHP6BT3",
+      "title": "yes Cleveland,yes Houston,yes San Antonio,yes Los Angeles L,yes Darius Acuff Jr.: 15+,yes Victor Wembanyama: 20+,yes Luka Don\u010di\u0107: 30+,yes Walker Kessler: 8+,yes Cincinnati,yes Joe Burrow: 250+,yes Ja'Marr Chase: 1+,yes Cincinnati over 21.5 points",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026ZYM5WXLNETGXJPEH-33Q2ZSJ4A",
-      "title": "yes Cam Spencer: 4+,yes LeBron James: 6+,yes Myles Turner: 25+,yes Scottie Barnes: 20+,no Tyrese Maxey: 30+,yes Luka Don\u010di\u0107: 35+,yes Walker Kessler: 15+,yes Moussa Diabat\u00e9: 8+,yes Scottie Barnes: 4+,yes Donovan Clingan: 10+",
+      "ticker": "KXMVECROSSCATEGORY-S2026ELGBFSI3QAKRTYJT-6CEJDYBHT",
+      "title": "yes Joe Burrow: 250+,yes Ja'Marr Chase: 70+,yes Tee Higgins: 50+,yes Chig Okonkwo: 25+,yes Stefon Diggs: 40+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026AVETYHSIVFTCHTAV-ELP6MGJNO",
-      "title": "yes Joe Burrow: 38+,yes Joe Burrow: 3+,yes Joe Burrow: 275+,yes Jayden Daniels: 175+,yes Ja'Marr Chase: 70+,yes Stefon Diggs: 30+,no Cincinnati wins by over 9.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S20263AEECDH24AFFMHBY-OADYGRI3D",
+      "title": "yes Fred VanVleet: 1+,yes Darius Garland: 1+,yes Alperen Sengun: 4+,yes Kevin Durant: 2+,yes Amen Thompson: 4+,yes Jabari Smith Jr.: 4+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026E4VKDQHHFW2D3UAG-UGA5GWXLL",
-      "title": "yes Cincinnati wins by over 3.5 points,yes Cincinnati,yes Chase Brown: 1+,yes Stefon Diggs: 1+,yes Over 49.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026MV55KUDXNE4ZIILC-UK6VT2TZS",
+      "title": "yes Target Price: $61,432.60,yes Target Price: $0.0568126,yes Target price: 1.09099,yes Target price: 1.30394,yes Target Price: $64.2470",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026MN54WTDDLPCZ7IS6-T5B4A6G7E",
-      "title": "no Napoli wins 1st Half,yes Como,yes Manchester City,yes Real Madrid,yes Real Betis,yes Over 2.5 goals scored,yes Over 2.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S20262JOGXOGKU6NDYGOZ-WAMSQYB66",
+      "title": "yes Joe Burrow: 1+,yes Jayden Daniels: 1+,yes Joe Burrow: 225+,yes Jayden Daniels: 150+,yes Ja'Marr Chase: 60+,no Tee Higgins: 80+,yes Antonio Williams: 15+,yes Stefon Diggs: 20+,yes Chase Brown: 30+,yes Samaje Perine: 10+,yes Jacory Croskey-Merritt: 15+,yes Ja'Marr Chase: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S20263F2CAMDHALX3MFG7-DZ2DNRJL3",
-      "title": "yes Luka Don\u010di\u0107: 4+,yes Luka Don\u010di\u0107: 30+,yes Walker Kessler: 10+,yes Keyonte George: 15+,yes Minnesota wins by over 2.5 points,yes Houston wins by over 2.5 points,yes Oklahoma City wins by over 2.5 points,yes Los Angeles L wins by over 2.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026IPZRMMUNGHH2DHRY-ZM3XRKB6Y",
+      "title": "yes Both Teams To Score,yes Both Teams To Score,yes Both Teams To Score,yes Both Teams To Score,yes Both Teams To Score,yes Barcelona wins by more than 1.5 goals,yes Over 2.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored,yes Over 2.5 goals scored,yes Over 2.5 goals scored,yes Over 2.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored,yes Over 3.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026R5XBDVNRF4OFLUCU-KG5JZXV4L",
-      "title": "yes Cincinnati,yes Joe Burrow: 3+,yes Jayden Daniels: 1+,yes Joe Burrow: 275+,yes Jayden Daniels: 200+,yes Chase Brown: 25+,yes Ja'Marr Chase: 80+,yes Tee Higgins: 60+,yes Chase Brown: 10+,yes Chase Brown: 40+,yes Rachaad White: 15+,yes Tee Higgins: 1+",
+      "ticker": "KXMVECROSSCATEGORY-S2026XZCE5KZR5EALHEPT-MQP2BYW4N",
+      "title": "yes Luka Don\u010di\u0107: 4+,yes Quentin Grimes: 2+,yes LaMelo Ball: 4+,yes Kyle Kuzma: 2+,no Immanuel Quickley: 12+,yes Scottie Barnes: 4+,yes Luka Don\u010di\u0107: 6+,yes Collin Sexton: 10+,yes Quentin Grimes: 20+,yes Walker Kessler: 20+,yes Ace Bailey: 15+,yes LaMelo Ball: 10+,no Rudy Gobert: 20+,no Cedric Coward: 25+,no Ty Jerome: 40+,yes Kyle Kuzma: 10+,no Allen Graves: 20+,yes Scottie Barnes: 15+,yes Luka Don\u010di\u0107: 30+,yes Sandro Mamukelashvili: 5+,yes Los Angeles L,yes Sandro Mamukelashvili: 2+,yes Walker Kessler: 8+,no Brooklyn wins by over 5.5 points,no Charlotte wins by over 2.5 points,no Milwaukee wins by over 4.5 points,yes Los Angeles L wins by over 4.5 points,no Matisse Thybulle: 4+,no Ziaire Williams: 3+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026WHYGT5U3IX6E35XS-D2GTLGXTE",
-      "title": "no Joe Burrow: 375+,no Jayden Daniels: 300+,no Dohnte Meyers: 40+,yes Tee Higgins: 40+,no Chig Okonkwo: 80+,yes Treylon Burks: 15+",
+      "ticker": "KXMVECROSSCATEGORY-S20265AXGF42GLZEURUXB-C5H3DIIFZ",
+      "title": "yes Minnesota,yes Memphis,yes Toronto,yes Wichita St.,yes Central Arkansas,yes Kansas,yes FDU,yes North Carolina,yes North Carolina A&T,yes Youngstown St.,yes Illinois,yes LSU,yes Binghamton,yes Green Bay,yes George Washington,yes Marquette,yes USC,yes Northwestern,yes Houston,yes Radford,yes Seton Hall,yes SMU,yes New Jersey",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026NY2VO7N7362ITS2I-4NSFXXEYC",
-      "title": "yes Memphis,yes Portland,yes New Jersey,yes Ottawa,yes Los Angeles,yes Winnipeg",
+      "ticker": "KXMVECROSSCATEGORY-S2026FRLBDZ66G63ECTX5-BQNRS2XJT",
+      "title": "yes Minnesota,yes Cleveland,yes Houston,yes Memphis,yes Toronto,yes Oklahoma City,yes Phoenix,yes Philadelphia,yes San Antonio,yes Los Angeles L,yes Wichita St.,yes FDU,yes North Carolina A&T,yes George Washington,yes North Alabama,yes FDU,yes Lipscomb,yes Xavier",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026I7WIKECYRK2XTDBH-6RHAMPJ67",
-      "title": "yes Cincinnati,yes Green Bay,yes Chicago,yes Kansas City,yes Dallas,yes Denver,yes Minnesota,yes Houston,yes Cleveland,yes New England,yes Cincinnati,yes New York G,yes New York J,yes San Francisco,yes Jacksonville,yes Washington,yes Tampa Bay,yes Joe Burrow: 2+,yes Caleb Williams: 2+,yes Joe Burrow: 225+,yes Jayden Daniels: 150+,yes Jordan Love: 200+,yes Matthew Stafford: 200+,yes Caleb Williams: 175+,yes Jared Goff: 200+,yes Josh Allen: 200+,yes Patrick Mahomes: 200+,yes Dak Prescott: 200+,yes Joe Milton III: 150+,yes Bo Nix: 150+,yes Aaron Rodgers: 150+",
+      "ticker": "KXMVECROSSCATEGORY-S2026EL5KP2P3FP2MVIQQ-SVYQJUEOJ",
+      "title": "yes Ty Jerome: 6+,no Coby White: 4+,yes Moussa Diabat\u00e9: 4+,yes Naz Reid: 2+,yes Sion James: 6+,yes Cedric Coward: 4+,yes Coby White: 15+,no Moussa Diabat\u00e9: 15+,yes Naz Reid: 25+,no Ryan Kalkbrenner: 5+,yes Sion James: 5+,no Cedric Coward: 20+,no Cam Spencer: 15+,yes Isaiah Stewart: 10+,no Jaylen Wells: 15+,no Ty Jerome: 35+,yes Zach Edey: 5+,no Coby White: 4+,no Moussa Diabat\u00e9: 10+,no Naz Reid: 10+,no Ryan Kalkbrenner: 4+,no Royce O'Neale: 4+,no Jaylen Wells: 4+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026SBF2VHXG5UNOCWA5-I7GNH2DGQ",
-      "title": "yes Minnesota,yes Cleveland,yes Houston,yes Memphis,yes San Antonio,yes Los Angeles L,yes Cincinnati,yes Joe Burrow: 225+,no Jayden Daniels: 325+",
+      "ticker": "KXMVECROSSCATEGORY-S2026VXF34DGYBBVKAA3U-A6UAZW7CB",
+      "title": "yes Over 2.5 goals scored,yes Over 2.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 2.5 goals scored,yes Over 1.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S20265CMFOI46SX6QOB2X-73QYVSASK",
-      "title": "yes Houston,yes Phoenix,yes San Antonio,yes Los Angeles L,yes Seattle,yes Columbus,yes Ottawa,yes Montreal,yes Minnesota,yes New York I,yes Winnipeg",
+      "ticker": "KXMVECROSSCATEGORY-S2026XMMC2M2DFHO5PEQ4-XRJKRD4YE",
+      "title": "yes Carl Emil Overbeck,yes Yusuke Takahashi,yes Yun Seong Chung,yes Joaquin Guilleme,yes Jie Cui,yes Gabriel Ghetu,yes Naoya Honda,yes Rio Noguchi,yes Jason Kubler,yes Christian Langmo,yes Yuta Shimizu,yes Tristan Schoolkate,yes Yosuke Watanuki,yes Yanki Erel,yes Juan Cruz Martin Manzano,yes Oleg Prihodko,yes Vadym Ursu",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026KRKEWL5375Y2DMLZ-PR7UB6F2R",
-      "title": "yes Phoenix,yes Houston wins by over 4.5 points,yes San Antonio wins by over 3.5 points,yes Los Angeles L wins by over 4.5 points,yes Cincinnati wins by over 3.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026SZOXSTCQLLZG6YHA-NN7O6KOJ2",
+      "title": "no Fabian Zetterlund: 1+,no Nick Cousins: 1+,no Stephen Halliday: 1+,no Viggo Bjorck: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026U4GVEY3SBYDQYPMU-Y5CHXNPRV",
-      "title": "yes Diego Duran,yes Naoya Honda,yes Hikaru Shiraishi,yes Takuya Kumasaka,yes Christian Langmo,yes Tristan Schoolkate,yes Valentin Guadagno,yes Varvara Panshina,yes Aoi Ito",
+      "ticker": "KXMVECROSSCATEGORY-S2026IWQZJUQMT3VHLKQK-EFA3ZS2RS",
+      "title": "no Coby White: 25+,no Naz Reid: 30+,no Cedric Coward: 25+,no Cam Spencer: 20+,no Isaiah Stewart: 15+,no Jaylen Wells: 20+,no Ty Jerome: 35+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026HCAPKYZIL2OG5YZ5-Y3YAOLQ5K",
-      "title": "yes Over 137.5 points,yes Over 142.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S20263GUBFRSCOFEIEMMK-3ODLTIQ74",
+      "title": "yes Jaylen Brown: 6+,yes Jaylen Brown: 25+,yes LeBron James: 20+,yes Tyrese Maxey: 15+,yes Deni Avdija: 30+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026FBCGBXIH7267OXPJ-QNDSANJHB",
-      "title": "yes Cincinnati,yes Joe Burrow: 23+,yes Joe Burrow: 250+,yes Jayden Daniels: 175+,yes Stefon Diggs: 2+,yes Tee Higgins: 50+,no Over 54.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026AGNG377YWUX3I73G-SN3SSAHED",
+      "title": "no Over 115.5 points,no Over 65.5 points,yes Alperen Sengun: 15+,no Amen Thompson: 25+,yes Kevin Durant: 20+,no Houston wins by over 16.5 points,yes Over 208.5 points",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026GXOKCWITAW4QJBSQ-67PPXKUTP",
-      "title": "no Los Angeles C wins by over 6.5 points,no New Orleans wins by over 8.5 points,no Utah wins by over 7.5 points,no Over 67.5 points,no Over 68.5 points,yes Minnesota,yes Houston,yes Los Angeles L,no Chicago wins by over 10.5 points,no Milwaukee wins by over 12.5 points,no Indiana wins by over 12.5 points,no New Orleans wins by over 11.5 points,no Philadelphia wins by over 11.5 points,no Over 241.5 points,no Over 237.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S20263RFDJ3E63V7V2KGC-BRUIYHITK",
+      "title": "yes Cincinnati,yes Joe Burrow: 225+,no Jayden Daniels: 325+,yes Stefon Diggs: 2+,no Chase Brown: 80+,yes Ja'Marr Chase: 50+,no Mike Gesicki: 90+,no Tee Higgins: 140+,no Stefon Diggs: 120+,no Chase Brown: 100+,no Joe Burrow: 40+,no Jayden Daniels: 90+,yes Chase Brown: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026UF2HNP3BQC26VU7Z-O4RMYJVOV",
-      "title": "yes Cincinnati,yes Joe Burrow: 28+,yes Joe Burrow: 3+,yes Jayden Daniels: 1+,yes Joe Burrow: 300+,yes Jayden Daniels: 200+,yes Chase Brown: 40+",
+      "ticker": "KXMVECROSSCATEGORY-S2026VTCE7SJJPLYUB7XD-IQRPW2IVK",
+      "title": "yes Como,yes Manchester City,yes Real Madrid,yes Real Betis,yes Over 0.5 goals scored,yes Over 1.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S20263FO7Z46VLRXAJCBT-L27PCMALZ",
-      "title": "yes Minnesota,yes Cleveland,yes Houston,yes Memphis,yes Toronto,yes Phoenix,yes Philadelphia,yes San Antonio,yes Los Angeles L,yes Cincinnati,yes New Jersey,yes Ottawa,yes Los Angeles,yes Minnesota,yes New York I,yes Winnipeg,no Over 8.5 goals scored,no Over 6.5 goals scored,yes Over 4.5 goals scored,yes Over 4.5 goals scored,yes Over 3.5 goals scored,yes Over 4.5 goals scored,yes Over 7.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026AEU6QGTFPCHKJPD3-GEPVAQJDQ",
+      "title": "yes Cincinnati,yes New Jersey,yes Over 4.5 goals scored,yes Over 7.5 goals scored",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026OTBHNV6ZH3M6APBM-DXC6HT7R5",
-      "title": "yes Daejeon Citizen,yes Kyoto Sanga,yes Bremen,yes FC K\u00f6ln,yes Mainz,yes Stuttgart,yes Dortmund,yes Bristol City,yes Cardiff,yes Middlesbrough,yes Norwich,yes Manchester United,yes Toluca,yes Nice,yes Lyon,yes San Jose,yes Philadelphia",
+      "ticker": "KXMVECROSSCATEGORY-S2026ZNKGDCCL7AZ4BW22-GO3FQ3GXQ",
+      "title": "yes Mike Gesicki,no Arsenal wins the 1H by more than 1.5 goals,no Over 2.5 1H goals scored,no Over 2.5 1H goals scored,yes Dortmund,yes Bodoe/Glimt,yes Galatasaray,yes Real Madrid,no Como wins by more than 2.5 goals,no Manchester City wins by more than 2.5 goals",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026EUESQYWKS5HZNS72-PDE773F2Z",
-      "title": "yes Memphis,yes Philadelphia,yes Over 238.5 points,yes Over 215.5 points",
+      "ticker": "KXMVECROSSCATEGORY-S2026IMC33GOWTVPFGCYZ-UNO5ZPOCW",
+      "title": "yes 9+ corners,yes 9+ corners,yes 8+ corners,yes 9+ corners,yes 8+ corners,yes Porto,no AEK Athens over 2.5 goals,yes Como over 1.5 goals,yes Manchester City over 1.5 goals,yes Leipzig over 1.5 goals,yes Lens over 0.5 goals",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026OVM2BC2UJ6RXKFGO-JZVI7KPUU",
-      "title": "yes Bodoe/Glimt,yes Como,yes Aston Villa,yes Real Madrid,yes Real Betis,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 0.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026WDWZQZWI7SM3WHDV-EPIPXLKTS",
+      "title": "yes Luke McCaffrey: 1+,yes WAS Commanders D/ST: 1+,no Mike Gesicki",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026RULBBX3A6CTEL3EZ-TZHWDLORY",
-      "title": "yes Minnesota,yes Toronto,yes Los Angeles L,yes Julius Randle: 15+,yes Michael Porter Jr.: 10+,yes Ayo Dosunmu: 10+,yes Jaden McDaniels: 10+,yes LaMelo Ball: 10+,yes James Harden: 10+,yes Alperen Sengun: 15+,yes Amen Thompson: 10+,yes Jabari Smith Jr.: 10+,yes Brandon Ingram: 10+,yes Kyle Kuzma: 10+,yes Tyler Herro: 15+,yes Immanuel Quickley: 10+,yes Scottie Barnes: 15+,yes Andrew Nembhard: 10+,yes Pascal Siakam: 15+,yes Jeremiah Fears: 10+,yes Zion Williamson: 15+,yes Tyrese Maxey: 15+,yes Damian Lillard: 15+,yes Zach LaVine: 10+,yes Alperen Sengun: 6+,yes Amen Thompson: 4+,yes Moussa Diabat\u00e9: 6+,yes Naz Reid: 6+,yes Scottie Barnes: 4+",
+      "ticker": "KXMVECROSSCATEGORY0-S20262TFJ33PTVPH7IREP-C5AH4NX7G",
+      "title": "yes Rachaad White: 30+,yes George Pickens: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026KAQOAGX2HRUQTB7J-VTOACVTH7",
-      "title": "yes Mikel Brown Jr.: 15+,yes Cam Spencer: 10+,yes Jaylen Wells: 10+,yes Kyle Kuzma: 10+,yes Scottie Barnes: 15+,yes Pascal Siakam: 15+,yes Shai Gilgeous-Alexander: 25+,yes Moussa Diabat\u00e9: 8+,yes Cedric Coward: 4+,no Charlotte wins by over 9.5 points,no Portland wins by over 8.5 points,no Northern Kentucky wins by over 10.5 points,yes North Carolina wins by over 13.5 points,no South Carolina St. wins by over 10.5 points,yes Joe Burrow: 250+",
+      "ticker": "KXMVECROSSCATEGORY-S2026LRHOQTZF7LPC6TFA-DFQUI2ZQS",
+      "title": "yes Minnesota,yes Cleveland,yes Houston,yes Memphis,yes Toronto,yes Oklahoma City,yes New Orleans,yes Philadelphia,yes San Antonio,yes Los Angeles L,yes Naz Reid: 20+,yes Cedric Coward: 15+,yes Ty Jerome: 25+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026F2U4VOIKE4MA5PWG-7NAUSRXSG",
-      "title": "no Cam Spencer: 4+,no LeBron James: 5+,yes Minnesota,yes Cleveland,yes Houston,yes Kevin Durant: 15+,no Coby White: 25+,no Ty Jerome: 35+,no Deni Avdija: 45+",
+      "ticker": "KXMVECROSSCATEGORY-S2026EKZ74LD4UFKWSQAV-AVF5IFCP7",
+      "title": "yes Atletico,yes Como,yes Napoli,yes Real Madrid",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026FWNWZHL6UPM7DZCL-H7Z4B5UK2",
-      "title": "yes Kenrich Williams: 1+,yes Minnesota,yes Memphis,yes Toronto,yes Ajay Mitchell: 10+,yes Jaylen Brown: 20+,no LeBron James: 30+,yes Tyrese Maxey: 15+,yes Deni Avdija: 30+,yes LeBron James: 4+,yes Donovan Clingan: 6+",
+      "ticker": "KXMVECROSSCATEGORY-S2026HQV6MG6IBE3RHBTL-SGN5JGEFY",
+      "title": "yes Como,yes Porto,yes Manchester City,yes Real Madrid,yes Arsenal wins by more than 1.5 goals,yes Aston Villa wins by more than 1.5 goals",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026BXEZ3OUC6CCVQTGU-N56RPJXQT",
-      "title": "yes Real Betis,yes Real Madrid,yes Barcelona,yes Valencia,no Over 3.5 goals scored,no Over 3.5 goals scored,no Over 3.5 goals scored,no Over 3.5 goals scored,no Over 3.5 goals scored,yes Over 1.5 goals scored,no Over 3.5 goals scored,no Over 3.5 goals scored,no Over 3.5 goals scored,no Over 3.5 goals scored,yes Roma,yes Over 1.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S20263KAJC4BTGEPOVY6U-QBRKHJDPV",
+      "title": "yes Both Teams To Score,yes Minnesota,yes Cleveland,no Toronto wins by over 7.5 points,no Philadelphia wins by over 4.5 points,no Both Teams To Score,yes Como,yes Real Madrid",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S20263UBQB7OJ2J7BOL63-SOMWNDRLT",
-      "title": "yes Alperen Sengun: 20+,yes Amen Thompson: 10+,yes Jabari Smith Jr.: 10+,yes Kevin Durant: 20+,yes Brandon Ingram: 10+,yes Max Strus: 5+,yes Rui Hachimura: 10+",
+      "ticker": "KXMVECROSSCATEGORY-S2026DTGZH3VXDGX7NWIL-WR5HBGVCO",
+      "title": "yes Cincinnati,yes Joe Burrow: 2+,yes Joe Burrow: 250+,yes Tee Higgins: 40+,yes Chase Brown: 1+,yes Ja'Marr Chase: 1+,yes Tee Higgins: 1+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026WIP5X5UPGQOW7GSF-U7Z5N3JON",
-      "title": "yes Arsenal,yes Como,yes Porto,no Tie,yes Manchester City,yes Leipzig,yes Real Madrid,yes Real Betis,yes Atletico,yes Liverpool,no Tie,no Tie,no Tie,yes Barcelona,no Tie,no Tie,no Tie",
+      "ticker": "KXMVECROSSCATEGORY-S2026IX4JKJKHASIIQ5GU-NVLJ2F6UH",
+      "title": "yes Luka Don\u010di\u0107: 4+,yes Luka Don\u010di\u0107: 4+,yes Darryn Peterson: 2+,yes Keyonte George: 4+,yes Luka Don\u010di\u0107: 30+,yes Walker Kessler: 10+,yes Darryn Peterson: 10+,yes Keyonte George: 15+,yes Luka Don\u010di\u0107: 4+,yes Walker Kessler: 6+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
       "reason": "Prediction model not validated."
     },
     {
-      "ticker": "KXMVECROSSCATEGORY-S2026F542K7R2DNAZ7JQ2-GBWBWSQYM",
-      "title": "yes America,yes Toluca,yes Cruz Azul,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Real Madrid,yes Atletico,yes PSG,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored,yes Over 1.5 goals scored",
+      "ticker": "KXMVECROSSCATEGORY-S2026JHF4TWJYV6BNENON-WF2VY5V3X",
+      "title": "no Ryan Rollins: 5+,no Collin Murray-Boyles: 4+,no Immanuel Quickley: 5+,no Ja'Kobe Walter: 5+,no Scottie Barnes: 4+,no Jalen Green: 5+,no Miles Bridges: 5+,no Deni Avdija: 5+,no Donovan Clingan: 4+,no Damian Lillard: 6+,no Jrue Holiday: 5+,no Sidy Cissoko: 5+,no Scoot Henderson: 5+,no Stephon Castle: 5+,no Victor Wembanyama: 5+,no Jaden McDaniels: 8+,no Brandon Miller: 8+,no Coby White: 8+,no Moussa Diabat\u00e9: 6+,no Royce O'Neale: 6+,no Sion James: 8+,no Cedric Coward: 8+,no Brayden Burries: 6+,no Kyle Kuzma: 6+,no Ryan Rollins: 8+,no Tyler Herro: 8+,no Collin Murray-Boyles: 6+,no Jakob Poeltl: 6+,no Ja'Kobe Walter: 6+,no Derik Queen: 6+,no Collin Gillespie: 8+,no Jalen Green: 8+,no Oso Ighodaro: 8+,no Anfernee Simons: 6+,no Jaylen Brown: 8+,no VJ Edgecombe: 8+,no Donovan Clingan: 6+,no Damian Lillard: 8+,no Jrue Holiday: 8+,no Sidy Cissoko: 6+,no Keegan Murray: 6+,no De'Aaron Fox: 10+,no Stephon Castle: 12+,no Victor Wembanyama: 8+,no Moussa Diabat\u00e9: 20+,no Ryan Kalkbrenner: 15+,no Cedric Coward: 25+,no Cam Spencer: 20+,no Isaiah Stewart: 15+,no Zach Edey: 20+,no Brandon Miller: 8+,no Coby White: 6+,no Naz Reid: 12+,no Ryan Kalkbrenner: 8+,no Royce O'Neale: 8+,no Sion James: 8+,no Cam Spencer: 6+,no Isaiah Stewart: 8+,no Taylor Hendricks: 8+,no Ty Jerome: 8+,no Tyler Herro: 8+,no Allen Graves: 8+,no Immanuel Quickley: 8+,no Jakob Poeltl: 12+,no Ja'Kobe Walter: 8+,no Scottie Barnes: 12+,no Anfernee Simons: 6+,no Tyrese Maxey: 8+,no Deni Avdija: 10+,no Damian Lillard: 8+,no Jrue Holiday: 8+,no Sidy Cissoko: 8+,no Scoot Henderson: 6+,no Toumani Camara: 8+,no Darius Acuff Jr.: 8+,no Zach LaVine: 8+,no De'Aaron Fox: 8+,no Devin Vassell: 8+,no Chase Brown: 3+,no Dohnte Meyers: 2+,no Drew Sample: 2+,no Joe Burrow: 3+,no Ja'Marr Chase: 3+,no Jack Endries: 2+,no Mike Gesicki: 2+,no Austin Ekeler: 3+,no Antonio Williams: 3+,no Ben Sinnott: 2+,no Chig Okonkwo: 2+,no Jayden Daniels: 2+,no Rachaad White: 3+,no Stefon Diggs: 3+,no Treylon Burks: 3+,no Van Jefferson: 2+",
       "yes_bid_cents": 0.0,
       "yes_ask_cents": 0.0,
       "decision": "NO BET",
