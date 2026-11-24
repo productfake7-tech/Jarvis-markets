@@ -159,3 +159,28 @@ with tab_risk:
 
 st.divider()
 st.caption("JARVIS MARKETS // EXPERIMENTAL BUILD 02 // No automated execution // " + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"))
+
+st.divider()
+st.header("⚡ JARVIS Live Market Scanner")
+
+import json
+from pathlib import Path
+
+results_file = Path("scanner_results.json")
+
+if results_file.exists():
+    with open(results_file, "r", encoding="utf-8") as f:
+        scan_data = json.load(f)
+
+    st.caption(f"Last scan: {scan_data.get('timestamp', 'Unknown')}")
+    st.metric("Markets scanned", scan_data.get("markets_scanned", 0))
+
+    for market in scan_data.get("markets", []):
+        with st.expander(market.get("title", "Unknown market")):
+            st.write("Ticker:", market.get("ticker", "Unknown"))
+            st.write("YES bid:", market.get("yes_bid_cents", 0), "¢")
+            st.write("YES ask:", market.get("yes_ask_cents", 0), "¢")
+            st.warning("NO BET — Model not validated.")
+else:
+    st.info("Waiting for the first scanner results.")
+
