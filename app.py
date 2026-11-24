@@ -1,6 +1,5 @@
 
-import json
-import os
+import time
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -8,480 +7,342 @@ import numpy as np
 import pandas as pd
 import requests
 import streamlit as st
-import yfinance as yf
 from streamlit_autorefresh import st_autorefresh
+
+# =====================================================
+# JARVIS MARKETS — KALSHI BUILD 04
+# READ ONLY — NO AUTOMATIC TRADING
+# =====================================================
+
+BASE = "https://api.elections.kalshi.com/trade-api/v2"
+HISTORY_FILE = Path("kalshi_prediction_history.csv")
+REFRESH_SECONDS = 30
+MAX_CANDLE_AGE = 150
 
 st.set_page_config(
     page_title="JARVIS Markets",
     page_icon="◈",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
-
-# =====================================================
-# JARVIS CONFIGURATION
-# =====================================================
-
-PRIMARY = {
-    "Bitcoin": "BTC-USD",
-    "Gold": "GC=F",
-    "WTI Oil": "CL=F"
-}
-
-SECONDARY = {
-    "Ethereum": "ETH-USD",
-    "Solana": "SOL-USD",
-    "XRP": "XRP-USD",
-    "Silver": "SI=F",
-    "NVIDIA": "NVDA",
-    "Apple": "AAPL",
-    "Microsoft": "MSFT",
-    "Tesla": "TSLA"
-}
-
-KALSHI_URL = "https://api.elections.kalshi.com/trade-api/v2/events"
-HISTORY_FILE = Path("prediction_history.csv")
 
 st.markdown("""
 <style>
-.block-container {max-width:1500px;padding-top:1.3rem;}
+.block-container {max-width:1450px;padding-top:1rem;}
 [data-testid="stAppViewContainer"] {
- background:radial-gradient(ellipse at 15% 0%,#10263a,#08111d 48%,#060b13);
+ background:radial-gradient(ellipse at 15% 0%,#10263a,#08111d 55%,#060b13);
 }
 [data-testid="stSidebar"] {background:#0a1421;}
 .hero {
- border:1px solid #24516a;border-radius:18px;padding:23px;
+ border:1px solid #24516a;border-radius:18px;padding:22px;
  background:linear-gradient(115deg,#102b3e,#08121f);
 }
 .eyebrow {letter-spacing:3px;color:#63e6ff;font-size:11px;font-weight:bold;}
-.hero h1 {color:#eefaff;font-size:35px;letter-spacing:2px;}
+.hero h1 {color:#eefaff;font-size:34px;}
 .hero p {color:#a9c2d2;}
 div[data-testid="stMetric"] {
  background:#0c1b2a;border:1px solid #1b3b51;
- padding:13px;border-radius:12px;
+ padding:12px;border-radius:12px;
 }
 </style>
-
 <div class="hero">
- <div class="eyebrow">PERSONAL MARKET INTELLIGENCE • BUILD 03</div>
+ <div class="eyebrow">KALSHI NATIVE DATA • BUILD 04</div>
  <h1>◈ JARVIS MARKETS</h1>
- <p>BTC · GOLD · WTI OIL | PREDICTION ENGINE | KALSHI RADAR</p>
+ <p>ONE-MINUTE CONTRACT CANDLES · LIVE DATA CHECKS · READ ONLY</p>
 </div>
 """, unsafe_allow_html=True)
 
-st_autorefresh(interval=300000, key="jarvis_refresh")
+st_autorefresh(
+    interval=REFRESH_SECONDS * 1000,
+    key="kalshi_refresh"
+)
 
 # =====================================================
-# DATA ENGINE
+# API
 # =====================================================
 
-@st.cache_data(ttl=180, show_spinner=False)
-def market_frame(ticker):
+SESSION = requests.Session()
+SESSION.headers.update({"User-Agent": "JARVIS-Markets/4.0"})
+
+
+def api_get(path, params=None):
+    response = SESSION.get(
+        BASE + path,
+        params=params,
+        timeout=12
+    )
+    response.raise_for_status()
+    return response.json()
+
+
+@st.cache_data(ttl=10, show_spinner=False)
+def get_market(ticker):
+    data = api_get(f"/markets/{ticker}")
+    return data.get("market", {})
+
+
+@st.cache_data(ttl=15, show_spinner=False)
+def get_candles(series, ticker):
+    now = int(time.time())
+
+    data = api_get(
+        f"/series/{series}/markets/{ticker}/candlesticks",
+        params={
+            "start_ts": now - 3 * 60 * 60,
+            "end_ts": now,
+            "period_interval": 1
+        }
+    )
+
+    return data.get("candlesticks", [])
+
+
+@st.cache_data(ttl=30, show_spinner=False)
+def get_open_markets():
+    data = api_get(
+        "/markets",
+        params={"status": "open", "limit": 100}
+    )
+    return data.get("markets", [])
+
+
+# =====================================================
+# HELPERS
+# =====================================================
+
+def number(value):
     try:
-        df = yf.download(
-            ticker,
-            period="5d",
-            interval="5m",
-            auto_adjust=True,
-            progress=False,
-            threads=False
+        result = float(value)
+        return result if np.isfinite(result) else None
+    except (TypeError, ValueError):
+        return None
+
+
+def dollars_or_cents(market, dollars_key, cents_key):
+    value = number(market.get(dollars_key))
+    if value is not None:
+        return value
+
+    value = number(market.get(cents_key))
+    if value is not None:
+        return value / 100
+
+    return None
+
+
+def parse_candles(raw):
+    rows = []
+
+    for candle in raw:
+        price = candle.get("price") or {}
+        yes_bid = candle.get("yes_bid") or {}
+        yes_ask = candle.get("yes_ask") or {}
+
+        close = number(price.get("close"))
+
+        # If no traded price exists, use the YES quote midpoint.
+        if close is None:
+            bid = number(yes_bid.get("close"))
+            ask = number(yes_ask.get("close"))
+
+            if bid is not None and ask is not None:
+                close = (bid + ask) / 2
+
+        timestamp = (
+            candle.get("end_period_ts")
+            or candle.get("ts")
+            or candle.get("timestamp")
         )
-        if df is None or df.empty:
-            return pd.DataFrame()
 
-        if isinstance(df.columns, pd.MultiIndex):
-            df.columns = df.columns.get_level_values(0)
+        if close is None or timestamp is None:
+            continue
 
-        return df.dropna(subset=["Close"])
-    except Exception:
+        rows.append({
+            "time": pd.to_datetime(
+                int(timestamp), unit="s", utc=True
+            ),
+            "close": close
+        })
+
+    if not rows:
         return pd.DataFrame()
 
+    df = pd.DataFrame(rows)
+    df = df.drop_duplicates("time")
+    return df.sort_values("time").set_index("time")
+
+
+def countdown(close_time):
+    try:
+        end = pd.Timestamp(close_time)
+
+        if end.tzinfo is None:
+            end = end.tz_localize("UTC")
+
+        seconds = max(
+            0,
+            int((end - pd.Timestamp.now(tz="UTC")).total_seconds())
+        )
+
+        hours, remainder = divmod(seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        return f"{hours:02}:{minutes:02}:{seconds:02}"
+
+    except Exception:
+        return "Unavailable"
+
 
 # =====================================================
-# JARVIS EXPERIMENTAL PREDICTION MODEL
+# SIGNAL ENGINE
 # =====================================================
 
-def calculate_rsi(series, period=14):
-    delta = series.diff()
+def analyze_contract(df):
+    if df.empty or len(df) < 30:
+        return None
+
+    close = df["close"].astype(float)
+
+    ema_fast = close.ewm(span=9, adjust=False).mean()
+    ema_slow = close.ewm(span=21, adjust=False).mean()
+
+    delta = close.diff()
     gains = delta.clip(lower=0)
     losses = -delta.clip(upper=0)
 
     avg_gain = gains.ewm(
-        alpha=1 / period, adjust=False
+        alpha=1 / 14, adjust=False
     ).mean()
 
     avg_loss = losses.ewm(
-        alpha=1 / period, adjust=False
+        alpha=1 / 14, adjust=False
     ).mean()
 
     rs = avg_gain / avg_loss.replace(0, np.nan)
-    return 100 - (100 / (1 + rs))
+    rsi = 100 - (100 / (1 + rs))
 
+    momentum = (
+        close.iloc[-1] / close.iloc[-6] - 1
+    ) * 100
 
-def predict_direction(df, horizon):
-    """
-    Experimental directional model.
-    15m uses recent 5m bars.
-    1h uses longer trend and momentum.
-    Probabilities are NOT calibrated or validated.
-    """
+    trend = (
+        ema_fast.iloc[-1] / ema_slow.iloc[-1] - 1
+    ) * 100
 
-    close = df["Close"].astype(float).dropna()
+    current_rsi = number(rsi.iloc[-1])
 
-    if len(close) < 35:
+    if current_rsi is None:
         return None
-
-    ema_fast = close.ewm(span=12).mean()
-    ema_slow = close.ewm(span=26).mean()
-    rsi = calculate_rsi(close)
-
-    if horizon == "15m":
-        momentum = (close.iloc[-1] / close.iloc[-4] - 1) * 100
-        trend = (ema_fast.iloc[-1] / ema_slow.iloc[-1] - 1) * 100
-        weight = 1.0
-    else:
-        momentum = (close.iloc[-1] / close.iloc[-13] - 1) * 100
-        trend = (ema_fast.iloc[-1] / ema_slow.iloc[-1] - 1) * 100
-        weight = 0.8
-
-    current_rsi = float(rsi.iloc[-1])
-
-    if not np.isfinite(current_rsi):
-        return None
-
-    # Normalize the signals to prevent one feature dominating.
-    momentum_score = np.tanh(momentum / 0.35)
-    trend_score = np.tanh(trend / 0.25)
-    rsi_score = np.tanh((current_rsi - 50) / 15)
 
     score = (
-        0.50 * momentum_score
-        + 0.30 * trend_score
-        + 0.20 * rsi_score
-    ) * weight
-
-    # Experimental score-to-probability mapping.
-    # Must be calibrated against out-of-sample results.
-    yes_probability = 50 + 30 * np.tanh(score)
-
-    yes_probability = float(
-        np.clip(yes_probability, 20, 80)
+        0.45 * np.tanh(momentum / 0.30)
+        + 0.35 * np.tanh(trend / 0.20)
+        + 0.20 * np.tanh((current_rsi - 50) / 18)
     )
-    no_probability = 100 - yes_probability
 
-    if yes_probability >= 55:
-        direction = "YES"
-    elif no_probability >= 55:
-        direction = "NO"
+    if score >= 0.20:
+        signal = "YES PRICE RISING"
+    elif score <= -0.20:
+        signal = "YES PRICE FALLING"
     else:
-        direction = "NEUTRAL"
-
-    strength = abs(yes_probability - 50)
-
-    if strength >= 18:
-        confidence = "HIGH SIGNAL"
-    elif strength >= 9:
-        confidence = "MODERATE SIGNAL"
-    else:
-        confidence = "LOW SIGNAL"
+        signal = "NO CLEAR DIRECTION"
 
     return {
-        "direction": direction,
-        "yes": yes_probability,
-        "no": no_probability,
-        "confidence": confidence,
+        "signal": signal,
+        "score": float(score),
         "rsi": current_rsi,
         "momentum": momentum,
         "trend": trend,
-        "score": score,
         "price": float(close.iloc[-1])
     }
 
 
 # =====================================================
-# PREDICTION HISTORY AND ACCURACY
+# HISTORY
 # =====================================================
-
-HISTORY_COLUMNS = [
-    "asset", "horizon", "created_at",
-    "entry_price", "direction", "yes_probability",
-    "settled", "settlement_price", "settled_at",
-    "actual_direction", "correct"
-]
-
 
 def load_history():
     if HISTORY_FILE.exists():
         try:
-            data = pd.read_csv(HISTORY_FILE)
-            for col in HISTORY_COLUMNS:
-                if col not in data.columns:
-                    data[col] = None
-            return data[HISTORY_COLUMNS]
+            return pd.read_csv(HISTORY_FILE)
         except Exception:
             pass
 
-    return pd.DataFrame(columns=HISTORY_COLUMNS)
+    return pd.DataFrame(columns=[
+        "ticker", "created_at", "entry_price",
+        "signal", "target_time", "actual_price",
+        "correct"
+    ])
 
 
-def save_history(history):
-    history.to_csv(HISTORY_FILE, index=False)
+def save_prediction(ticker, prediction, history):
+    now = pd.Timestamp.now(tz="UTC")
 
+    # Record at most one forecast every five minutes.
+    previous = history[history["ticker"] == ticker]
 
-def update_predictions(history, asset, horizon, prediction, price_df=None):
-    now = datetime.now(timezone.utc)
+    if not previous.empty:
+        latest = pd.to_datetime(
+            previous["created_at"], utc=True
+        ).max()
 
-    # Automatically retrieve price data if it wasn't supplied.
-    if price_df is None:
-        ticker = PRIMARY.get(asset)
-        if ticker is None:
+        if (now - latest).total_seconds() < 300:
             return history
-        price_df = market_frame(ticker)
 
-    if price_df is None or price_df.empty:
+    row = {
+        "ticker": ticker,
+        "created_at": now.isoformat(),
+        "entry_price": prediction["price"],
+        "signal": prediction["signal"],
+        "target_time": (
+            now + pd.Timedelta(minutes=5)
+        ).isoformat(),
+        "actual_price": np.nan,
+        "correct": ""
+    }
+
+    return pd.concat(
+        [history, pd.DataFrame([row])],
+        ignore_index=True
+    )
+
+
+def settle_history(ticker, candles, history):
+    if history.empty or candles.empty:
         return history
 
-    prices = price_df[["Close"]].copy()
-    prices.index = pd.to_datetime(prices.index, utc=True)
-    prices = prices.dropna()
-
-    if prices.empty:
-        return history
-
-    # Settle predictions using the first available price
-    # at or after their target time.
-    for idx, row in history.iterrows():
-        if row["asset"] != asset or row["horizon"] != horizon:
+    for index, row in history.iterrows():
+        if row["ticker"] != ticker:
             continue
 
-        if str(row["settled"]).lower() == "true":
+        if pd.notna(row["actual_price"]):
             continue
 
-        try:
-            created = pd.Timestamp(row["created_at"])
-            if created.tzinfo is None:
-                created = created.tz_localize("UTC")
+        target = pd.Timestamp(row["target_time"])
+        if target.tzinfo is None:
+            target = target.tz_localize("UTC")
 
-            minutes = 15 if horizon == "15m" else 60
-            target = created + pd.Timedelta(minutes=minutes)
+        eligible = candles[candles.index >= target]
 
-            eligible = prices[prices.index >= target]
-
-            if eligible.empty:
-                continue
-
-            settlement_time = eligible.index[0]
-
-            if settlement_time > target + pd.Timedelta(minutes=10):
-                continue
-
-            entry = float(row["entry_price"])
-            settlement_price = float(eligible.iloc[0]["Close"])
-
-            actual = "YES" if settlement_price > entry else "NO"
-
-            history.at[idx, "settled"] = True
-            history.at[idx, "settlement_price"] = settlement_price
-            history.at[idx, "settled_at"] = settlement_time.isoformat()
-            history.at[idx, "actual_direction"] = actual
-            history.at[idx, "correct"] = (
-                str(row["direction"]) == actual
-            )
-
-        except Exception:
+        if eligible.empty:
             continue
 
-    existing = history[
-        (history["asset"] == asset)
-        & (history["horizon"] == horizon)
-    ]
+        actual_price = float(eligible.iloc[0]["close"])
+        entry_price = float(row["entry_price"])
 
-    should_add = existing.empty
+        actual_direction = (
+            "YES PRICE RISING"
+            if actual_price > entry_price
+            else "YES PRICE FALLING"
+        )
 
-    if not existing.empty:
-        try:
-            latest = pd.to_datetime(
-                existing["created_at"], utc=True
-            ).max()
+        predicted = str(row["signal"])
 
-            interval = 15 if horizon == "15m" else 60
-
-            should_add = (
-                now - latest.to_pydatetime()
-            ).total_seconds() >= interval * 60
-
-        except Exception:
-            should_add = True
-
-    if should_add and prediction["direction"] != "NEUTRAL":
-        new_row = {
-            "asset": asset,
-            "horizon": horizon,
-            "created_at": now.isoformat(),
-            "entry_price": prediction["price"],
-            "direction": prediction["direction"],
-            "yes_probability": prediction["yes"],
-            "settled": False,
-            "settlement_price": np.nan,
-            "settled_at": "",
-            "actual_direction": "",
-            "correct": False
-        }
-
-        history = pd.concat(
-            [history, pd.DataFrame([new_row])],
-            ignore_index=True
+        history.at[index, "actual_price"] = actual_price
+        history.at[index, "correct"] = (
+            predicted == actual_direction
         )
 
     return history
-
-
-# =====================================================
-# HISTORICAL BACKTEST ENGINE
-# =====================================================
-
-@st.cache_data(ttl=3600, show_spinner=False)
-def historical_frame(ticker):
-    try:
-        df = yf.download(
-            ticker,
-            period="60d",
-            interval="15m",
-            auto_adjust=True,
-            progress=False,
-            threads=False
-        )
-
-        if df is None or df.empty:
-            return pd.DataFrame()
-
-        if isinstance(df.columns, pd.MultiIndex):
-            df.columns = df.columns.get_level_values(0)
-
-        return df.dropna(subset=["Close"])
-
-    except Exception:
-        return pd.DataFrame()
-
-
-def run_backtest(ticker, horizon):
-    df = historical_frame(ticker)
-
-    if df.empty or len(df) < 100:
-        return None
-
-    close = df["Close"].astype(float).dropna()
-
-    ema_fast = close.ewm(span=12).mean()
-    ema_slow = close.ewm(span=26).mean()
-    rsi = calculate_rsi(close)
-
-    bars = 1 if horizon == "15m" else 4
-
-    momentum = (
-        close / close.shift(bars) - 1
-    ) * 100
-
-    trend = (
-        ema_fast / ema_slow - 1
-    ) * 100
-
-    score = (
-        0.50 * np.tanh(momentum / 0.35)
-        + 0.30 * np.tanh(trend / 0.25)
-        + 0.20 * np.tanh((rsi - 50) / 15)
-    )
-
-    if horizon == "1h":
-        score = score * 0.8
-
-    yes_probability = np.clip(
-        50 + 30 * np.tanh(score),
-        20,
-        80
-    )
-
-    prediction = np.where(
-        yes_probability >= 55, 1,
-        np.where(yes_probability <= 45, -1, 0)
-    )
-
-    future_return = (
-        close.shift(-bars) / close - 1
-    ) * 100
-
-    actual = np.where(future_return > 0, 1, -1)
-
-    results = pd.DataFrame({
-        "prediction": prediction,
-        "actual": actual,
-        "future_return": future_return,
-        "yes_probability": yes_probability
-    }).dropna()
-
-    results = results[results["prediction"] != 0]
-
-    if results.empty:
-        return None
-
-    results["correct"] = (
-        results["prediction"] == results["actual"]
-    )
-
-    accuracy = results["correct"].mean() * 100
-
-    return {
-        "accuracy": accuracy,
-        "samples": len(results),
-        "wins": int(results["correct"].sum()),
-        "losses": int((~results["correct"]).sum()),
-        "coverage": (
-            len(results) / len(future_return.dropna()) * 100
-        ),
-        "brier": np.mean(
-            (
-                results["yes_probability"] / 100
-                - (results["actual"] == 1).astype(float)
-            ) ** 2
-        )
-    }
-
-# =====================================================
-# KALSHI RADAR
-# =====================================================
-
-@st.cache_data(ttl=180, show_spinner=False)
-def kalshi_events():
-    try:
-        response = requests.get(
-            KALSHI_URL,
-            params={
-                "status": "open",
-                "with_nested_markets": "true",
-                "limit": 100
-            },
-            timeout=12
-        )
-        response.raise_for_status()
-
-        events = response.json().get("events", [])
-        rows = []
-
-        for event in events:
-            for market in event.get("markets", []) or []:
-                rows.append({
-                    "Market": market.get("title") or market.get("ticker"),
-                    "YES bid": market.get("yes_bid"),
-                    "YES ask": market.get("yes_ask"),
-                    "Volume": market.get("volume", 0),
-                    "Close": market.get("close_time"),
-                    "Ticker": market.get("ticker")
-                })
-
-        return pd.DataFrame(rows)
-
-    except Exception:
-        return pd.DataFrame()
 
 
 # =====================================================
@@ -489,282 +350,273 @@ def kalshi_events():
 # =====================================================
 
 with st.sidebar:
-    st.markdown("## ◈ JARVIS CONTROL")
+    st.header("◈ CONTROL")
 
-    st.success("BTC / GOLD / OIL PRIORITY")
+    ticker = st.text_input(
+        "Kalshi market ticker",
+        placeholder="Paste exact market ticker"
+    ).strip().upper()
 
-    st.caption("Automatic dashboard refresh: 5 minutes")
-    st.caption("Background scanner: 15 minutes")
+    st.caption("Use the full ticker from the Kalshi market page.")
 
-    show_secondary = st.toggle(
-        "Show secondary markets", value=True
-    )
-
-    st.divider()
-
-    if st.button("↻ REFRESH NOW", use_container_width=True):
+    if st.button("REFRESH DATA", use_container_width=True):
         st.cache_data.clear()
         st.rerun()
 
-    st.caption("READ ONLY • NO AUTOMATIC TRADING")
+    st.divider()
+    st.caption("Automatic refresh: 30 seconds")
+    st.caption("Execution: DISABLED")
+    st.caption("No account access or automatic bets.")
 
 
 # =====================================================
-# TOP STATUS
+# MAIN
 # =====================================================
 
-c1, c2, c3, c4 = st.columns(4)
+now = datetime.now(timezone.utc)
 
-c1.metric("ENGINE", "BUILD 03")
-c2.metric("SCAN", "15 MIN")
-c3.metric("EXECUTION", "DISABLED")
-c4.metric(
-    "UTC TIME",
-    datetime.now(timezone.utc).strftime("%H:%M:%S")
-)
+a, b, c = st.columns(3)
+a.metric("ENGINE", "BUILD 04")
+b.metric("DATA SOURCE", "KALSHI API")
+c.metric("REFRESH", "30 SEC")
 
-# =====================================================
-# MAIN PREDICTION DASHBOARD
-# =====================================================
-
-st.header("⚡ PRIORITY MARKET INTELLIGENCE")
 st.caption(
-    "YES = model predicts price higher at the selected horizon. "
-    "NO = model predicts price lower or unchanged."
+    "Dashboard time: " + now.strftime("%Y-%m-%d %H:%M:%S UTC")
 )
+
+if not ticker:
+    st.info(
+        "Enter the exact Kalshi contract ticker in the sidebar "
+        "to load its one-minute candles and signal."
+    )
+
+    st.subheader("Open Kalshi markets")
+
+    try:
+        markets = get_open_markets()
+
+        if markets:
+            table = pd.DataFrame([{
+                "Ticker": m.get("ticker"),
+                "Market": m.get("yes_sub_title") or m.get("ticker"),
+                "Status": m.get("status"),
+                "Close": m.get("close_time"),
+                "Volume": m.get("volume_fp", m.get("volume", 0))
+            } for m in markets])
+
+            st.dataframe(
+                table,
+                use_container_width=True,
+                hide_index=True
+            )
+        else:
+            st.warning("No open markets returned.")
+
+    except Exception as error:
+        st.error(f"Could not load open markets: {error}")
+
+    st.stop()
+
+
+# =====================================================
+# CONTRACT DATA
+# =====================================================
+
+try:
+    market = get_market(ticker)
+
+    if not market:
+        st.error("Kalshi did not return this market ticker.")
+        st.stop()
+
+    series = market.get("series_ticker")
+
+    if not series:
+        st.error("Market has no series ticker. Cannot load candles.")
+        st.stop()
+
+    raw_candles = get_candles(series, ticker)
+    candles = parse_candles(raw_candles)
+
+except requests.RequestException as error:
+    st.error(f"Kalshi API connection failed: {error}")
+    st.stop()
+
+except Exception as error:
+    st.error(f"Data error: {error}")
+    st.stop()
+
+
+st.divider()
+st.header("⚡ CONTRACT INTELLIGENCE")
+
+st.subheader(
+    market.get("yes_sub_title")
+    or market.get("ticker")
+)
+
+st.caption(f"Contract: {ticker}")
+
+if candles.empty:
+    st.error("No one-minute candle data returned.")
+    st.stop()
+
+last_candle_time = candles.index[-1]
+age = (
+    pd.Timestamp.now(tz="UTC") - last_candle_time
+).total_seconds()
+
+fresh = 0 <= age <= MAX_CANDLE_AGE
+
+last_price = dollars_or_cents(
+    market, "last_price_dollars", "last_price"
+)
+
+yes_bid = dollars_or_cents(
+    market, "yes_bid_dollars", "yes_bid"
+)
+
+yes_ask = dollars_or_cents(
+    market, "yes_ask_dollars", "yes_ask"
+)
+
+close_time = market.get("close_time")
+
+# Use the latest candle if the quote is unavailable.
+if last_price is None:
+    last_price = float(candles["close"].iloc[-1])
+
+if yes_bid is not None and yes_ask is not None:
+    spread = (yes_ask - yes_bid) * 100
+else:
+    spread = None
+
+remaining = countdown(close_time)
+
+x, y, z, q = st.columns(4)
+
+x.metric("LAST YES PRICE", f"{last_price * 100:.2f}¢")
+y.metric("YES BID", "—" if yes_bid is None else f"{yes_bid * 100:.2f}¢")
+z.metric("YES ASK", "—" if yes_ask is None else f"{yes_ask * 100:.2f}¢")
+q.metric("TIME TO CLOSE", remaining)
+
+st.metric(
+    "LATEST CANDLE AGE",
+    f"{max(0, age):.0f} seconds",
+    delta="FRESH" if fresh else "STALE",
+    delta_color="normal" if fresh else "inverse"
+)
+
+st.caption(
+    "Last candle timestamp: "
+    + last_candle_time.strftime("%Y-%m-%d %H:%M:%S UTC")
+)
+
+if not fresh:
+    st.error(
+        "SIGNALS LOCKED — latest one-minute candle is older than "
+        f"{MAX_CANDLE_AGE} seconds. Waiting for fresh data."
+    )
+    st.stop()
+
+if remaining == "00:00:00":
+    st.warning("Contract closing time has passed. Signals disabled.")
+    st.stop()
+
+prediction = analyze_contract(candles)
+
+if prediction is None:
+    st.warning("Not enough one-minute candles to calculate a signal.")
+    st.stop()
+
+st.subheader("JARVIS SIGNAL")
+
+if prediction["signal"] == "YES PRICE RISING":
+    st.success(prediction["signal"])
+elif prediction["signal"] == "YES PRICE FALLING":
+    st.warning(prediction["signal"])
+else:
+    st.info(prediction["signal"])
+
+st.caption(
+    "This describes the direction of the YES contract price, "
+    "not the probability that the contract settles YES."
+)
+
+m1, m2, m3 = st.columns(3)
+m1.metric("MODEL SCORE", f'{prediction["score"]:+.3f}')
+m2.metric("RSI", f'{prediction["rsi"]:.1f}')
+m3.metric("5-MIN MOMENTUM", f'{prediction["momentum"]:+.3f}%')
+
+if spread is not None:
+    st.metric("YES BID-ASK SPREAD", f"{spread:.2f}¢")
+
+st.subheader("One-minute YES contract candles")
+st.line_chart(candles["close"].tail(90), height=280)
+
+# =====================================================
+# HISTORY AND VALIDATION
+# =====================================================
+
+st.divider()
+st.header("PREDICTION TRACKER")
 
 history = load_history()
 
-for asset, ticker in PRIMARY.items():
+history = settle_history(ticker, candles, history)
+history = save_prediction(ticker, prediction, history)
 
-    st.markdown("---")
-    st.subheader(asset.upper())
+history.to_csv(HISTORY_FILE, index=False)
 
-    df = market_frame(ticker)
+settled = history[
+    (history["ticker"] == ticker)
+    & history["actual_price"].notna()
+].copy()
 
-    if df.empty:
-        st.warning(f"{asset}: market data unavailable.")
-        continue
-
-    close = df["Close"].astype(float).dropna()
-    current_price = float(close.iloc[-1])
-
-    st.metric(
-        "LATEST PRICE",
-        f"${current_price:,.4f}",
-        help="Latest available five-minute market bar."
+if not settled.empty:
+    settled["correct_bool"] = (
+        settled["correct"].astype(str).str.lower() == "true"
     )
 
-    p15 = predict_direction(df, "15m")
-    p60 = predict_direction(df, "1h")
+    accuracy = settled["correct_bool"].mean() * 100
 
-    if p15 is None or p60 is None:
-        st.warning("Not enough price history to calculate signals.")
-        continue
-
-    history = update_predictions(
-        history, asset, "15m", p15
-    )
-    history = update_predictions(
-        history, asset, "1h", p60
-    )
-
-    st.markdown("**15-MINUTE FORECAST**")
-
-    a, b, c = st.columns(3)
-
-    a.metric("JARVIS DECISION", p15["direction"])
-    b.metric("YES ESTIMATE", f'{p15["yes"]:.1f}%')
-    c.metric("NO ESTIMATE", f'{p15["no"]:.1f}%')
-
-    st.progress(p15["yes"] / 100)
-
-    st.caption(
-        f'{p15["confidence"]} · RSI {p15["rsi"]:.1f} '
-        f'· Momentum {p15["momentum"]:+.3f}%'
-    )
-
-    st.markdown("**1-HOUR FORECAST**")
-
-    a, b, c = st.columns(3)
-
-    a.metric("JARVIS DECISION", p60["direction"])
-    b.metric("YES ESTIMATE", f'{p60["yes"]:.1f}%')
-    c.metric("NO ESTIMATE", f'{p60["no"]:.1f}%')
-
-    st.progress(p60["yes"] / 100)
-
-    st.caption(
-        f'{p60["confidence"]} · RSI {p60["rsi"]:.1f} '
-        f'· Momentum {p60["momentum"]:+.3f}%'
-    )
-
-    st.line_chart(close.tail(48), height=150)
-
-save_history(history)
-
-# =====================================================
-# ACCURACY CENTER
-# =====================================================
-
-st.divider()
-st.header("🎯 JARVIS ACCURACY CENTER")
-
-st.caption(
-    "Only resolved forecasts count. Accuracy is measured against "
-    "the actual direction after the forecast horizon."
-)
-
-if not history.empty:
-
-    settled = history[
-        history["settled"].astype(str).str.lower() == "true"
-    ].copy()
-
-    for asset in PRIMARY:
-        st.markdown(f"**{asset}**")
-
-        for horizon in ["15m", "1h"]:
-            subset = settled[
-                (settled["asset"] == asset)
-                & (settled["horizon"] == horizon)
-            ]
-
-            total = len(subset)
-
-            if total:
-                wins = (
-                    subset["correct"].astype(str).str.lower()
-                    == "true"
-                ).sum()
-
-                accuracy = wins / total * 100
-
-                x, y, z = st.columns(3)
-                x.metric("HORIZON", horizon)
-                y.metric("RESOLVED", total)
-                z.metric("ACCURACY", f"{accuracy:.1f}%")
-            else:
-                st.caption(
-                    f"{horizon}: Collecting predictions. "
-                    "No validated accuracy yet."
-                )
-
-    st.subheader("Recent prediction history")
-
-    if not settled.empty:
-        st.dataframe(
-            settled.tail(30).iloc[::-1],
-            use_container_width=True,
-            hide_index=True
-        )
-    else:
-        st.info("Waiting for the first forecasts to settle.")
-
-else:
-    st.info("Accuracy tracking will begin as forecasts are recorded.")
-
-
-# =====================================================
-# SECONDARY MARKETS
-# =====================================================
-
-if show_secondary:
-    st.divider()
-    st.header("OTHER MARKETS")
-
-    for asset, ticker in SECONDARY.items():
-        df = market_frame(ticker)
-
-        if df.empty:
-            continue
-
-        close = df["Close"].astype(float).dropna()
-
-        if len(close) < 4:
-            continue
-
-        change = (
-            close.iloc[-1] / close.iloc[-4] - 1
-        ) * 100
-
-        st.metric(
-            asset,
-            f"${close.iloc[-1]:,.4f}",
-            f"{change:+.2f}% / 15m"
-        )
-
-
-# =====================================================
-# KALSHI RADAR
-# =====================================================
-
-st.divider()
-st.header("◈ KALSHI MARKET RADAR")
-
-st.caption(
-    "Public contract quotes. These are market-implied prices, "
-    "not independent JARVIS predictions."
-)
-
-kdf = kalshi_events()
-
-if kdf.empty:
-    st.warning("Kalshi public market data unavailable.")
-else:
-    kdf["Volume"] = pd.to_numeric(
-        kdf["Volume"], errors="coerce"
-    ).fillna(0)
-
-    kdf = kdf.sort_values(
-        "Volume", ascending=False
-    ).head(40)
-
-    def quote(value):
-        try:
-            value = float(value)
-            return f"{value:.1f}¢"
-        except (ValueError, TypeError):
-            return "—"
-
-    kdf["YES BID"] = kdf["YES bid"].map(quote)
-    kdf["YES ASK"] = kdf["YES ask"].map(quote)
+    h1, h2, h3 = st.columns(3)
+    h1.metric("RESOLVED FORECASTS", len(settled))
+    h2.metric("DIRECTIONAL ACCURACY", f"{accuracy:.1f}%")
+    h3.metric("CORRECT", int(settled["correct_bool"].sum()))
 
     st.dataframe(
-        kdf[
-            ["Market", "YES BID", "YES ASK",
-             "Volume", "Close", "Ticker"]
-        ],
+        settled.tail(30).iloc[::-1],
         use_container_width=True,
         hide_index=True
     )
-
+else:
+    st.info(
+        "Collecting forecasts. Accuracy will appear only after "
+        "five-minute forecasts have actual candle results."
+    )
 
 # =====================================================
-# RISK & SYSTEM STATUS
+# SYSTEM STATUS
 # =====================================================
 
 st.divider()
 st.header("SYSTEM STATUS")
 
+st.write("**Market feed:** Kalshi REST API")
+st.write("**Candle interval:** 1 minute")
+st.write("**Dashboard refresh:** 30 seconds")
+st.write("**Stale-data threshold:** 150 seconds")
+st.write("**Automatic trading:** Disabled")
+st.write("**Account access:** None")
+
 st.warning(
-    "Experimental model. Probabilities are heuristic estimates, "
-    "not calibrated odds or proven trading edges."
+    "A directional signal is experimental, not a proven edge. "
+    "The five-minute tracker measures contract-price direction, "
+    "not final settlement accuracy. Do not treat it as a betting instruction."
 )
 
-st.markdown("""
-- No automatic bets or trades.
-- No deposits or withdrawals.
-- No brokerage or Kalshi account access.
-- Historical accuracy includes only settled forecasts.
-- Data can be delayed or incomplete.
-- Prediction history is stored locally in the app's filesystem.
-- Free hosting may reset local files; persistent storage or an external database
-  will be needed for reliable long-term accuracy tracking.
-- Historical accuracy does not guarantee future performance.
-""")
-
 st.caption(
-    "JARVIS MARKETS BUILD 03 · READ ONLY · "
+    "JARVIS MARKETS BUILD 04 · READ ONLY · "
     + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 )
