@@ -1,4 +1,4 @@
-import time
+ import time
 from datetime import datetime, timezone
 
 import numpy as np
@@ -535,18 +535,17 @@ try:
         "All matches": ("Gold", "WTI Oil", "Bitcoin"),
     }
 
-    for tab, category in zip(tabs, category_map):
-        with tab:
-            matched = []
-            for asset_name in category:
-                asset_markets = [
-                    market for market in kalshi_markets
-                    if isinstance(market, dict) and market_matches(market, asset_name)
-                ]
-                asset_markets.sort(key=market_close_sort)
-                for market in asset_markets[:8]:
-                    matched.append((asset_name, market))
-
+    for tab, (tab_name, category) in zip(tabs, category_map.items()):
+    with tab:
+        matched = []
+        for asset_name in category:
+            asset_markets = [
+                market for market in kalshi_markets
+                if isinstance(market, dict) and market_matches(market, asset_name)
+            ]
+            asset_markets.sort(key=market_close_sort)
+            for market in asset_markets[:8]:
+                matched.append((asset_name, market))
             if not matched:
                 st.info("No clearly matching open contracts were found in the scanned pages.")
             else:
