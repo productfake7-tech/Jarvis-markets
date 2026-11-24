@@ -205,7 +205,8 @@ def predict_direction(df, horizon):
 HISTORY_COLUMNS = [
     "asset", "horizon", "created_at",
     "entry_price", "direction", "yes_probability",
-    "settled", "actual_direction", "correct"
+    "settled", "settlement_price", "settled_at",
+    "actual_direction", "correct"
 ]
 
 
