@@ -228,10 +228,28 @@ def save_history(history):
     history.to_csv(HISTORY_FILE, index=False)
 
 
-def update_predictions(history, asset, horizon, prediction):
+def update_predictions(history, asset, horizon, prediction, price_df=None):
     now = datetime.now(timezone.utc)
 
-    # Resolve forecasts after their target horizon.
+    # Automatically retrieve price data if it wasn't supplied.
+    if price_df is None:
+        ticker = PRIMARY.get(asset)
+        if ticker is None:
+            return history
+        price_df = market_frame(ticker)
+
+    if price_df is None or price_df.empty:
+        return history
+
+    prices = price_df[["Close"]].copy()
+    prices.index = pd.to_datetime(prices.index, utc=True)
+    prices = prices.dropna()
+
+    if prices.empty:
+        return history
+
+    # Settle predictions using the first available price
+    # at or after their target time.
     for idx, row in history.iterrows():
         if row["asset"] != asset or row["horizon"] != horizon:
             continue
@@ -245,22 +263,34 @@ def update_predictions(history, asset, horizon, prediction):
                 created = created.tz_localize("UTC")
 
             minutes = 15 if horizon == "15m" else 60
+            target = created + pd.Timedelta(minutes=minutes)
 
-            if (now - created.to_pydatetime()).total_seconds() < minutes * 60:
+            eligible = prices[prices.index >= target]
+
+            if eligible.empty:
+                continue
+
+            settlement_time = eligible.index[0]
+
+            if settlement_time > target + pd.Timedelta(minutes=10):
                 continue
 
             entry = float(row["entry_price"])
-            actual = "YES" if prediction["price"] > entry else "NO"
+            settlement_price = float(eligible.iloc[0]["Close"])
+
+            actual = "YES" if settlement_price > entry else "NO"
 
             history.at[idx, "settled"] = True
+            history.at[idx, "settlement_price"] = settlement_price
+            history.at[idx, "settled_at"] = settlement_time.isoformat()
             history.at[idx, "actual_direction"] = actual
             history.at[idx, "correct"] = (
                 str(row["direction"]) == actual
             )
+
         except Exception:
             continue
 
-    # Create a new forecast at most once per horizon interval.
     existing = history[
         (history["asset"] == asset)
         & (history["horizon"] == horizon)
@@ -279,6 +309,7 @@ def update_predictions(history, asset, horizon, prediction):
             should_add = (
                 now - latest.to_pydatetime()
             ).total_seconds() >= interval * 60
+
         except Exception:
             should_add = True
 
@@ -291,6 +322,8 @@ def update_predictions(history, asset, horizon, prediction):
             "direction": prediction["direction"],
             "yes_probability": prediction["yes"],
             "settled": False,
+            "settlement_price": np.nan,
+            "settled_at": "",
             "actual_direction": "",
             "correct": False
         }
