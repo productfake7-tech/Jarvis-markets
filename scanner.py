@@ -183,6 +183,9 @@ def main():
         **results
     }
 
+        with open("scanner_results.json", "w", encoding="utf-8") as file:
+        json.dump(output, file, indent=2)
+
     print(json.dumps(output, indent=2))
 
 
