@@ -12,7 +12,8 @@ BASE = "https://api.elections.kalshi.com/trade-api/v2"
 def fetch_markets():
     params = urllib.parse.urlencode({
         "status": "open",
-        "limit": 100
+        "limit": 1000,
+        "mve_filter":"exclude"
     })
     url = BASE + "/markets?" + params
 
