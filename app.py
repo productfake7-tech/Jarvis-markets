@@ -518,6 +518,7 @@ for index, asset_name in enumerate(("Gold", "WTI Oil", "Bitcoin")):
             "frame": frame, "signal": signal, "age": age_seconds,
         }
 
+
 # ------------------------- KALSHI RADAR -------------------------
 
 st.divider()
@@ -529,6 +530,7 @@ try:
     st.caption(f"Open markets scanned: {len(kalshi_markets):,}")
 
     tabs = st.tabs(["Commodities", "Crypto", "All matches"])
+
     category_map = {
         "Commodities": ("Gold", "WTI Oil"),
         "Crypto": ("Bitcoin",),
@@ -536,18 +538,27 @@ try:
     }
 
     for tab, (tab_name, category) in zip(tabs, category_map.items()):
-    with tab:
-        matched = []
-        for asset_name in category:
-            asset_markets = [
-                market for market in kalshi_markets
-                if isinstance(market, dict) and market_matches(market, asset_name)
-            ]
-            asset_markets.sort(key=market_close_sort)
-            for market in asset_markets[:8]:
-                matched.append((asset_name, market))
+        with tab:
+            matched = []
+
+            for asset_name in category:
+                asset_markets = [
+                    market
+                    for market in kalshi_markets
+                    if isinstance(market, dict)
+                    and market_matches(market, asset_name)
+                ]
+
+                asset_markets.sort(key=market_close_sort)
+
+                for market in asset_markets[:8]:
+                    matched.append((asset_name, market))
+
             if not matched:
-                st.info("No clearly matching open contracts were found in the scanned pages.")
+                st.info(
+                    "No clearly matching open contracts were found "
+                    "in the scanned pages."
+                )
             else:
                 for asset_name, market in matched:
                     st.markdown(f"**{asset_name}**")
@@ -555,8 +566,11 @@ try:
 
 except requests.RequestException as exc:
     st.error(f"Kalshi market feed unavailable: {exc}")
+
 except Exception as exc:
     st.error(f"Kalshi scanner error: {exc}")
+
+
 
 # ------------------------- FOOTER -------------------------
 
