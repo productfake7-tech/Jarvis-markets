@@ -1,59 +1,185 @@
-"""15-minute, read-only market scanner. Standard-library HTTP; Telegram alerts only."""
-import os, json, urllib.parse, urllib.request
+
+"""JARVIS Markets — Kalshi market scanner.
+Read-only. No betting or trading. Prediction engine not yet enabled.
+"""
+import json
+import urllib.parse
+import urllib.request
 from datetime import datetime, timezone
 
-TELEGRAM_TOKEN=os.getenv("TELEGRAM_BOT_TOKEN", "")
-TELEGRAM_CHAT=os.getenv("TELEGRAM_CHAT_ID", "")
-BASE="https://api.elections.kalshi.com/trade-api/v2"
-ASSETS={"BTC":"BTC-USD","ETH":"ETH-USD","SOL":"SOL-USD","XRP":"XRP-USD","NVDA":"NVDA","AAPL":"AAPL","MSFT":"MSFT","TSLA":"TSLA","AMZN":"AMZN","AMD":"AMD","META":"META","Gold":"GC=F","Silver":"SI=F","WTI":"CL=F"}
-THRESHOLD=float(os.getenv("MOVE_ALERT_THRESHOLD_PCT", "0.8"))
+BASE = "https://api.elections.kalshi.com/trade-api/v2"
+PAGE_SIZE = 100
+MAX_PAGES = 5
+TIMEOUT = 15
 
-def get_json(url, timeout=12):
-    req=urllib.request.Request(url, headers={"User-Agent":"JARVIS-Markets/0.2"})
-    with urllib.request.urlopen(req, timeout=timeout) as response:
+
+def get_json(url):
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": "JARVIS-Markets/0.3"}
+    )
+    with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
         return json.loads(response.read().decode("utf-8"))
 
-def telegram(message):
-    if not (TELEGRAM_TOKEN and TELEGRAM_CHAT):
-        print("Telegram secrets not configured; alert skipped."); return
-    url=f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    body=urllib.parse.urlencode({"chat_id":TELEGRAM_CHAT,"text":message}).encode()
-    req=urllib.request.Request(url, data=body, method="POST")
-    with urllib.request.urlopen(req, timeout=12) as response:
-        response.read()
 
-def scan_assets():
-    hits=[]
-    for name,ticker in ASSETS.items():
-        try:
-            url=f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(ticker)}?range=1d&interval=5m"
-            data=get_json(url, timeout=10)["chart"]["result"]
-            if not data: continue
-            values=data[0]["indicators"]["quote"][0]["close"]
-            values=[float(x) for x in values if x is not None]
-            if len(values)<4: continue
-            move=(values[-1]/values[-4]-1)*100
-            if abs(move)>=THRESHOLD:
-                hits.append(f"{name} ({ticker}): {move:+.2f}% over ~15m")
-        except Exception as e:
-            print(f"{ticker}: {e}")
-    return hits
-
-def scan_kalshi():
+def number(value):
     try:
-        url=BASE+"/events?"+urllib.parse.urlencode({"status":"open","with_nested_markets":"true","limit":100})
-        events=get_json(url).get("events",[])
-        markets=[]
-        for ev in events:
-            markets.extend(ev.get("markets",[]) or [])
-        markets.sort(key=lambda m: float(m.get("volume") or 0), reverse=True)
-        return [f"{m.get('title') or m.get('ticker')} | YES quote: {m.get('yes_ask', m.get('last_price','n/a'))}¢ | volume: {m.get('volume',0)}" for m in markets[:5]]
-    except Exception as e:
-        print(f"Kalshi scan error: {e}"); return []
+        return float(value or 0)
+    except (TypeError, ValueError):
+        return 0.0
 
-if __name__=="__main__":
-    now=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    asset_hits=scan_assets(); kalshi=scan_kalshi()
-    print(json.dumps({"timestamp":now,"asset_moves":asset_hits,"kalshi_top_volume":kalshi},indent=2))
-    if asset_hits:
-        telegram("JARVIS MARKETS — unusual 15m move(s)\n"+now+"\n\n"+"\n".join(asset_hits)+"\n\nMovement alert only; not a trade signal.")
+
+def parse_time(value):
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+
+
+def fetch_markets():
+    markets = []
+    cursor = None
+
+    for _ in range(MAX_PAGES):
+        params = {"status": "open", "limit": PAGE_SIZE}
+        if cursor:
+            params["cursor"] = cursor
+
+        url = BASE + "/markets?" + urllib.parse.urlencode(params)
+        data = get_json(url)
+        markets.extend(data.get("markets", []))
+
+        cursor = data.get("cursor")
+        if not cursor:
+            break
+
+    return markets
+
+
+def classify_market(market, now):
+    close = parse_time(market.get("close_time"))
+
+    if not close:
+        return "Longer-term / closing time unknown"
+
+    hours_left = (close - now).total_seconds() / 3600
+
+    if hours_left <= 0:
+        return "Closing / expired"
+    if hours_left <= 0.5:
+        return "15-minute / near-expiry"
+    if hours_left <= 2:
+        return "Hourly"
+    if hours_left <= 24:
+        return "Daily"
+    return "Longer-term"
+
+
+def market_summary(market, now):
+    bid = number(market.get("yes_bid"))
+    ask = number(market.get("yes_ask"))
+
+    if bid > 0 and ask > 0:
+        midpoint = (bid + ask) / 2
+        spread = ask - bid
+        implied = f"{midpoint:.1f}%"
+        spread_text = f"{spread:.1f} cents"
+    elif ask > 0:
+        implied = f"{ask:.1f}% YES ask"
+        spread_text = "Unavailable"
+    else:
+        implied = "Unavailable"
+        spread_text = "Unavailable"
+
+    close = market.get("close_time") or "Unknown"
+
+    return {
+        "ticker": market.get("ticker", "Unknown"),
+        "title": market.get("title", "Untitled market"),
+        "category": classify_market(market, now),
+        "yes_bid_cents": bid,
+        "yes_ask_cents": ask,
+        "market_implied_yes_probability": implied,
+        "spread": spread_text,
+        "volume": number(market.get("volume")),
+        "volume_24h": number(market.get("volume_24h")),
+        "open_interest": number(market.get("open_interest")),
+        "close_time": close,
+        "rules": (
+            market.get("rules_primary")
+            or market.get("rules_primary_doc")
+            or "Rules not provided by this response"
+        ),
+        "jarvis_decision": "NO BET",
+        "reason": "Prediction model not yet validated."
+    }
+
+
+def rank_markets(markets, now):
+    summaries = [market_summary(m, now) for m in markets]
+
+    active = [
+        m for m in summaries
+        if m["category"] != "Closing / expired"
+    ]
+
+    active.sort(
+        key=lambda m: (
+            m["volume_24h"],
+            m["open_interest"],
+            m["volume"]
+        ),
+        reverse=True
+    )
+
+    short_term = [
+        m for m in active
+        if m["category"] != "Longer-term / closing time unknown"
+        and m["category"] != "Longer-term"
+    ]
+
+    longer_term = [
+        m for m in active
+        if m["category"].startswith("Longer-term")
+    ]
+
+    return {
+        "short_term_markets": short_term[:10],
+        "longer_term_markets": longer_term[:10],
+        "markets_scanned": len(markets),
+        "markets_with_open_quotes": sum(
+            1 for m in active if m["yes_bid_cents"] or m["yes_ask_cents"]
+        )
+    }
+
+
+def main():
+    now = datetime.now(timezone.utc)
+
+    try:
+        markets = fetch_markets()
+        results = rank_markets(markets, now)
+
+        output = {
+            "scanner": "JARVIS Markets",
+            "timestamp": now.strftime("%Y-%m-%d %H:%M UTC"),
+            "mode": "READ ONLY — NO AUTOMATIC BETS",
+            "prediction_model": "NOT ENABLED",
+            **results
+        }
+
+        print(json.dumps(output, indent=2))
+
+    except Exception as error:
+        print(json.dumps({
+            "scanner": "JARVIS Markets",
+            "status": "ERROR",
+            "message": str(error)
+        }, indent=2))
+        raise
+
+
+if __name__ == "__main__":
+    main()
