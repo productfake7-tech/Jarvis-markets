@@ -6,14 +6,12 @@ import numpy as np
 import pandas as pd
 import requests
 import streamlit as st
-import yfinance as yf
 from streamlit_autorefresh import st_autorefresh
 
-# --------------------------------------------------
-# JARVIS MARKETS
-# Asset prices + Kalshi 15-minute contracts
-# READ ONLY - NO AUTOMATIC TRADES
-# --------------------------------------------------
+# ==========================================================
+# JARVIS MARKETS — PYTH + KALSHI
+# READ ONLY. NO ORDERS. NO AUTOMATIC BETS.
+# ==========================================================
 
 st.set_page_config(
     page_title="JARVIS Markets",
@@ -21,57 +19,63 @@ st.set_page_config(
     layout="wide",
 )
 
-KALSHI = "https://external-api.kalshi.com/trade-api/v2"
+PYTH_BASE = "https://pyth.dourolabs.app/v1"
+KALSHI_BASE = "https://external-api.kalshi.com/trade-api/v2"
 
 ASSETS = {
     "Bitcoin": {
-        "symbol": "BTC-USD",
-        "series": "KXBTC15M",
+        "symbol": "Crypto.BTC/USD",
+        "keywords": ["bitcoin", "btc"],
         "emoji": "₿",
     },
     "Gold": {
-        "symbol": "GC=F",
-        "series": "KXGOLD15M",
+        "symbol": "Metal.Index.GOLD/USD",
+        "keywords": ["gold", "xau"],
         "emoji": "Au",
     },
     "WTI Oil": {
-        "symbol": "CL=F",
-        "series": "KXWTI15M",
+        "symbol": "Commodities.Index.PYTHOIL/USD",
+        "keywords": ["wti", "crude oil", "oil"],
         "emoji": "🛢️",
     },
 }
 
-st_autorefresh(interval=15000, key="jarvis_refresh")
+# ==========================================================
+# SETTINGS
+# ==========================================================
 
+refresh_seconds = st.sidebar.selectbox(
+    "Refresh interval",
+    [15, 30, 60],
+    index=0,
+)
 
-# --------------------------------------------------
+st_autorefresh(
+    interval=refresh_seconds * 1000,
+    key="jarvis_refresh",
+)
+
+st.sidebar.title("JARVIS CONTROL")
+st.sidebar.caption("READ ONLY — no trading permissions")
+st.sidebar.markdown("---")
+st.sidebar.write("ASSET DATA: PYTH PRO")
+st.sidebar.write("CONTRACT DATA: KALSHI PUBLIC API")
+st.sidebar.write("CANDLE SIZE: 1 MINUTE")
+
+# ==========================================================
 # HELPERS
-# --------------------------------------------------
+# ==========================================================
 
 def safe_float(value):
     try:
         if value is None:
             return None
-        return float(value)
+        number = float(value)
+        if not np.isfinite(number):
+            return None
+        return number
     except (ValueError, TypeError):
         return None
-
-
-def dollars(value):
-    number = safe_float(value)
-    return number if number is not None else None
-
-
-def format_price(value):
-    if value is None:
-        return "Unavailable"
-    return f"${value:,.2f}"
-
-
-def format_percent(value):
-    if value is None:
-        return "Unavailable"
-    return f"{value:.1f}%"
 
 
 def parse_time(value):
@@ -83,98 +87,177 @@ def parse_time(value):
         return None
 
 
-def api_get(path, params=None):
+def format_price(value):
+    if value is None:
+        return "Unavailable"
+    return f"${value:,.4f}" if value < 10 else f"${value:,.2f}"
+
+
+def format_percent(value):
+    if value is None:
+        return "Unavailable"
+    return f"{value:.1f}%"
+
+
+def get_pyth_key():
+    try:
+        key = st.secrets.get("PYTH_API_KEY", "")
+        if key:
+            return str(key).strip()
+    except Exception:
+        pass
+
+    return ""
+
+
+# ==========================================================
+# PYTH ASSET CANDLES
+# ==========================================================
+
+@st.cache_data(ttl=10, show_spinner=False)
+def get_pyth_candles(symbol, api_key):
+    if not api_key:
+        return None, "PYTH_API_KEY is missing from Streamlit Secrets."
+
+    now = int(time.time())
+    start = now - (240 * 60)
+
+    url = f"{PYTH_BASE}/real_time/history"
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "User-Agent": "JARVIS-Markets/2.0",
+    }
+
+    params = {
+        "symbol": symbol,
+        "from": start,
+        "to": now,
+        "resolution": "1",
+    }
+
     try:
         response = requests.get(
-            KALSHI + path,
+            url,
+            headers=headers,
             params=params,
-            timeout=12,
-            headers={"User-Agent": "JARVIS-Markets/1.0"},
+            timeout=15,
         )
+
+        if response.status_code == 401:
+            return None, "Pyth rejected the API key (401)."
+
+        if response.status_code == 403:
+            return None, "Pyth key does not have access to this feed (403)."
+
         response.raise_for_status()
-        return response.json()
-    except Exception:
-        return None
+        data = response.json()
 
+        if data.get("s") != "ok":
+            return None, f"Pyth returned: {data.get('s', 'no data')}."
 
-# --------------------------------------------------
-# ASSET PRICE DATA
-# --------------------------------------------------
+        timestamps = data.get("t", [])
+        closes = data.get("c", [])
 
-@st.cache_data(ttl=20, show_spinner=False)
-def get_asset_data(symbol):
-    try:
-        df = yf.Ticker(symbol).history(
-            period="1d",
-            interval="1m",
-            prepost=True,
+        if not timestamps or not closes:
+            return None, "Pyth returned no candles."
+
+        df = pd.DataFrame({
+            "Close": pd.to_numeric(closes, errors="coerce"),
+        })
+
+        df["Time"] = pd.to_datetime(
+            timestamps,
+            unit="s",
+            utc=True,
         )
 
-        if df is None or df.empty:
-            return None
+        df = df.dropna(subset=["Close"])
+        df = df.set_index("Time").sort_index()
+        df = df[~df.index.duplicated(keep="last")]
 
-        df = df.dropna(subset=["Close"]).copy()
-        df.index = pd.to_datetime(df.index, utc=True)
+        if df.empty:
+            return None, "No valid candle prices."
 
-        return df.tail(240)
+        return df.tail(240), None
 
-    except Exception:
-        return None
+    except requests.exceptions.Timeout:
+        return None, "Pyth request timed out."
+    except requests.exceptions.RequestException as exc:
+        return None, f"Pyth connection error: {exc}"
+    except Exception as exc:
+        return None, f"Pyth data error: {exc}"
 
+
+# ==========================================================
+# DIRECTIONAL MODEL
+# NOT A CALIBRATED PROBABILITY
+# ==========================================================
 
 def calculate_signal(df):
-    if df is None or len(df) < 25:
+    if df is None or len(df) < 30:
         return None
 
     close = df["Close"].astype(float)
 
-    ema_fast = close.ewm(span=9, adjust=False).mean()
-    ema_slow = close.ewm(span=21, adjust=False).mean()
+    ema_fast = close.ewm(
+        span=9,
+        adjust=False,
+    ).mean()
+
+    ema_slow = close.ewm(
+        span=21,
+        adjust=False,
+    ).mean()
+
+    latest = float(close.iloc[-1])
+    previous = float(close.iloc[-6])
+
+    if previous == 0:
+        return None
+
+    momentum = ((latest / previous) - 1) * 100
+
+    trend = (
+        (float(ema_fast.iloc[-1]) / float(ema_slow.iloc[-1])) - 1
+    ) * 100
 
     change = close.diff()
     gains = change.clip(lower=0)
     losses = -change.clip(upper=0)
 
     avg_gain = gains.rolling(14).mean()
-    avg_loss = losses.rolling(14).mean().replace(0, np.nan)
+    avg_loss = losses.rolling(14).mean()
 
-    rs = avg_gain / avg_loss
+    rs = avg_gain / avg_loss.replace(0, np.nan)
     rsi = 100 - (100 / (1 + rs))
 
-    latest = float(close.iloc[-1])
-    previous = float(close.iloc[-6])
-    momentum = ((latest / previous) - 1) * 100 if previous else 0
-
-    trend = (
-        (float(ema_fast.iloc[-1]) / float(ema_slow.iloc[-1])) - 1
-    ) * 100
-
-    rsi_value = float(rsi.iloc[-1]) if pd.notna(rsi.iloc[-1]) else 50
-
-    # Experimental directional score, NOT a calibrated probability.
-    raw_score = (
-        50
-        + momentum * 7
-        + trend * 35
-        + (50 - rsi_value) * -0.08
+    rsi_value = (
+        float(rsi.iloc[-1])
+        if pd.notna(rsi.iloc[-1])
+        else 50.0
     )
 
-    probability = float(np.clip(raw_score, 50, 75))
+    # This is a directional score, NOT a win probability.
+    raw_score = (
+        50
+        + momentum * 8
+        + trend * 120
+        + (rsi_value - 50) * 0.08
+    )
 
-    if probability >= 53:
+    score = float(np.clip(raw_score, 0, 100))
+
+    if score >= 55:
         direction = "UP"
-    elif probability <= 47:
+    elif score <= 45:
         direction = "DOWN"
     else:
         direction = "NEUTRAL"
 
-    # Keep neutral signals honest.
-    if direction == "NEUTRAL":
-        probability = 50.0
-
     return {
         "direction": direction,
-        "probability": probability,
+        "score": score,
         "momentum": momentum,
         "trend": trend,
         "rsi": rsi_value,
@@ -183,82 +266,116 @@ def calculate_signal(df):
     }
 
 
-# --------------------------------------------------
-# KALSHI CONTRACT DATA
-# --------------------------------------------------
+# ==========================================================
+# KALSHI PUBLIC MARKET DISCOVERY
+# NO ASSUMED SERIES TICKERS
+# ==========================================================
 
 @st.cache_data(ttl=10, show_spinner=False)
-def get_kalshi_markets(series):
-    data = api_get(
-        "/markets",
-        {
-            "series_ticker": series,
+def get_open_kalshi_markets():
+    all_markets = []
+    cursor = None
+
+    # Scan up to three pages of currently open markets.
+    for _ in range(3):
+        params = {
             "status": "open",
-            "limit": 200,
-        },
+            "limit": 1000,
+        }
+
+        if cursor:
+            params["cursor"] = cursor
+
+        try:
+            response = requests.get(
+                f"{KALSHI_BASE}/markets",
+                params=params,
+                headers={"User-Agent": "JARVIS-Markets/2.0"},
+                timeout=15,
+            )
+
+            response.raise_for_status()
+            data = response.json()
+
+            all_markets.extend(data.get("markets", []))
+            cursor = data.get("cursor")
+
+            if not cursor:
+                break
+
+        except Exception as exc:
+            return all_markets, f"Kalshi API error: {exc}"
+
+    return all_markets, None
+
+
+def market_close_time(market):
+    return (
+        parse_time(market.get("close_time"))
+        or parse_time(market.get("expected_expiration_time"))
+        or parse_time(market.get("expiration_time"))
     )
 
-    if not data:
-        return []
 
-    markets = data.get("markets", [])
+def find_asset_markets(markets, asset_name):
+    keywords = ASSETS[asset_name]["keywords"]
+    now = pd.Timestamp.now(tz="UTC")
 
-    now = datetime.now(timezone.utc)
-
-    valid = []
+    matches = []
 
     for market in markets:
-        close_time = parse_time(
-            market.get("close_time")
-            or market.get("expected_expiration_time")
-        )
+        searchable = " ".join([
+            str(market.get("ticker", "")),
+            str(market.get("title", "")),
+            str(market.get("subtitle", "")),
+            str(market.get("event_ticker", "")),
+        ]).lower()
 
-        if close_time is None:
+        if not any(word in searchable for word in keywords):
             continue
 
-        if close_time.to_pydatetime() > now:
-            market["_close_dt"] = close_time
-            valid.append(market)
+        close_time = market_close_time(market)
 
-    valid.sort(key=lambda m: m["_close_dt"])
+        if close_time is None or close_time <= now:
+            continue
 
-    return valid
+        market["_jarvis_close"] = close_time
+        matches.append(market)
+
+    matches.sort(key=lambda item: item["_jarvis_close"])
+
+    return matches
 
 
-def get_market_prices(market):
-    yes_bid = dollars(market.get("yes_bid_dollars"))
-    yes_ask = dollars(market.get("yes_ask_dollars"))
-    no_bid = dollars(market.get("no_bid_dollars"))
-    no_ask = dollars(market.get("no_ask_dollars"))
+# ==========================================================
+# KALSHI PRICE CONVERSION
+# ==========================================================
 
-    if yes_bid is None:
-        cents = safe_float(market.get("yes_bid"))
-        yes_bid = cents / 100 if cents is not None else None
+def market_prices(market):
+    def read_price(dollar_key, cents_key):
+        value = safe_float(market.get(dollar_key))
 
-    if yes_ask is None:
-        cents = safe_float(market.get("yes_ask"))
-        yes_ask = cents / 100 if cents is not None else None
+        if value is not None:
+            return value
 
-    if no_bid is None:
-        cents = safe_float(market.get("no_bid"))
-        no_bid = cents / 100 if cents is not None else None
+        cents = safe_float(market.get(cents_key))
 
-    if no_ask is None:
-        cents = safe_float(market.get("no_ask"))
-        no_ask = cents / 100 if cents is not None else None
+        if cents is not None:
+            return cents / 100
 
-    # Derive missing sides from complementary bids/asks.
+        return None
+
+    yes_bid = read_price("yes_bid_dollars", "yes_bid")
+    yes_ask = read_price("yes_ask_dollars", "yes_ask")
+    no_bid = read_price("no_bid_dollars", "no_bid")
+    no_ask = read_price("no_ask_dollars", "no_ask")
+    last = read_price("last_price_dollars", "last_price")
+
     if yes_ask is None and no_bid is not None:
         yes_ask = 1 - no_bid
 
     if no_ask is None and yes_bid is not None:
         no_ask = 1 - yes_bid
-
-    last = dollars(market.get("last_price_dollars"))
-
-    if last is None:
-        cents = safe_float(market.get("last_price"))
-        last = cents / 100 if cents is not None else None
 
     yes_mid = None
 
@@ -276,279 +393,314 @@ def get_market_prices(market):
         "no_ask": no_ask,
         "yes_mid": yes_mid,
         "no_mid": no_mid,
-        "last": last,
     }
 
 
-# --------------------------------------------------
-# PAGE DESIGN
-# --------------------------------------------------
+# ==========================================================
+# DASHBOARD
+# ==========================================================
 
 st.title("◈ JARVIS MARKETS")
 st.caption(
-    "LIVE ASSET MONITOR • KALSHI CONTRACT RADAR • READ ONLY"
+    "PYTH ASSET MONITOR • KALSHI CONTRACT RADAR • READ ONLY"
 )
 
 st.info(
-    "Experimental research dashboard. Model estimates are not "
-    "verified win probabilities. No automatic orders or bets."
+    "Experimental research tool. Directional scores are not "
+    "calibrated probabilities and are not verified trading signals."
 )
 
-st.sidebar.title("JARVIS CONTROL")
+api_key = get_pyth_key()
 
-refresh = st.sidebar.selectbox(
-    "Refresh interval",
-    [15, 30, 60],
-    index=0,
-)
-
-if refresh != 15:
-    st.sidebar.caption(
-        "The page refreshes every 15 seconds. "
-        "Change this setting only as a display preference."
+if not api_key:
+    st.error(
+        "Pyth API key not found. Add PYTH_API_KEY to "
+        "Streamlit Cloud → Settings → Secrets."
     )
 
-st.sidebar.markdown("---")
-st.sidebar.write("DATA SOURCES")
-st.sidebar.write("• Yahoo Finance — asset candles")
-st.sidebar.write("• Kalshi public API — contracts")
-st.sidebar.write("• 1-minute asset chart")
-st.sidebar.write("• 15-minute Kalshi markets")
 
-
-# --------------------------------------------------
-# MAIN ASSET DASHBOARD
-# --------------------------------------------------
+# ==========================================================
+# ASSET MONITOR
+# ==========================================================
 
 st.header("1. ASSET MARKET MONITOR")
 
 asset_columns = st.columns(3)
-
 asset_results = {}
 
 for column, (name, config) in zip(asset_columns, ASSETS.items()):
     with column:
         st.subheader(f"{config['emoji']} {name}")
 
-        df = get_asset_data(config["symbol"])
+        df, error = get_pyth_candles(
+            config["symbol"],
+            api_key,
+        )
 
         if df is None or df.empty:
-            st.error("Asset price unavailable")
+            st.error("Asset data unavailable")
+            if error:
+                st.caption(error)
             asset_results[name] = None
             continue
 
         signal = calculate_signal(df)
+
+        last_time = df.index[-1]
+        now = pd.Timestamp.now(tz="UTC")
+
+        age = max(
+            0,
+            int((now - last_time).total_seconds()),
+        )
+
+        current = float(df["Close"].iloc[-1])
+
+        previous = (
+            float(df["Close"].iloc[-2])
+            if len(df) > 1
+            else current
+        )
+
+        candle_change = (
+            ((current / previous) - 1) * 100
+            if previous
+            else 0
+        )
+
         asset_results[name] = {
             "df": df,
             "signal": signal,
+            "age": age,
         }
 
-        current = float(df["Close"].iloc[-1])
-        previous = float(df["Close"].iloc[-2]) if len(df) > 1 else current
-
-        change = (
-            ((current / previous) - 1) * 100
-            if previous else 0
-        )
-
         st.metric(
-            "LIVE PRICE",
+            "PYTH PRICE",
             format_price(current),
-            f"{change:+.3f}%",
+            f"{candle_change:+.4f}% (last candle)",
         )
 
-        last_time = df.index[-1]
-        age = (
-            datetime.now(timezone.utc) - last_time.to_pydatetime()
-        ).total_seconds()
+        st.caption(
+            f"Feed: {config['symbol']}"
+        )
 
         st.caption(
             f"Last candle: {last_time.strftime('%H:%M:%S UTC')} "
-            f" • Age: {int(max(age, 0))} sec"
+            f"• Age: {age}s"
         )
 
-        if age > 180:
-            st.warning("STALE ASSET DATA — signal disabled")
+        stale = age > 180
 
-        if signal is None:
-            st.warning("Not enough candles for analysis")
-        elif age > 180:
-            st.warning("No signal: waiting for fresh data")
+        if stale:
+            st.warning("STALE DATA — SIGNAL DISABLED")
+        elif signal is None:
+            st.warning("Waiting for enough candles.")
+        elif signal["direction"] == "UP":
+            st.success(
+                f"JARVIS: UP — Score {signal['score']:.1f}/100"
+            )
+        elif signal["direction"] == "DOWN":
+            st.error(
+                f"JARVIS: DOWN — Score {signal['score']:.1f}/100"
+            )
         else:
-            direction = signal["direction"]
+            st.warning(
+                f"JARVIS: NEUTRAL — Score {signal['score']:.1f}/100"
+            )
 
-            if direction == "UP":
-                st.success(
-                    f"JARVIS: UP — {signal['probability']:.1f}%"
+        if signal and not stale:
+            with st.expander("Technical details"):
+                st.write(
+                    f"5-minute momentum: {signal['momentum']:+.5f}%"
                 )
-            elif direction == "DOWN":
-                st.error(
-                    f"JARVIS: DOWN — {signal['probability']:.1f}%"
+                st.write(
+                    f"EMA trend: {signal['trend']:+.5f}%"
                 )
-            else:
-                st.warning("JARVIS: NEUTRAL — 50.0%")
-
-            st.caption("Experimental model estimate, not calibrated.")
+                st.write(
+                    f"RSI: {signal['rsi']:.2f}"
+                )
+                st.caption(
+                    "Score is an experimental directional indicator, "
+                    "not a probability of winning."
+                )
 
         st.line_chart(
             df["Close"],
-            height=180,
+            height=190,
         )
 
-        with st.expander("Technical details"):
-            if signal:
-                st.write(f"Momentum: {signal['momentum']:+.4f}%")
-                st.write(f"EMA trend: {signal['trend']:+.4f}%")
-                st.write(f"RSI: {signal['rsi']:.2f}")
 
-
-# --------------------------------------------------
+# ==========================================================
 # KALSHI CONTRACT RADAR
-# --------------------------------------------------
+# ==========================================================
 
 st.divider()
-st.header("2. KALSHI LIVE CONTRACTS")
+st.header("2. KALSHI LIVE CONTRACT RADAR")
+
+with st.spinner("Scanning open Kalshi markets..."):
+    kalshi_markets, kalshi_error = get_open_kalshi_markets()
+
+if kalshi_error:
+    st.warning(kalshi_error)
 
 st.caption(
-    "These are actual open contracts from each specific Kalshi series."
+    f"Open markets returned by Kalshi: {len(kalshi_markets)} "
+    "• Up to three pages scanned"
 )
 
-for name, config in ASSETS.items():
+for name in ASSETS:
+    st.subheader(name)
 
-    st.subheader(f"{name} — {config['series']}")
+    matches = find_asset_markets(
+        kalshi_markets,
+        name,
+    )
 
-    markets = get_kalshi_markets(config["series"])
-
-    if not markets:
+    if not matches:
         st.warning(
-            "No open contract returned right now. "
-            "This can happen outside the asset's trading hours "
-            "or between market windows."
+            "No matching open contract found in the markets scanned. "
+            "This does not prove that Kalshi has no such contract."
         )
         continue
 
-    # The nearest future closing contract is shown first.
-    market = markets[0]
-    prices = get_market_prices(market)
+    for market in matches[:3]:
+        prices = market_prices(market)
 
-    title = (
-        market.get("title")
-        or market.get("subtitle")
-        or market.get("ticker")
-    )
-
-    st.write(f"**{title}**")
-    st.caption(f"Ticker: {market.get('ticker', 'Unknown')}")
-
-    a, b, c, d = st.columns(4)
-
-    a.metric(
-        "YES MARKET PRICE",
-        format_percent(
-            prices["yes_mid"] * 100
-            if prices["yes_mid"] is not None else None
-        ),
-    )
-
-    b.metric(
-        "NO MARKET PRICE",
-        format_percent(
-            prices["no_mid"] * 100
-            if prices["no_mid"] is not None else None
-        ),
-    )
-
-    c.metric(
-        "YES BID",
-        format_percent(
-            prices["yes_bid"] * 100
-            if prices["yes_bid"] is not None else None
-        ),
-    )
-
-    d.metric(
-        "YES ASK",
-        format_percent(
-            prices["yes_ask"] * 100
-            if prices["yes_ask"] is not None else None
-        ),
-    )
-
-    close_time = market.get("_close_dt")
-
-    if close_time is not None:
-        seconds_left = (
-            close_time.to_pydatetime()
-            - datetime.now(timezone.utc)
-        ).total_seconds()
-
-        st.write(
-            f"**Time until close:** {max(int(seconds_left), 0)} seconds"
+        title = (
+            market.get("title")
+            or market.get("subtitle")
+            or market.get("ticker")
+            or "Untitled contract"
         )
 
-    volume = (
-        market.get("volume_fp")
-        or market.get("volume")
-        or 0
-    )
+        st.write(f"**{title}**")
+        st.caption(
+            f"Ticker: {market.get('ticker', 'Unknown')}"
+        )
 
-    st.caption(f"Volume: {volume}")
+        a, b, c, d = st.columns(4)
 
-    st.markdown("---")
+        a.metric(
+            "YES MID",
+            format_percent(
+                prices["yes_mid"] * 100
+                if prices["yes_mid"] is not None
+                else None
+            ),
+        )
 
-    with st.expander(f"Other open {name} contracts ({len(markets)})"):
-        rows = []
+        b.metric(
+            "NO MID",
+            format_percent(
+                prices["no_mid"] * 100
+                if prices["no_mid"] is not None
+                else None
+            ),
+        )
 
-        for item in markets:
-            p = get_market_prices(item)
+        c.metric(
+            "YES BID",
+            format_percent(
+                prices["yes_bid"] * 100
+                if prices["yes_bid"] is not None
+                else None
+            ),
+        )
 
-            rows.append({
-                "Contract": item.get("ticker"),
-                "Title": item.get("title") or item.get("subtitle"),
-                "YES": (
-                    round(p["yes_mid"] * 100, 1)
-                    if p["yes_mid"] is not None else None
+        d.metric(
+            "YES ASK",
+            format_percent(
+                prices["yes_ask"] * 100
+                if prices["yes_ask"] is not None
+                else None
+            ),
+        )
+
+        close_time = market.get("_jarvis_close")
+
+        if close_time is not None:
+            seconds_left = max(
+                0,
+                int(
+                    (
+                        close_time
+                        - pd.Timestamp.now(tz="UTC")
+                    ).total_seconds()
                 ),
-                "NO": (
-                    round(p["no_mid"] * 100, 1)
-                    if p["no_mid"] is not None else None
-                ),
-                "Closes": str(item.get("close_time", "")),
-            })
-
-        if rows:
-            st.dataframe(
-                pd.DataFrame(rows),
-                use_container_width=True,
-                hide_index=True,
             )
 
+            st.write(
+                f"**Market close countdown:** {seconds_left:,} seconds"
+            )
 
-# --------------------------------------------------
-# EXPLANATION / DATA STATUS
-# --------------------------------------------------
+        st.caption(
+            f"Volume: {market.get('volume_fp', market.get('volume', 'Unavailable'))}"
+        )
+
+        with st.expander("Contract settlement rules"):
+            st.write(
+                market.get(
+                    "rules_primary",
+                    "No primary rules supplied by the API.",
+                )
+            )
+            st.write(
+                market.get(
+                    "rules_secondary",
+                    "",
+                )
+            )
+
+        st.markdown("---")
+
+
+# ==========================================================
+# SYSTEM STATUS
+# ==========================================================
 
 st.divider()
-st.header("3. SIGNAL & DATA STATUS")
+st.header("3. JARVIS SYSTEM STATUS")
+
+for name in ASSETS:
+    result = asset_results.get(name)
+
+    if result is None:
+        st.write(f"🔴 {name}: No usable Pyth data")
+    elif result["age"] > 180:
+        st.write(
+            f"🟠 {name}: Stale candle data "
+            f"({result['age']} seconds old)"
+        )
+    else:
+        st.write(
+            f"🟢 {name}: Pyth candles available "
+            f"({result['age']} seconds old)"
+        )
+
+st.markdown("---")
 
 st.write(
-    "**Asset UP/DOWN estimate:** calculated from the underlying "
-    "asset's recent price candles."
+    "**Pyth:** underlying asset price candles. "
+    "The Gold and Oil feeds are Pyth index feeds."
 )
 
 st.write(
-    "**Kalshi YES/NO prices:** market prices for the actual "
-    "binary contract. They are not JARVIS's asset prediction."
+    "**Kalshi:** actual contract quotes. YES/NO prices are "
+    "market prices, not JARVIS predictions."
 )
 
 st.write(
-    "**Important:** a contract's settlement rules and reference "
-    "price can differ from the asset feed displayed above."
+    "**Timing:** the asset candle timestamp and Kalshi market "
+    "close timestamp are tracked separately."
+)
+
+st.warning(
+    "Before relying on any signal, compare it against historical "
+    "outcomes and the exact settlement rules of the contract. "
+    "No score guarantees a profitable result."
 )
 
 st.caption(
-    f"Last dashboard render: "
-    f"{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}"
+    "JARVIS MARKETS • EXPERIMENTAL • READ ONLY • "
+    + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 )
-
-st.caption("JARVIS MARKETS • EXPERIMENTAL • READ ONLY")
