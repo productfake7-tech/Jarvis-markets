@@ -36,7 +36,8 @@ def main():
     for market in markets:
         bid = float(market.get("yes_bid_dollars") or 0) * 100
         ask = float(market.get("yes_ask_dollars") or 0) * 100
-                if bid > 0 and ask > 0 and ask >= bid:
+
+        if bid > 0 and ask > 0 and ask >= bid:
             yes_probability = (bid + ask) / 2
             no_probability = 100 - yes_probability
         else:
@@ -49,6 +50,7 @@ def main():
             "yes_bid_cents": bid,
             "yes_ask_cents": ask,
             "yes_probability": yes_probability,
+            "no_probability": no_probability,
 "no_probability": no_probability,
             "decision": "NO BET",
             "reason": "Prediction model not validated."
