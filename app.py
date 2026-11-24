@@ -8,39 +8,74 @@ import requests
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 
+# ============================================================
+# JARVIS MARKETS — BUILD 06
+# KALSHI DATA | READ ONLY | NO AUTOMATIC TRADING
+# ============================================================
+
 BASE = "https://api.elections.kalshi.com/trade-api/v2"
+
 REFRESH_SECONDS = 30
+CANDLE_CACHE_SECONDS = 10
+MARKET_CACHE_SECONDS = 60
 MAX_CANDLE_AGE = 150
 
 st.set_page_config(
     page_title="JARVIS Markets",
     page_icon="◈",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 st.markdown("""
 <style>
-.block-container {max-width:1500px;padding-top:1rem;}
+.block-container {
+    max-width: 1550px;
+    padding-top: 1rem;
+}
 [data-testid="stAppViewContainer"] {
- background:radial-gradient(ellipse at 15% 0%,#10263a,#08111d 55%,#060b13);
+    background: radial-gradient(
+        ellipse at 15% 0%,
+        #10263a,
+        #08111d 55%,
+        #060b13
+    );
 }
-[data-testid="stSidebar"] {background:#0a1421;}
+[data-testid="stSidebar"] {
+    background: #0a1421;
+}
 .hero {
- border:1px solid #24516a;border-radius:18px;padding:22px;
- background:linear-gradient(115deg,#102b3e,#08121f);
+    border: 1px solid #24516a;
+    border-radius: 18px;
+    padding: 22px;
+    background: linear-gradient(115deg,#102b3e,#08121f);
 }
-.eyebrow {letter-spacing:3px;color:#63e6ff;font-size:11px;font-weight:bold;}
-.hero h1 {color:#eefaff;font-size:34px;}
-.hero p {color:#a9c2d2;}
+.eyebrow {
+    letter-spacing: 3px;
+    color: #63e6ff;
+    font-size: 11px;
+    font-weight: bold;
+}
+.hero h1 {
+    color: #eefaff;
+    font-size: 35px;
+    letter-spacing: 2px;
+}
+.hero p {
+    color: #a9c2d2;
+}
 div[data-testid="stMetric"] {
- background:#0c1b2a;border:1px solid #1b3b51;
- padding:12px;border-radius:12px;
+    background: #0c1b2a;
+    border: 1px solid #1b3b51;
+    padding: 12px;
+    border-radius: 12px;
 }
 </style>
+
 <div class="hero">
- <div class="eyebrow">KALSHI NATIVE DATA • BUILD 05</div>
- <h1>◈ JARVIS MARKETS</h1>
- <p>BITCOIN · GOLD · WTI OIL · ALL KALSHI MARKETS</p>
+    <div class="eyebrow">KALSHI NATIVE DATA • BUILD 06</div>
+    <h1>◈ JARVIS MARKETS</h1>
+    <p>BITCOIN · GOLD · WTI OIL · YES/NO INTELLIGENCE</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -49,13 +84,15 @@ st_autorefresh(
     key="jarvis_refresh"
 )
 
-SESSION = requests.Session()
-SESSION.headers.update({"User-Agent": "JARVIS-Markets/5.0"})
-
-
-# =====================================================
+# ============================================================
 # API CONNECTION
-# =====================================================
+# ============================================================
+
+SESSION = requests.Session()
+SESSION.headers.update({
+    "User-Agent": "JARVIS-Markets/6.0"
+})
+
 
 def api_get(path, params=None):
     response = SESSION.get(
@@ -67,13 +104,17 @@ def api_get(path, params=None):
     return response.json()
 
 
-@st.cache_data(ttl=30, show_spinner=False)
+# ============================================================
+# MARKET DISCOVERY
+# ============================================================
+
+@st.cache_data(ttl=MARKET_CACHE_SECONDS, show_spinner=False)
 def get_open_markets():
-    """Fetch multiple pages of currently open Kalshi markets."""
-    all_markets = []
+    markets = []
     cursor = None
 
-    for _ in range(5):
+    # Up to 10,000 markets, subject to available pages.
+    for _ in range(10):
         params = {
             "status": "open",
             "limit": 1000
@@ -83,41 +124,16 @@ def get_open_markets():
             params["cursor"] = cursor
 
         data = api_get("/markets", params)
-        all_markets.extend(data.get("markets", []))
+
+        markets.extend(data.get("markets", []))
 
         cursor = data.get("cursor")
 
         if not cursor:
             break
 
-    return all_markets
+    return markets
 
-
-@st.cache_data(ttl=10, show_spinner=False)
-def get_market(ticker):
-    data = api_get(f"/markets/{ticker}")
-    return data.get("market", {})
-
-
-@st.cache_data(ttl=10, show_spinner=False)
-def get_candles(series, ticker):
-    now = int(time.time())
-
-    data = api_get(
-        f"/series/{series}/markets/{ticker}/candlesticks",
-        {
-            "start_ts": now - 3 * 60 * 60,
-            "end_ts": now,
-            "period_interval": 1
-        }
-    )
-
-    return data.get("candlesticks", [])
-
-
-# =====================================================
-# MARKET DISCOVERY AND CATEGORIES
-# =====================================================
 
 def market_text(market):
     fields = [
@@ -126,34 +142,42 @@ def market_text(market):
         market.get("subtitle", ""),
         market.get("yes_sub_title", ""),
         market.get("event_ticker", ""),
+        market.get("rules_primary", ""),
+        market.get("rules_secondary", "")
     ]
-    return " ".join(str(x) for x in fields if x).lower()
+
+    return " ".join(
+        str(value) for value in fields if value
+    ).lower()
 
 
 def categorize_market(market):
     text = market_text(market)
 
-    bitcoin_terms = [
-        "bitcoin", "btc", "crypto price"
+    oil_terms = [
+        "wti", "crude oil",
+        "west texas intermediate",
+        "oil price", "crude"
     ]
 
     gold_terms = [
+        "gold price", "gold futures",
+        "gold above", "gold below",
         "gold", "xau"
     ]
 
-    oil_terms = [
-        "wti", "crude oil", "oil price",
-        "west texas intermediate"
+    bitcoin_terms = [
+        "bitcoin", "btc"
     ]
 
-    if any(term in text for term in bitcoin_terms):
-        return "Bitcoin"
+    if any(term in text for term in oil_terms):
+        return "WTI Oil"
 
     if any(term in text for term in gold_terms):
         return "Gold"
 
-    if any(term in text for term in oil_terms):
-        return "WTI Oil"
+    if any(term in text for term in bitcoin_terms):
+        return "Bitcoin"
 
     return "Other"
 
@@ -169,37 +193,103 @@ def market_title(market):
 
 def market_volume(market):
     for key in [
-        "volume_24h_fp", "volume_24h",
-        "volume_fp", "volume"
+        "volume_24h_fp",
+        "volume_24h",
+        "volume_fp",
+        "volume"
     ]:
         try:
             return float(market.get(key) or 0)
         except (ValueError, TypeError):
-            pass
-    return 0
+            continue
+
+    return 0.0
 
 
-def dollars_or_cents(market, dollars_key, cents_key):
+# ============================================================
+# PRICE HELPERS
+# ============================================================
+
+def number(value):
     try:
-        value = market.get(dollars_key)
-        if value is not None:
-            return float(value)
-    except (ValueError, TypeError):
-        pass
-
-    try:
-        value = market.get(cents_key)
-        if value is not None:
-            return float(value) / 100
+        result = float(value)
+        if np.isfinite(result):
+            return result
     except (ValueError, TypeError):
         pass
 
     return None
 
 
-# =====================================================
-# CANDLE DATA
-# =====================================================
+def dollars_or_cents(market, dollar_key, cent_key):
+    value = number(market.get(dollar_key))
+
+    if value is not None:
+        return value
+
+    value = number(market.get(cent_key))
+
+    if value is not None:
+        return value / 100
+
+    return None
+
+
+def cents(value):
+    if value is None:
+        return "—"
+
+    return f"{value * 100:.1f}¢"
+
+
+def volume_display(value):
+    try:
+        return f"{float(value):,.0f}"
+    except (ValueError, TypeError):
+        return "0"
+
+
+# ============================================================
+# INDIVIDUAL MARKET DATA
+# ============================================================
+
+@st.cache_data(ttl=10, show_spinner=False)
+def get_market(ticker):
+    data = api_get(f"/markets/{ticker}")
+    return data.get("market", {})
+
+
+@st.cache_data(ttl=CANDLE_CACHE_SECONDS, show_spinner=False)
+def get_candles(series, ticker):
+    now = int(time.time())
+
+    data = api_get(
+        f"/series/{series}/markets/{ticker}/candlesticks",
+        {
+            "start_ts": now - 3 * 60 * 60,
+            "end_ts": now,
+            "period_interval": 1
+        }
+    )
+
+    return data.get("candlesticks", [])
+
+
+# ============================================================
+# CANDLE PARSER
+# ============================================================
+
+def candle_close(obj):
+    if not isinstance(obj, dict):
+        return None
+
+    for key in ["close_dollars", "close"]:
+        value = number(obj.get(key))
+        if value is not None:
+            return value
+
+    return None
+
 
 def parse_candles(raw):
     rows = []
@@ -209,23 +299,22 @@ def parse_candles(raw):
         bid = candle.get("yes_bid") or {}
         ask = candle.get("yes_ask") or {}
 
-        close = price.get("close")
+        close = candle_close(price)
 
-        try:
-            close = float(close) if close is not None else None
-        except (ValueError, TypeError):
-            close = None
+        # Fallback to YES quote midpoint.
+        if close is None:
+            bid_close = candle_close(bid)
+            ask_close = candle_close(ask)
+
+            if bid_close is not None and ask_close is not None:
+                close = (bid_close + ask_close) / 2
 
         if close is None:
-            try:
-                bid_close = float(bid["close"])
-                ask_close = float(ask["close"])
-                close = (bid_close + ask_close) / 2
-            except (KeyError, ValueError, TypeError):
-                continue
+            continue
 
         timestamp = (
             candle.get("end_period_ts")
+            or candle.get("period_start_ts")
             or candle.get("ts")
             or candle.get("timestamp")
         )
@@ -235,7 +324,9 @@ def parse_candles(raw):
 
         rows.append({
             "time": pd.to_datetime(
-                int(timestamp), unit="s", utc=True
+                int(timestamp),
+                unit="s",
+                utc=True
             ),
             "YES price": close
         })
@@ -244,9 +335,146 @@ def parse_candles(raw):
         return pd.DataFrame()
 
     frame = pd.DataFrame(rows)
-    frame = frame.drop_duplicates("time")
-    return frame.sort_values("time").set_index("time")
 
+    frame = frame.drop_duplicates("time")
+
+    return (
+        frame.sort_values("time")
+        .set_index("time")
+    )
+
+
+# ============================================================
+# MARKET-IMPLIED PROBABILITY
+# ============================================================
+
+def market_probability(market):
+    bid = dollars_or_cents(
+        market,
+        "yes_bid_dollars",
+        "yes_bid"
+    )
+
+    ask = dollars_or_cents(
+        market,
+        "yes_ask_dollars",
+        "yes_ask"
+    )
+
+    last = dollars_or_cents(
+        market,
+        "last_price_dollars",
+        "last_price"
+    )
+
+    if bid is not None and ask is not None and bid <= ask:
+        midpoint = (bid + ask) / 2
+        source = "YES bid/ask midpoint"
+
+    elif last is not None:
+        midpoint = last
+        source = "Last traded YES price"
+
+    else:
+        return None
+
+    return {
+        "yes": float(np.clip(midpoint * 100, 0, 100)),
+        "no": float(100 - midpoint * 100),
+        "bid": bid,
+        "ask": ask,
+        "last": last,
+        "source": source
+    }
+
+
+# ============================================================
+# EXPERIMENTAL MODEL
+# ============================================================
+
+def analyze_contract(frame):
+    if frame.empty or len(frame) < 30:
+        return None
+
+    close = frame["YES price"].astype(float)
+
+    ema_fast = close.ewm(
+        span=9,
+        adjust=False
+    ).mean()
+
+    ema_slow = close.ewm(
+        span=21,
+        adjust=False
+    ).mean()
+
+    delta = close.diff()
+
+    gains = delta.clip(lower=0)
+    losses = -delta.clip(upper=0)
+
+    avg_gain = gains.ewm(
+        alpha=1 / 14,
+        adjust=False
+    ).mean()
+
+    avg_loss = losses.ewm(
+        alpha=1 / 14,
+        adjust=False
+    ).mean()
+
+    rs = avg_gain / avg_loss.replace(0, np.nan)
+
+    rsi = 100 - (100 / (1 + rs))
+
+    momentum = (
+        close.iloc[-1] / close.iloc[-6] - 1
+    ) * 100
+
+    trend = (
+        ema_fast.iloc[-1] / ema_slow.iloc[-1] - 1
+    ) * 100
+
+    current_rsi = number(rsi.iloc[-1])
+
+    if current_rsi is None:
+        return None
+
+    score = (
+        0.45 * np.tanh(momentum / 0.30)
+        + 0.35 * np.tanh(trend / 0.20)
+        + 0.20 * np.tanh((current_rsi - 50) / 18)
+    )
+
+    # Experimental score mapping, NOT calibrated odds.
+    model_yes = float(
+        np.clip(50 + 30 * np.tanh(score), 20, 80)
+    )
+
+    model_no = 100 - model_yes
+
+    if model_yes >= 55:
+        decision = "YES"
+    elif model_no >= 55:
+        decision = "NO"
+    else:
+        decision = "NEUTRAL"
+
+    return {
+        "decision": decision,
+        "yes": model_yes,
+        "no": model_no,
+        "score": float(score),
+        "rsi": float(current_rsi),
+        "momentum": float(momentum),
+        "trend": float(trend),
+        "price": float(close.iloc[-1])
+    }
+
+
+# ============================================================
+# COUNTDOWN
+# ============================================================
 
 def countdown(close_time):
     try:
@@ -258,7 +486,9 @@ def countdown(close_time):
         seconds = max(
             0,
             int(
-                (end - pd.Timestamp.now(tz="UTC")).total_seconds()
+                (
+                    end - pd.Timestamp.now(tz="UTC")
+                ).total_seconds()
             )
         )
 
@@ -271,137 +501,131 @@ def countdown(close_time):
         return "Unavailable"
 
 
-# =====================================================
-# EXPERIMENTAL CONTRACT ANALYSIS
-# =====================================================
+# ============================================================
+# SIDEBAR
+# ============================================================
 
-def analyze_contract(frame):
-    if frame.empty or len(frame) < 30:
-        return None
+with st.sidebar:
+    st.header("◈ JARVIS CONTROL")
 
-    close = frame["YES price"].astype(float)
+    st.success("KALSHI DATA CONNECTED")
 
-    ema_fast = close.ewm(span=9, adjust=False).mean()
-    ema_slow = close.ewm(span=21, adjust=False).mean()
-
-    delta = close.diff()
-    gains = delta.clip(lower=0)
-    losses = -delta.clip(upper=0)
-
-    avg_gain = gains.ewm(
-        alpha=1 / 14, adjust=False
-    ).mean()
-
-    avg_loss = losses.ewm(
-        alpha=1 / 14, adjust=False
-    ).mean()
-
-    rs = avg_gain / avg_loss.replace(0, np.nan)
-    rsi = 100 - (100 / (1 + rs))
-
-    momentum = (
-        close.iloc[-1] / close.iloc[-6] - 1
-    ) * 100
-
-    trend = (
-        ema_fast.iloc[-1] / ema_slow.iloc[-1] - 1
-    ) * 100
-
-    current_rsi = rsi.iloc[-1]
-
-    if not np.isfinite(current_rsi):
-        return None
-
-    score = (
-        0.45 * np.tanh(momentum / 0.30)
-        + 0.35 * np.tanh(trend / 0.20)
-        + 0.20 * np.tanh((current_rsi - 50) / 18)
+    category = st.selectbox(
+        "MARKET CATEGORY",
+        [
+            "Bitcoin",
+            "Gold",
+            "WTI Oil",
+            "Other",
+            "All markets"
+        ]
     )
 
-    if score >= 0.20:
-        signal = "YES PRICE RISING"
-    elif score <= -0.20:
-        signal = "YES PRICE FALLING"
-    else:
-        signal = "NO CLEAR DIRECTION"
+    search = st.text_input(
+        "SEARCH MARKETS",
+        placeholder="Search BTC, price, ticker..."
+    ).strip().lower()
 
-    return {
-        "signal": signal,
-        "score": float(score),
-        "rsi": float(current_rsi),
-        "momentum": float(momentum),
-        "trend": float(trend)
-    }
+    sort_by = st.selectbox(
+        "SORT MARKETS",
+        ["Volume", "Closing soonest", "Name"]
+    )
+
+    st.divider()
+
+    if st.button(
+        "↻ REFRESH NOW",
+        use_container_width=True
+    ):
+        st.cache_data.clear()
+        st.rerun()
+
+    st.caption("Dashboard refresh: 30 seconds")
+    st.caption("Contract candles: 1 minute")
+    st.caption("Automatic trading: DISABLED")
 
 
-# =====================================================
-# HEADER AND MARKET BROWSER
-# =====================================================
+# ============================================================
+# TOP STATUS
+# ============================================================
 
 now = datetime.now(timezone.utc)
 
-a, b, c = st.columns(3)
-a.metric("ENGINE", "BUILD 05")
-b.metric("DATA SOURCE", "KALSHI")
-c.metric("REFRESH", "30 SECONDS")
+a, b, c, d = st.columns(4)
 
-st.caption(
-    "Dashboard time: "
-    + now.strftime("%Y-%m-%d %H:%M:%S UTC")
+a.metric("ENGINE", "BUILD 06")
+b.metric("DATA SOURCE", "KALSHI")
+c.metric("REFRESH", "30 SEC")
+d.metric(
+    "UTC TIME",
+    now.strftime("%H:%M:%S")
 )
 
+
+# ============================================================
+# LOAD MARKETS
+# ============================================================
+
 st.divider()
-st.header("◈ LIVE MARKET BROWSER")
+st.header("◈ LIVE KALSHI MARKET BROWSER")
 
 try:
-    with st.spinner("Loading open Kalshi markets..."):
+    with st.spinner("Loading Kalshi markets..."):
         markets = get_open_markets()
 
 except Exception as error:
-    st.error(f"Could not load Kalshi markets: {error}")
+    st.error(f"Kalshi market connection failed: {error}")
     st.stop()
 
 if not markets:
-    st.warning("Kalshi returned no open markets.")
+    st.warning("No open markets were returned.")
     st.stop()
 
+
 for market in markets:
-    market["_jarvis_category"] = categorize_market(market)
+    market["_category"] = categorize_market(market)
+
+
+# ============================================================
+# CATEGORY COUNTS
+# ============================================================
 
 counts = {
-    category: sum(
-        m["_jarvis_category"] == category for m in markets
+    name: sum(
+        m["_category"] == name
+        for m in markets
     )
-    for category in ["Bitcoin", "Gold", "WTI Oil", "Other"]
+    for name in [
+        "Bitcoin",
+        "Gold",
+        "WTI Oil",
+        "Other"
+    ]
 }
 
 count_cols = st.columns(4)
 
-for col, category in zip(
-    count_cols, ["Bitcoin", "Gold", "WTI Oil", "Other"]
+for col, name in zip(
+    count_cols,
+    ["Bitcoin", "Gold", "WTI Oil", "Other"]
 ):
-    col.metric(category.upper(), counts[category])
+    col.metric(name.upper(), counts[name])
 
 st.caption(
-    f"Loaded {len(markets):,} open markets from Kalshi."
+    f"{len(markets):,} open contracts loaded from available pages."
 )
 
-category = st.selectbox(
-    "MARKET CATEGORY",
-    ["Bitcoin", "Gold", "WTI Oil", "Other", "All markets"]
-)
 
-search = st.text_input(
-    "SEARCH MARKETS",
-    placeholder="Search a market, ticker, price, event..."
-).strip().lower()
+# ============================================================
+# FILTER MARKETS
+# ============================================================
 
 filtered = markets
 
 if category != "All markets":
     filtered = [
         m for m in filtered
-        if m["_jarvis_category"] == category
+        if m["_category"] == category
     ]
 
 if search:
@@ -410,37 +634,68 @@ if search:
         if search in market_text(m)
     ]
 
-filtered.sort(
-    key=market_volume,
-    reverse=True
-)
 
-st.subheader(f"{category} — {len(filtered):,} markets")
+if sort_by == "Volume":
+    filtered.sort(
+        key=market_volume,
+        reverse=True
+    )
+
+elif sort_by == "Name":
+    filtered.sort(
+        key=lambda m: market_title(m).lower()
+    )
+
+else:
+    filtered.sort(
+        key=lambda m: m.get("close_time") or "9999"
+    )
+
+
+st.subheader(
+    f"{category.upper()} MARKETS — {len(filtered):,} RESULTS"
+)
 
 if not filtered:
     st.warning(
-        "No open markets match this category/search. "
-        "Try All markets or a different search."
+        "No matching contracts found. Try All markets "
+        "or a different search."
     )
     st.stop()
 
+
+# ============================================================
+# MARKET TABLE
+# ============================================================
+
 table_rows = []
 
-for m in filtered:
-    bid = dollars_or_cents(
-        m, "yes_bid_dollars", "yes_bid"
+for market in filtered:
+    probability = market_probability(market)
+
+    yes_bid = (
+        cents(probability["bid"])
+        if probability else "—"
     )
-    ask = dollars_or_cents(
-        m, "yes_ask_dollars", "yes_ask"
+
+    yes_ask = (
+        cents(probability["ask"])
+        if probability else "—"
+    )
+
+    yes_probability = (
+        f'{probability["yes"]:.1f}%'
+        if probability else "—"
     )
 
     table_rows.append({
-        "Market": market_title(m),
-        "YES bid": "—" if bid is None else f"{bid * 100:.1f}¢",
-        "YES ask": "—" if ask is None else f"{ask * 100:.1f}¢",
-        "Volume": market_volume(m),
-        "Closes": m.get("close_time", "—"),
-        "Ticker": m.get("ticker", "")
+        "Market": market_title(market),
+        "YES probability": yes_probability,
+        "YES bid": yes_bid,
+        "YES ask": yes_ask,
+        "Volume": volume_display(market_volume(market)),
+        "Closes": market.get("close_time", "—"),
+        "Ticker": market.get("ticker", "")
     })
 
 st.dataframe(
@@ -449,12 +704,13 @@ st.dataframe(
     hide_index=True
 )
 
-# =====================================================
+
+# ============================================================
 # CONTRACT SELECTOR
-# =====================================================
+# ============================================================
 
 st.divider()
-st.header("⚡ SELECT A CONTRACT")
+st.header("⚡ SELECT MARKET TO ANALYZE")
 
 ticker_options = [
     m.get("ticker")
@@ -463,152 +719,268 @@ ticker_options = [
 ]
 
 selected_ticker = st.selectbox(
-    "Choose a market to analyze",
+    "CHOOSE A KALSHI CONTRACT",
     ticker_options,
-    format_func=lambda t: (
+    format_func=lambda ticker: (
         next(
             (
                 market_title(m)
                 for m in filtered
-                if m.get("ticker") == t
+                if m.get("ticker") == ticker
             ),
-            t
-        ) + "  |  " + t
+            ticker
+        ) + " | " + ticker
     )
 )
 
-selected_market = next(
-    m for m in filtered
-    if m.get("ticker") == selected_ticker
-)
-
-st.caption(f"Selected ticker: {selected_ticker}")
-
-# =====================================================
-# SELECTED CONTRACT INTELLIGENCE
-# =====================================================
+# ============================================================
+# FETCH SELECTED CONTRACT
+# ============================================================
 
 try:
     market = get_market(selected_ticker)
 
+    if not market:
+        st.error("Could not find selected contract.")
+        st.stop()
+
     series = market.get("series_ticker")
 
     if not series:
-        st.error("This contract has no series ticker.")
+        st.error("Contract is missing its series ticker.")
         st.stop()
 
     raw = get_candles(series, selected_ticker)
     candles = parse_candles(raw)
 
-except Exception as error:
-    st.error(f"Could not load contract data: {error}")
+except requests.RequestException as error:
+    st.error(f"Contract data connection failed: {error}")
     st.stop()
+
+except Exception as error:
+    st.error(f"Contract data error: {error}")
+    st.stop()
+
+
+# ============================================================
+# CONTRACT INTELLIGENCE
+# ============================================================
 
 st.divider()
-st.header("CONTRACT INTELLIGENCE")
+st.header("⚡ CONTRACT INTELLIGENCE")
+
 st.subheader(market_title(market))
 
+st.caption(f"Ticker: {selected_ticker}")
+
 if candles.empty:
-    st.warning("No one-minute candles are available for this contract.")
+    st.warning(
+        "No one-minute candle history available for this contract."
+    )
     st.stop()
 
-last_time = candles.index[-1]
+last_candle_time = candles.index[-1]
+
 age = (
-    pd.Timestamp.now(tz="UTC") - last_time
+    pd.Timestamp.now(tz="UTC") - last_candle_time
 ).total_seconds()
 
 fresh = 0 <= age <= MAX_CANDLE_AGE
 
-last_price = dollars_or_cents(
-    market, "last_price_dollars", "last_price"
-)
+probability = market_probability(market)
 
-bid = dollars_or_cents(
-    market, "yes_bid_dollars", "yes_bid"
+last_price = (
+    probability["last"]
+    if probability and probability["last"] is not None
+    else float(candles["YES price"].iloc[-1])
 )
-
-ask = dollars_or_cents(
-    market, "yes_ask_dollars", "yes_ask"
-)
-
-if last_price is None:
-    last_price = float(candles["YES price"].iloc[-1])
 
 close_time = market.get("close_time")
 
-x, y, z, q = st.columns(4)
+bid = probability["bid"] if probability else None
+ask = probability["ask"] if probability else None
 
-x.metric("LAST YES", f"{last_price * 100:.1f}¢")
-y.metric("YES BID", "—" if bid is None else f"{bid * 100:.1f}¢")
-z.metric("YES ASK", "—" if ask is None else f"{ask * 100:.1f}¢")
-q.metric("TIME TO CLOSE", countdown(close_time))
-
-st.metric(
-    "LATEST CANDLE AGE",
-    f"{max(0, age):.0f} seconds",
-    delta="FRESH" if fresh else "STALE",
-    delta_color="normal" if fresh else "inverse"
+spread = (
+    (ask - bid) * 100
+    if bid is not None and ask is not None
+    else None
 )
 
-st.caption(
-    "Last candle: "
-    + last_time.strftime("%Y-%m-%d %H:%M:%S UTC")
+
+# ============================================================
+# LIVE QUOTE METRICS
+# ============================================================
+
+x, y, z, q = st.columns(4)
+
+x.metric("LAST YES PRICE", cents(last_price))
+y.metric("YES BID", cents(bid))
+z.metric("YES ASK", cents(ask))
+q.metric("TIME TO CLOSE", countdown(close_time))
+
+if probability:
+    st.subheader("KALSHI MARKET-IMPLIED PROBABILITY")
+
+    p1, p2 = st.columns(2)
+
+    p1.metric(
+        "YES PROBABILITY",
+        f'{probability["yes"]:.1f}%'
+    )
+
+    p2.metric(
+        "NO PROBABILITY",
+        f'{probability["no"]:.1f}%'
+    )
+
+    st.progress(probability["yes"] / 100)
+
+    st.caption(
+        "Source: " + probability["source"]
+        + ". Based on the YES midpoint or last trade."
+    )
+
+else:
+    st.warning(
+        "Current YES quote unavailable. Market-implied "
+        "probability cannot be calculated."
+    )
+
+
+# ============================================================
+# DATA SYNCHRONIZATION
+# ============================================================
+
+st.subheader("DATA SYNCHRONIZATION")
+
+s1, s2 = st.columns(2)
+
+s1.metric(
+    "LATEST CANDLE AGE",
+    f"{max(0, age):.0f} seconds"
+)
+
+s2.metric(
+    "LATEST CANDLE",
+    last_candle_time.strftime("%H:%M:%S UTC")
 )
 
 if not fresh:
     st.error(
-        "SIGNAL LOCKED: contract candle is stale. "
-        "Waiting for fresh market data."
+        "SIGNAL LOCKED — candle is stale or has an invalid "
+        "timestamp. JARVIS will not display a fresh signal."
     )
     st.stop()
 
-prediction = analyze_contract(candles)
-
-if prediction is None:
-    st.warning("Not enough candles for analysis.")
+if countdown(close_time) == "00:00:00":
+    st.warning("Contract close time has passed. Signal disabled.")
     st.stop()
 
-if prediction["signal"] == "YES PRICE RISING":
-    st.success(prediction["signal"])
-elif prediction["signal"] == "YES PRICE FALLING":
-    st.warning(prediction["signal"])
-else:
-    st.info(prediction["signal"])
 
-st.caption(
-    "This signal describes YES contract price direction. "
-    "It does not predict the probability of settlement."
-)
+# ============================================================
+# JARVIS PREDICTION
+# ============================================================
+
+prediction = analyze_contract(candles)
+
+st.divider()
+st.header("◈ JARVIS YES / NO PREDICTION")
+
+if prediction is None:
+    st.warning(
+        "Not enough candle history to calculate the experimental model."
+    )
+    st.stop()
+
+if prediction["decision"] == "YES":
+    st.success("JARVIS DECISION: YES")
+
+elif prediction["decision"] == "NO":
+    st.error("JARVIS DECISION: NO")
+
+else:
+    st.info("JARVIS DECISION: NEUTRAL")
+
 
 m1, m2, m3 = st.columns(3)
-m1.metric("MODEL SCORE", f'{prediction["score"]:+.3f}')
-m2.metric("RSI", f'{prediction["rsi"]:.1f}')
-m3.metric("MOMENTUM", f'{prediction["momentum"]:+.3f}%')
 
-st.subheader("ONE-MINUTE CONTRACT PRICE CHART")
-st.line_chart(candles["YES price"].tail(90), height=280)
+m1.metric(
+    "MODEL YES ESTIMATE",
+    f'{prediction["yes"]:.1f}%'
+)
 
-# =====================================================
-# SAFETY
-# =====================================================
+m2.metric(
+    "MODEL NO ESTIMATE",
+    f'{prediction["no"]:.1f}%'
+)
+
+m3.metric(
+    "MODEL SCORE",
+    f'{prediction["score"]:+.3f}'
+)
+
+st.progress(prediction["yes"] / 100)
+
+st.caption(
+    f'RSI: {prediction["rsi"]:.1f} | '
+    f'Momentum: {prediction["momentum"]:+.3f}% | '
+    f'Trend: {prediction["trend"]:+.3f}%'
+)
+
+st.warning(
+    "MODEL ESTIMATES ARE EXPERIMENTAL AND UNCALIBRATED. "
+    "They are not proven probabilities of final YES/NO settlement."
+)
+
+
+# ============================================================
+# CHART
+# ============================================================
+
+st.divider()
+st.header("ONE-MINUTE CONTRACT PRICE CHART")
+
+st.line_chart(
+    candles["YES price"].tail(90),
+    height=300
+)
+
+
+# ============================================================
+# RECENT MARKET DATA
+# ============================================================
+
+with st.expander("VIEW RECENT CANDLE DATA"):
+    recent = candles.tail(30).copy()
+
+    recent.index = recent.index.strftime(
+        "%Y-%m-%d %H:%M:%S UTC"
+    )
+
+    st.dataframe(
+        recent.iloc[::-1],
+        use_container_width=True
+    )
+
+
+# ============================================================
+# SYSTEM STATUS
+# ============================================================
 
 st.divider()
 st.header("SYSTEM STATUS")
 
-st.write("Market discovery: Paginated Kalshi API")
-st.write("Market categories: Bitcoin / Gold / WTI Oil / Other")
-st.write("Contract candles: 1 minute")
-st.write("Refresh: 30 seconds")
-st.write("Stale-data lock: 150 seconds")
-st.write("Automatic trading: DISABLED")
-
-st.warning(
-    "Experimental directional analysis only. "
-    "No proven predictive edge or guaranteed accuracy. "
-    "Do not use this signal alone to place a bet."
-)
+st.write("**Market discovery:** Kalshi paginated API")
+st.write("**Price feed:** Kalshi contract candles")
+st.write("**Candle interval:** 1 minute")
+st.write("**Dashboard refresh:** 30 seconds")
+st.write("**Stale-data threshold:** 150 seconds")
+st.write("**YES/NO market probability:** Kalshi quotes")
+st.write("**JARVIS model:** Experimental")
+st.write("**Automatic trading:** Disabled")
+st.write("**Account access:** None")
 
 st.caption(
-    "JARVIS MARKETS BUILD 05 · READ ONLY · "
+    "JARVIS MARKETS BUILD 06 · READ ONLY · "
     + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 )
