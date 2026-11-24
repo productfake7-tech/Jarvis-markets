@@ -164,65 +164,107 @@ st.divider()
 st.header("⚡ JARVIS Live Market Scanner")
 
 import json
+
 from pathlib import Path
 
 results_file = Path("scanner_results.json")
 
 if results_file.exists():
+
     with open(results_file, "r", encoding="utf-8") as f:
+
         scan_data = json.load(f)
 
     st.caption(f"Last scan: {scan_data.get('timestamp', 'Unknown')}")
+
     st.metric("Markets scanned", scan_data.get("markets_scanned", 0))
 
     markets = scan_data.get("markets", [])
 
     def get_category(market):
-        text = (
-            market.get("title", "") + " " +
-            market.get("ticker", "")
-        ).lower()
 
-        categories = {
-            "₿ Bitcoin": ["bitcoin", "btc"],
-            "◆ Ethereum": ["ethereum", "eth"],
-            "🥇 Gold": ["gold"],
-            "🥈 Silver": ["silver"],
-            "🛢️ Oil": ["crude oil", "wti", "oil"],
-            "🔥 Natural Gas": ["natural gas"],
-            "📈 Stocks & Indices": ["s&p", "nasdaq", "dow", "stock"],
-        }
+        title = market.get("title", "").lower()
 
-        for category, words in categories.items():
-            if any(word in text for word in words):
-                return category
+        ticker = market.get("ticker", "").lower()
 
-        return "🌎 Other Markets"
+        if any(x in title for x in ["gold", "silver", "crude oil", "natural gas", "wti"]):
 
-    categories = sorted(set(get_category(m) for m in markets))
+            return "Commodities"
+
+        if any(x in title for x in ["bitcoin", "ethereum", "solana"]) or any(
+
+            x in ticker for x in ["btc", "eth", "sol"]
+
+        ):
+
+            return "Crypto"
+
+        if any(x in title for x in ["s&p", "nasdaq", "dow", "stock"]):
+
+            return "Stocks & Indices"
+
+        return "Other Markets"
+
+    order = {
+
+        "Commodities": 0,
+
+        "Crypto": 1,
+
+        "Stocks & Indices": 2,
+
+        "Other Markets": 3
+
+    }
+
+    markets.sort(key=lambda m: order[get_category(m)])
+
     selected = st.selectbox(
-        "Choose market category",
-        ["All Categories"] + categories
+
+        "Filter markets",
+
+        ["All Markets", "Commodities", "Crypto", "Stocks & Indices", "Other Markets"]
+
     )
 
-    filtered = markets if selected == "All Categories" else [
+    filtered = markets if selected == "All Markets" else [
+
         m for m in markets if get_category(m) == selected
+
     ]
 
-    st.write(f"Showing {len(filtered)} markets")
-
     for market in filtered:
+
         with st.container(border=True):
+
             st.subheader(market.get("title", "Untitled market"))
-            st.caption(
-                f"{get_category(market)} · {market.get('ticker', 'Unknown')}"
-            )
 
-            c1, c2 = st.columns(2)
-            c1.metric("YES bid", f"{market.get('yes_bid_cents', 0):.1f}¢")
-            c2.metric("YES ask", f"{market.get('yes_ask_cents', 0):.1f}¢")
+            st.caption(f"{get_category(market)} · {market.get('ticker', 'Unknown')}")
 
-            st.warning("NO BET — Prediction model not validated.")
-            st.caption(market.get("reason", "No validated prediction available."))
+            bid = float(market.get("yes_bid_cents") or 0)
+
+            ask = float(market.get("yes_ask_cents") or 0)
+
+            if bid > 0 and ask > 0 and ask >= bid:
+
+                yes_probability = (bid + ask) / 2
+
+                no_probability = 100 - yes_probability
+
+                c1, c2 = st.columns(2)
+
+                c1.metric("YES probability", f"{yes_probability:.1f}%")
+
+                c2.metric("NO probability", f"{no_probability:.1f}%")
+
+                st.caption("Estimated from the midpoint of the YES bid and ask. These are market-implied estimates, not JARVIS predictions.")
+
+            else:
+
+                st.info("Probability unavailable — insufficient price data.")
+
+            st.warning("NO BET — JARVIS prediction model is not validated.")
+
 else:
+
     st.info("Waiting for the first scanner results.")
