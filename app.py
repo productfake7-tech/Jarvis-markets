@@ -1,4 +1,3 @@
-import re
 import time
 from datetime import datetime, timezone
 
@@ -8,683 +7,564 @@ import requests
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 
+# ============================================================
+# JARVIS MARKETS 5.0
+# Pyth Pro candles + Kalshi public market radar
+# READ ONLY: no orders, no bets, no account access.
+# ============================================================
+
 st.set_page_config(
     page_title="JARVIS Markets",
     page_icon="◈",
     layout="wide",
+    initial_sidebar_state="expanded",
 )
 
 PYTH_BASE = "https://pyth.dourolabs.app/v1"
 KALSHI_BASE = "https://external-api.kalshi.com/trade-api/v2"
 
 ASSETS = {
-    "Bitcoin": {"symbol": "Crypto.BTC/USD", "emoji": "₿"},
-    "Gold": {"query": "gold", "emoji": "Au"},
-    "WTI Oil": {"query": "oil", "emoji": "🛢️"},
+    "Gold": {
+        "asset_type": "metal",
+        "kalshi_terms": ("gold", "xau", "troy ounce"),
+        "emoji": "Au",
+    },
+    "WTI Oil": {
+        "asset_type": "commodity",
+        "kalshi_terms": ("wti", "west texas intermediate", "crude oil", "oil price"),
+        "emoji": "Oil",
+    },
+    "Bitcoin": {
+        "asset_type": "crypto",
+        "kalshi_terms": ("bitcoin", "btc"),
+        "emoji": "₿",
+    },
 }
 
-# ---------------- SETTINGS ----------------
-
-refresh_seconds = st.sidebar.selectbox(
-    "Refresh interval", [15, 30, 60], index=1
+SPORTS_EXCLUSIONS = (
+    "nba", "nfl", "mlb", "nhl", "soccer", "football", "basketball",
+    "baseball", "hockey", "tennis", "golf", "player", "team",
+    "match", "tournament", "championship",
 )
 
-st_autorefresh(
-    interval=refresh_seconds * 1000,
-    key="jarvis_refresh",
-)
+SESSION = requests.Session()
+SESSION.headers.update({"User-Agent": "JARVIS-Markets/5.0"})
 
-st.sidebar.title("JARVIS CONTROL")
-st.sidebar.caption("READ ONLY — no trading permissions")
-st.sidebar.write("ASSET DATA: PYTH PRO")
-st.sidebar.write("CONTRACT DATA: KALSHI PUBLIC API")
 
-def get_pyth_key():
+def get_api_key():
+    """Read the key only from Streamlit Cloud Secrets; never display it."""
     try:
         return str(st.secrets.get("PYTH_API_KEY", "")).strip()
     except Exception:
         return ""
 
-def safe_float(value):
-    try:
-        value = float(value)
-        return value if np.isfinite(value) else None
-    except (ValueError, TypeError):
-        return None
 
-def format_price(value):
-    if value is None:
-        return "Unavailable"
-    return f"${value:,.4f}" if value < 10 else f"${value:,.2f}"
+def pyth_headers(api_key):
+    headers = {"Accept": "application/json"}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
+    return headers
 
-def format_percent(value):
-    return "Unavailable" if value is None else f"{value:.1f}%"
-
-def parse_time(value):
-    try:
-        return pd.to_datetime(value, utc=True)
-    except Exception:
-        return None
-
-# ---------------- PYTH SYMBOL DISCOVERY ----------------
 
 @st.cache_data(ttl=300, show_spinner=False)
-def discover_pyth_symbol(asset_name, api_key):
-    if asset_name == "Bitcoin":
-        return "Crypto.BTC/USD", "real_time", None
-
-    query = ASSETS[asset_name]["query"]
-
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "User-Agent": "JARVIS-Markets/3.0",
+def get_pyth_catalog(asset_type, entitled_only, api_key):
+    """
+    One documented /symbols request per asset type.
+    No limit/offset pagination: those parameters are not documented
+    for this endpoint.
+    """
+    params = {
+        "asset_type": asset_type,
+        "entitled_only": "true" if entitled_only else "false",
     }
+    response = SESSION.get(
+        f"{PYTH_BASE}/symbols",
+        params=params,
+        headers=pyth_headers(api_key),
+        timeout=20,
+    )
 
-    try:
-        response = requests.get(
-            f"{PYTH_BASE}/symbols",
-            params={
-                "query": query,
-                "entitled_only": "true",
-            },
-            headers=headers,
-            timeout=15,
+    if response.status_code == 401:
+        return [], "Pyth rejected the API key (HTTP 401). Check PYTH_API_KEY."
+    if response.status_code == 403:
+        return [], "Pyth denied catalog access (HTTP 403)."
+    response.raise_for_status()
+
+    payload = response.json()
+    if isinstance(payload, list):
+        return payload, None
+    if isinstance(payload, dict):
+        for key in ("symbols", "data", "results"):
+            if isinstance(payload.get(key), list):
+                return payload[key], None
+    return [], "Pyth returned an unexpected catalog format."
+
+
+def searchable_text(item):
+    return " ".join(
+        str(item.get(field, "") or "")
+        for field in ("symbol", "name", "description", "base", "quote_currency")
+    ).lower()
+
+
+def feed_matches(item, asset_name):
+    text = searchable_text(item)
+    if asset_name == "Gold":
+        return "gold" in text or "xau" in text
+    if asset_name == "WTI Oil":
+        # Commodity asset_type is already filtered by Pyth.
+        # PYTHOIL is included because some Pyth symbols use that name.
+        return any(term in text for term in (
+            "wti", "west texas intermediate", "pythoil", "crude oil", "oil/usd"
+        ))
+    if asset_name == "Bitcoin":
+        symbol = str(item.get("symbol", "")).lower()
+        return (
+            symbol in ("crypto.btc/usd", "crypto.btc/usdt", "btc/usd")
+            or "bitcoin" in text
+        )
+    return False
+
+
+def feed_rank(item, asset_name):
+    symbol = str(item.get("symbol", "")).lower()
+    score = 0
+    if str(item.get("state", "")).lower() == "stable":
+        score += 100
+    if asset_name == "Bitcoin" and symbol == "crypto.btc/usd":
+        score += 100
+    if asset_name == "Gold" and "gold" in symbol:
+        score += 50
+    if asset_name == "WTI Oil" and "pythoil" in symbol:
+        score += 70
+    if str(item.get("instrument_type", "")).lower() in ("spot", "index", "future"):
+        score += 10
+    if "usd" in symbol:
+        score += 5
+    return score
+
+
+@st.cache_data(ttl=300, show_spinner=False)
+def discover_pyth_feed(asset_name, asset_type, api_key):
+    """
+    First check feeds entitled to this key. If not found, inspect the
+    visible catalog to distinguish 'not entitled' from 'not listed'.
+    """
+    entitled_error = None
+
+    if api_key:
+        entitled, entitled_error = get_pyth_catalog(asset_type, True, api_key)
+        entitled_matches = [
+            item for item in entitled
+            if isinstance(item, dict) and feed_matches(item, asset_name)
+        ]
+        if entitled_matches:
+            selected = max(
+                entitled_matches,
+                key=lambda item: feed_rank(item, asset_name),
+            )
+            return selected, "entitled", None
+
+    public, public_error = get_pyth_catalog(asset_type, False, api_key)
+    public_matches = [
+        item for item in public
+        if isinstance(item, dict) and feed_matches(item, asset_name)
+    ]
+
+    if public_matches:
+        selected = max(
+            public_matches,
+            key=lambda item: feed_rank(item, asset_name),
+        )
+        if not api_key:
+            return selected, "key_missing", "Add PYTH_API_KEY to Streamlit Secrets to request candles."
+        if entitled_error and "HTTP 401" in entitled_error:
+            return selected, "key_error", entitled_error
+        return selected, "not_entitled", (
+            "Feed is listed in Pyth's catalog but is not returned by entitled_only=true. "
+            "Your API key may not include this feed."
         )
 
-        if response.status_code == 401:
-            return None, None, "Pyth rejected the API key (401)."
+    if entitled_error and not public_error:
+        detail = entitled_error
+    elif public_error:
+        detail = public_error
+    else:
+        detail = "No matching feed appeared in Pyth's visible catalog."
+    return None, "not_found", detail
 
-        if response.status_code == 403:
-            return None, None, "Pyth denied symbol catalog access (403)."
 
-        response.raise_for_status()
-        data = response.json()
-
-        if isinstance(data, dict):
-            symbols = data.get("symbols", data.get("data", []))
-        else:
-            symbols = data
-
-        if not isinstance(symbols, list):
-            return None, None, "Unexpected Pyth symbol catalog response."
-
-        candidates = []
-
-        for item in symbols:
-            if not isinstance(item, dict):
-                continue
-
-            symbol = str(item.get("symbol", ""))
-            name = str(item.get("name", ""))
-            description = str(item.get("description", ""))
-
-            searchable = f"{symbol} {name} {description}".lower()
-
-            if asset_name == "Gold":
-                valid = (
-                    "gold" in searchable
-                    or "xau" in searchable
-                )
-                invalid = any(
-                    word in searchable
-                    for word in ["golden", "goldfish"]
-                )
-            else:
-                valid = (
-                    "wti" in searchable
-                    or "crude oil" in searchable
-                    or "oil" in searchable
-                )
-                invalid = any(
-                    word in searchable
-                    for word in ["olive", "oil company"]
-                )
-
-            if valid and not invalid and symbol:
-                candidates.append(item)
-
-        if not candidates:
-            return (
-                None,
-                None,
-                f"No entitled {asset_name} feed appeared in Pyth's symbol catalog.",
-            )
-
-        # Prefer a direct WTI feed for oil and a direct gold/USD feed for gold.
-        def rank(item):
-            symbol = str(item.get("symbol", "")).lower()
-
-            if asset_name == "Gold":
-                return (
-                    0 if "gold/usd" in symbol else
-                    1 if "xau/usd" in symbol else
-                    2
-                )
-
-            return (
-                0 if "wti" in symbol else
-                1 if "crude" in symbol else
-                2
-            )
-
-        candidates.sort(key=rank)
-
-        selected = candidates[0]
-        symbol = selected["symbol"]
-        channel = selected.get("min_channel") or "real_time"
-
-        return symbol, channel, None
-
-    except requests.exceptions.RequestException as exc:
-        return None, None, f"Pyth catalog connection error: {exc}"
-    except Exception as exc:
-        return None, None, f"Pyth catalog error: {exc}"
-
-# ---------------- PYTH CANDLES ----------------
-
-@st.cache_data(ttl=10, show_spinner=False)
-def get_pyth_candles(symbol, channel, api_key):
+@st.cache_data(ttl=20, show_spinner=False)
+def get_pyth_candles(symbol, channel, api_key, lookback_minutes=240):
     if not api_key:
         return None, "Missing PYTH_API_KEY in Streamlit Secrets."
 
     now = int(time.time())
-
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "User-Agent": "JARVIS-Markets/3.0",
-    }
-
     params = {
         "symbol": symbol,
-        "from": now - 240 * 60,
+        "from": now - int(lookback_minutes * 60),
         "to": now,
         "resolution": "1",
     }
+    response = SESSION.get(
+        f"{PYTH_BASE}/{channel}/history",
+        params=params,
+        headers=pyth_headers(api_key),
+        timeout=20,
+    )
 
-    try:
-        response = requests.get(
-            f"{PYTH_BASE}/{channel}/history",
-            headers=headers,
-            params=params,
-            timeout=15,
-        )
+    if response.status_code == 401:
+        return None, "Pyth rejected the API key (HTTP 401)."
+    if response.status_code == 403:
+        return None, "Pyth returned HTTP 403: this key is not entitled to this feed/channel."
+    if response.status_code == 404:
+        return None, "Pyth returned HTTP 404: the catalog symbol was not found on the history endpoint."
+    if response.status_code == 400:
+        return None, f"Pyth rejected the history request (HTTP 400): {response.text[:250]}"
+    response.raise_for_status()
 
-        if response.status_code in (401, 403, 404):
-            detail = response.text[:300]
-            return None, (
-                f"Pyth HTTP {response.status_code}: "
-                f"{detail or response.reason}"
-            )
+    payload = response.json()
+    if payload.get("s") != "ok":
+        return None, f"Pyth history status: {payload.get('s', 'unknown')}."
 
-        if response.status_code == 429:
-            return None, "Pyth rate limit reached (429)."
+    arrays = [payload.get(key, []) for key in ("t", "o", "h", "l", "c")]
+    if not all(isinstance(values, list) for values in arrays):
+        return None, "Pyth returned malformed candle arrays."
+    if not arrays[0]:
+        return None, "Pyth returned no candles for this time window."
 
-        response.raise_for_status()
-        data = response.json()
+    length = min(len(values) for values in arrays)
+    if length < 25:
+        return None, f"Only {length} one-minute candles returned; not enough for the trend calculation."
 
-        if data.get("s") != "ok":
-            return None, f"Pyth returned: {data.get('s', 'no data')}."
+    frame = pd.DataFrame({
+        "timestamp": arrays[0][:length],
+        "open": arrays[1][:length],
+        "high": arrays[2][:length],
+        "low": arrays[3][:length],
+        "close": arrays[4][:length],
+    })
+    for column in ("open", "high", "low", "close"):
+        frame[column] = pd.to_numeric(frame[column], errors="coerce")
+    frame["timestamp"] = pd.to_numeric(frame["timestamp"], errors="coerce")
+    frame = frame.dropna().drop_duplicates("timestamp").sort_values("timestamp")
+    frame = frame[frame["close"] > 0].reset_index(drop=True)
 
-        timestamps = data.get("t", [])
-        closes = data.get("c", [])
+    if len(frame) < 25:
+        return None, "Not enough valid candles after cleaning the Pyth response."
+    return frame, None
 
-        if not timestamps or not closes:
-            return None, "Pyth returned no candles."
 
-        df = pd.DataFrame({
-            "Close": pd.to_numeric(closes, errors="coerce"),
-        })
-
-        df["Time"] = pd.to_datetime(
-            timestamps, unit="s", utc=True
-        )
-
-        df = df.dropna(subset=["Close"])
-        df = df.set_index("Time").sort_index()
-        df = df[~df.index.duplicated(keep="last")]
-
-        if df.empty:
-            return None, "No valid candle prices."
-
-        return df.tail(240), None
-
-    except requests.exceptions.Timeout:
-        return None, "Pyth request timed out."
-    except requests.exceptions.RequestException as exc:
-        return None, f"Pyth connection error: {exc}"
-    except Exception as exc:
-        return None, f"Pyth data error: {exc}"
-
-# ---------------- EXPERIMENTAL DIRECTIONAL MODEL ----------------
-
-def calculate_signal(df):
-    if df is None or len(df) < 30:
-        return None
-
-    close = df["Close"].astype(float)
-
+def calculate_signal(frame):
+    close = frame["close"].astype(float)
     ema_fast = close.ewm(span=9, adjust=False).mean()
     ema_slow = close.ewm(span=21, adjust=False).mean()
 
-    latest = float(close.iloc[-1])
-    previous = float(close.iloc[-6])
-
-    if previous == 0:
-        return None
-
-    momentum = (latest / previous - 1) * 100
-    trend = (float(ema_fast.iloc[-1]) / float(ema_slow.iloc[-1]) - 1) * 100
-
-    change = close.diff()
-    gains = change.clip(lower=0)
-    losses = -change.clip(upper=0)
-
-    avg_gain = gains.rolling(14).mean()
-    avg_loss = losses.rolling(14).mean()
-
-    rs = avg_gain / avg_loss.replace(0, np.nan)
+    delta = close.diff()
+    gains = delta.clip(lower=0).rolling(14).mean()
+    losses = (-delta.clip(upper=0)).rolling(14).mean()
+    rs = gains / losses.replace(0, np.nan)
     rsi = 100 - (100 / (1 + rs))
+    latest_rsi = float(rsi.iloc[-1]) if pd.notna(rsi.iloc[-1]) else 50.0
 
-    rsi_value = (
-        float(rsi.iloc[-1])
-        if pd.notna(rsi.iloc[-1])
-        else 50.0
-    )
+    ema_gap_pct = (float(ema_fast.iloc[-1]) / float(ema_slow.iloc[-1]) - 1) * 100
+    momentum_pct = (float(close.iloc[-1]) / float(close.iloc[-6]) - 1) * 100
+    raw_score = 50 + (ema_gap_pct * 180) + ((latest_rsi - 50) * 0.45) + (momentum_pct * 90)
+    score = float(np.clip(raw_score, 0, 100))
 
-    score = float(np.clip(
-        50 + momentum * 8 + trend * 120
-        + (rsi_value - 50) * 0.08,
-        0,
-        100,
-    ))
-
-    direction = (
-        "UP" if score >= 55 else
-        "DOWN" if score <= 45 else
-        "NEUTRAL"
-    )
+    if score >= 58:
+        direction = "UP"
+    elif score <= 42:
+        direction = "DOWN"
+    else:
+        direction = "NEUTRAL"
 
     return {
         "direction": direction,
         "score": score,
-        "momentum": momentum,
-        "trend": trend,
-        "rsi": rsi_value,
+        "rsi": latest_rsi,
+        "ema_gap_pct": ema_gap_pct,
+        "momentum_pct": momentum_pct,
     }
 
-# ---------------- KALSHI MARKET DISCOVERY ----------------
+
+def format_price(value):
+    value = float(value)
+    if abs(value) >= 1000:
+        return f"${value:,.2f}"
+    if abs(value) >= 1:
+        return f"${value:,.3f}"
+    return f"${value:.6f}"
+
+
+def kalshi_price_cents(market, dollar_key, cents_key):
+    """Handle both current *_dollars fields and legacy cent fields."""
+    dollars = market.get(dollar_key)
+    if dollars not in (None, ""):
+        try:
+            return float(dollars) * 100
+        except (TypeError, ValueError):
+            pass
+    cents = market.get(cents_key)
+    if cents not in (None, ""):
+        try:
+            return float(cents)
+        except (TypeError, ValueError):
+            pass
+    return None
+
+
+def yes_midpoint_cents(market):
+    yes_bid = kalshi_price_cents(market, "yes_bid_dollars", "yes_bid")
+    yes_ask = kalshi_price_cents(market, "yes_ask_dollars", "yes_ask")
+    no_bid = kalshi_price_cents(market, "no_bid_dollars", "no_bid")
+    no_ask = kalshi_price_cents(market, "no_ask_dollars", "no_ask")
+
+    if yes_ask is None and no_bid is not None:
+        yes_ask = 100 - no_bid
+    if yes_bid is None and no_ask is not None:
+        yes_bid = 100 - no_ask
+
+    # 0 / 100 commonly represent an absent quote, not a real midpoint.
+    valid_bid = yes_bid if yes_bid is not None and 0 < yes_bid < 100 else None
+    valid_ask = yes_ask if yes_ask is not None and 0 < yes_ask < 100 else None
+
+    if valid_bid is not None and valid_ask is not None and valid_ask >= valid_bid:
+        return (valid_bid + valid_ask) / 2, "bid/ask midpoint"
+    if valid_bid is not None:
+        return valid_bid, "best YES bid only"
+    if valid_ask is not None:
+        return valid_ask, "best YES ask only"
+
+    last = kalshi_price_cents(market, "last_price_dollars", "last_price")
+    if last is not None and 0 < last < 100:
+        return last, "last traded price"
+    return None, "no usable quote"
+
 
 @st.cache_data(ttl=30, show_spinner=False)
-def get_open_kalshi_markets():
+def get_kalshi_open_markets():
     markets = []
     cursor = None
 
+    # Kalshi's public endpoint supports up to 1,000 markets per page.
     for _ in range(3):
-        params = {
-            "status": "open",
-            "limit": 1000,
-            "mve_filter": "exclude",
-        }
-
+        params = {"status": "open", "limit": 1000, "mve_filter": "exclude"}
         if cursor:
             params["cursor"] = cursor
+        response = SESSION.get(
+            f"{KALSHI_BASE}/markets",
+            params=params,
+            timeout=25,
+        )
+        response.raise_for_status()
+        payload = response.json()
+        page = payload.get("markets", [])
+        if not isinstance(page, list):
+            raise ValueError("Kalshi returned an unexpected markets response.")
+        markets.extend(page)
+        cursor = payload.get("cursor")
+        if not cursor or not page:
+            break
+    return markets
 
-        try:
-            response = requests.get(
-                f"{KALSHI_BASE}/markets",
-                params=params,
-                headers={"User-Agent": "JARVIS-Markets/3.0"},
-                timeout=15,
-            )
-            response.raise_for_status()
 
-            data = response.json()
-            markets.extend(data.get("markets", []))
-            cursor = data.get("cursor")
+def market_matches(market, asset_name):
+    text = " ".join(str(market.get(key, "") or "") for key in (
+        "title", "subtitle", "yes_sub_title", "no_sub_title",
+        "rules_primary", "rules_secondary", "ticker",
+    )).lower()
 
-            if not cursor:
-                break
+    if any(term in text for term in SPORTS_EXCLUSIONS):
+        return False
 
-        except Exception as exc:
-            return markets, f"Kalshi API error: {exc}"
+    return any(term in text for term in ASSETS[asset_name]["kalshi_terms"])
 
-    return markets, None
 
-def market_close_time(market):
-    return (
-        parse_time(market.get("close_time"))
-        or parse_time(market.get("expected_expiration_time"))
-        or parse_time(market.get("expiration_time"))
-    )
+def market_close_sort(market):
+    return str(market.get("close_time", market.get("expiration_time", "")))
 
-def find_asset_markets(markets, asset_name):
-    now = pd.Timestamp.now(tz="UTC")
-    matches = []
 
-    # Search human-readable contract text only.
-    # Do not search tickers: ticker fragments create false matches.
-    for market in markets:
-        title = str(market.get("title", ""))
-        subtitle = str(market.get("subtitle", ""))
+def render_market(market):
+    title = market.get("title") or market.get("ticker") or "Untitled market"
+    ticker = market.get("ticker", "")
+    midpoint, source = yes_midpoint_cents(market)
+    close_time = market.get("close_time") or market.get("expiration_time") or "Not provided"
 
-        searchable = f"{title} {subtitle}".lower()
+    st.markdown(f"**{title}**")
+    if ticker:
+        st.caption(ticker)
+    if midpoint is None:
+        st.write("YES: —  |  NO: —")
+    else:
+        yes_probability = float(np.clip(midpoint, 0, 100))
+        no_probability = 100 - yes_probability
+        left, right = st.columns(2)
+        left.metric("YES · market-implied", f"{yes_probability:.1f}%")
+        right.metric("NO · market-implied", f"{no_probability:.1f}%")
+        st.caption(f"Quote source: {source}. These are market prices, not JARVIS predictions.")
+    st.caption(f"Closes: {close_time}")
+    st.divider()
 
-        if asset_name == "Gold":
-            pattern = r"\b(gold|xau|troy ounce)\b"
-        elif asset_name == "WTI Oil":
-            pattern = r"\b(wti|crude oil|crude|oil price|barrel)\b"
-        else:
-            pattern = r"\b(bitcoin|btc)\b"
 
-        if not re.search(pattern, searchable):
-            continue
+# ------------------------- SIDEBAR -------------------------
 
-        close_time = market_close_time(market)
+with st.sidebar:
+    st.title("◈ JARVIS MARKETS")
+    st.caption("Market data monitor · Read only")
+    refresh_seconds = st.selectbox("Auto-refresh", [15, 30, 60], index=0)
+    st.caption("Prices and public markets refresh automatically.")
+    st.divider()
+    st.markdown("**Safety mode**")
+    st.success("READ ONLY — no automatic bets or orders")
+    st.caption("Directional scores are technical indicators, not calibrated probabilities.")
 
-        if close_time is None or close_time <= now:
-            continue
+st_autorefresh(interval=refresh_seconds * 1000, key="jarvis_refresh")
 
-        # Reject obvious sports and player-prop language.
-        sports_terms = [
-            "touchdown", "passing yards", "rushing yards",
-            "receiving yards", "rebounds", "assists",
-            "points scored", "quarterback", "nba", "nfl",
-            "nhl", "mlb", "soccer", "football",
-        ]
-
-        if any(term in searchable for term in sports_terms):
-            continue
-
-        market["_jarvis_close"] = close_time
-        matches.append(market)
-
-    matches.sort(key=lambda item: item["_jarvis_close"])
-    return matches
-
-# ---------------- KALSHI PRICES ----------------
-
-def market_prices(market):
-    def read_price(dollar_key, cents_key):
-        value = safe_float(market.get(dollar_key))
-        if value is not None:
-            return value
-
-        cents = safe_float(market.get(cents_key))
-        return cents / 100 if cents is not None else None
-
-    yes_bid = read_price("yes_bid_dollars", "yes_bid")
-    yes_ask = read_price("yes_ask_dollars", "yes_ask")
-    no_bid = read_price("no_bid_dollars", "no_bid")
-    no_ask = read_price("no_ask_dollars", "no_ask")
-    last = read_price("last_price_dollars", "last_price")
-
-    if yes_ask is None and no_bid is not None:
-        yes_ask = 1 - no_bid
-
-    if no_ask is None and yes_bid is not None:
-        no_ask = 1 - yes_bid
-
-    yes_mid = None
-
-    if yes_bid is not None and yes_ask is not None:
-        yes_mid = (yes_bid + yes_ask) / 2
-    elif last is not None:
-        yes_mid = last
-
-    return {
-        "yes_bid": yes_bid,
-        "yes_ask": yes_ask,
-        "yes_mid": yes_mid,
-        "no_mid": 1 - yes_mid if yes_mid is not None else None,
-    }
-
-# ---------------- DASHBOARD ----------------
-
-st.title("◈ JARVIS MARKETS")
-st.caption("PYTH ASSET MONITOR • KALSHI CONTRACT RADAR • READ ONLY")
-
-st.info(
-    "Experimental research tool. Directional scores are not "
-    "calibrated probabilities or verified trading signals."
-)
-
-api_key = get_pyth_key()
-
+api_key = get_api_key()
 if not api_key:
-    st.error("PYTH_API_KEY is missing from Streamlit Secrets.")
+    st.warning("PYTH_API_KEY is not configured in Streamlit Cloud → Settings → Secrets. Public Kalshi markets can still load, but Pyth candles need the key.")
 
-# ---------------- ASSET MONITOR ----------------
+st.title("JARVIS Markets")
+st.caption(f"Updated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}")
 
-st.header("1. ASSET MARKET MONITOR")
+# ------------------------- ASSET DATA -------------------------
 
-columns = st.columns(3)
 asset_results = {}
+asset_columns = st.columns(3)
 
-for column, (name, config) in zip(columns, ASSETS.items()):
-    with column:
-        st.subheader(f"{config['emoji']} {name}")
+for index, asset_name in enumerate(("Gold", "WTI Oil", "Bitcoin")):
+    config = ASSETS[asset_name]
+    with asset_columns[index]:
+        st.subheader(f"{config['emoji']} {asset_name}")
+        feed, discovery_status, discovery_message = discover_pyth_feed(
+            asset_name, config["asset_type"], api_key
+        )
 
-        symbol = config.get("symbol")
-        channel = "real_time"
-        discovery_error = None
-
-        if name != "Bitcoin" and api_key:
-            symbol, channel, discovery_error = discover_pyth_symbol(
-                name, api_key
-            )
-
-        if discovery_error:
+        if feed is None:
             st.error("Feed discovery failed")
-            st.caption(discovery_error)
-            asset_results[name] = None
+            st.caption(discovery_message or "No matching Pyth feed was found.")
+            asset_results[asset_name] = None
             continue
 
-        if not symbol:
-            st.error("No entitled Pyth feed found")
-            asset_results[name] = None
+        symbol = str(feed.get("symbol", "")).strip()
+        channel = str(feed.get("min_channel", "") or "real_time").strip()
+
+        if discovery_status == "not_entitled":
+            st.warning("Feed listed, but key entitlement not confirmed")
+            st.caption(discovery_message)
+            asset_results[asset_name] = None
             continue
-
-        df, error = get_pyth_candles(
-            symbol, channel, api_key
-        )
-
-        if df is None or df.empty:
-            st.error("Asset data unavailable")
-            st.caption(error or "No data returned.")
-            st.caption(f"Attempted: {symbol} • {channel}")
-            asset_results[name] = None
+        if discovery_status == "key_missing":
+            st.warning("Feed found; API key required for candles")
+            st.caption(discovery_message)
+            asset_results[asset_name] = None
             continue
-
-        last_time = df.index[-1]
-        age = max(
-            0,
-            int(
-                (
-                    pd.Timestamp.now(tz="UTC") - last_time
-                ).total_seconds()
-            ),
-        )
-
-        current = float(df["Close"].iloc[-1])
-        previous = (
-            float(df["Close"].iloc[-2])
-            if len(df) > 1 else current
-        )
-
-        change = (
-            (current / previous - 1) * 100
-            if previous else 0
-        )
-
-        signal = calculate_signal(df)
-
-        asset_results[name] = {
-            "age": age,
-            "signal": signal,
-        }
-
-        st.metric(
-            "PYTH PRICE",
-            format_price(current),
-            f"{change:+.4f}% (last candle)",
-        )
+        if discovery_status == "key_error":
+            st.error("Pyth API key rejected")
+            st.caption(discovery_message)
+            asset_results[asset_name] = None
+            continue
 
         st.caption(f"Feed: {symbol}")
         st.caption(f"Channel: {channel}")
+
+        try:
+            frame, candle_error = get_pyth_candles(symbol, channel, api_key)
+        except requests.RequestException as exc:
+            frame, candle_error = None, f"Pyth network error: {exc}"
+        except Exception as exc:
+            frame, candle_error = None, f"Pyth data error: {exc}"
+
+        if frame is None:
+            st.error("Price data unavailable")
+            st.caption(candle_error)
+            asset_results[asset_name] = None
+            continue
+
+        latest = frame.iloc[-1]
+        candle_time = datetime.fromtimestamp(
+            int(latest["timestamp"]), tz=timezone.utc
+        )
+        age_seconds = max(0, int(time.time() - int(latest["timestamp"])))
+        st.metric("Pyth price", format_price(latest["close"]))
         st.caption(
-            f"Last candle: {last_time.strftime('%H:%M:%S UTC')} "
-            f"• Age: {age}s"
+            f"Last 1-min candle: {candle_time.strftime('%H:%M:%S UTC')} · "
+            f"Age: {age_seconds}s"
         )
 
-        if age > 180:
-            st.warning("STALE DATA — SIGNAL DISABLED")
-        elif signal is None:
-            st.warning("Waiting for enough candles.")
-        elif signal["direction"] == "UP":
-            st.success(
-                f"JARVIS: UP — Score {signal['score']:.1f}/100"
-            )
+        if age_seconds > 180:
+            st.warning("STALE DATA — signal disabled")
+            st.caption("The latest candle is more than 3 minutes old.")
+            asset_results[asset_name] = {
+                "frame": frame, "signal": None, "age": age_seconds,
+            }
+            continue
+
+        signal = calculate_signal(frame)
+        if signal["direction"] == "UP":
+            st.success(f"JARVIS: UP · Score {signal['score']:.1f}/100")
         elif signal["direction"] == "DOWN":
-            st.error(
-                f"JARVIS: DOWN — Score {signal['score']:.1f}/100"
-            )
+            st.error(f"JARVIS: DOWN · Score {signal['score']:.1f}/100")
         else:
-            st.warning(
-                f"JARVIS: NEUTRAL — Score {signal['score']:.1f}/100"
-            )
-
-        if signal:
-            with st.expander("Technical details"):
-                st.write(f"Momentum: {signal['momentum']:+.5f}%")
-                st.write(f"EMA trend: {signal['trend']:+.5f}%")
-                st.write(f"RSI: {signal['rsi']:.2f}")
-                st.caption("Score is not a probability of winning.")
-
-        st.line_chart(df["Close"], height=190)
-
-# ---------------- KALSHI RADAR ----------------
-
-st.divider()
-st.header("2. KALSHI LIVE CONTRACT RADAR")
-
-with st.spinner("Scanning Kalshi markets..."):
-    kalshi_markets, kalshi_error = get_open_kalshi_markets()
-
-if kalshi_error:
-    st.warning(kalshi_error)
-
-st.caption(f"Open markets scanned: {len(kalshi_markets)}")
-
-for name in ASSETS:
-    st.subheader(name)
-
-    matches = find_asset_markets(kalshi_markets, name)
-
-    if not matches:
-        st.info(
-            "No clearly matching open commodity/asset contract found "
-            "in the markets scanned."
-        )
-        continue
-
-    for market in matches[:3]:
-        prices = market_prices(market)
-
-        st.write(f"**{market.get('title', 'Untitled contract')}**")
-        st.caption(f"Ticker: {market.get('ticker', 'Unknown')}")
-
-        a, b, c, d = st.columns(4)
-
-        a.metric(
-            "YES MID",
-            format_percent(
-                prices["yes_mid"] * 100
-                if prices["yes_mid"] is not None else None
-            ),
-        )
-        b.metric(
-            "NO MID",
-            format_percent(
-                prices["no_mid"] * 100
-                if prices["no_mid"] is not None else None
-            ),
-        )
-        c.metric(
-            "YES BID",
-            format_percent(
-                prices["yes_bid"] * 100
-                if prices["yes_bid"] is not None else None
-            ),
-        )
-        d.metric(
-            "YES ASK",
-            format_percent(
-                prices["yes_ask"] * 100
-                if prices["yes_ask"] is not None else None
-            ),
-        )
-
-        close_time = market.get("_jarvis_close")
-
-        if close_time is not None:
-            seconds_left = max(
-                0,
-                int(
-                    (
-                        close_time
-                        - pd.Timestamp.now(tz="UTC")
-                    ).total_seconds()
-                ),
-            )
-            st.write(f"**Close countdown:** {seconds_left:,} seconds")
+            st.info(f"JARVIS: NEUTRAL · Score {signal['score']:.1f}/100")
 
         st.caption(
-            f"Volume: {market.get('volume_fp', market.get('volume', 'Unavailable'))}"
+            f"RSI(14): {signal['rsi']:.1f} · "
+            f"EMA spread: {signal['ema_gap_pct']:+.3f}% · "
+            f"5-min momentum: {signal['momentum_pct']:+.3f}%"
         )
+        asset_results[asset_name] = {
+            "frame": frame, "signal": signal, "age": age_seconds,
+        }
 
-        with st.expander("Contract settlement rules"):
-            st.write(
-                market.get(
-                    "rules_primary",
-                    "No primary rules supplied.",
-                )
-            )
-            st.write(market.get("rules_secondary", ""))
-
-        st.markdown("---")
-
-# ---------------- SYSTEM STATUS ----------------
+# ------------------------- KALSHI RADAR -------------------------
 
 st.divider()
-st.header("3. JARVIS SYSTEM STATUS")
+st.header("Kalshi Market Radar")
+st.caption("Open public contracts only. YES/NO percentages are inferred from available quotes.")
 
-for name in ASSETS:
-    result = asset_results.get(name)
+try:
+    kalshi_markets = get_kalshi_open_markets()
+    st.caption(f"Open markets scanned: {len(kalshi_markets):,}")
 
-    if result is None:
-        st.write(f"🔴 {name}: No usable Pyth data")
-    elif result["age"] > 180:
-        st.write(
-            f"🟠 {name}: Stale data ({result['age']} seconds old)"
-        )
-    else:
-        st.write(
-            f"🟢 {name}: Pyth candles available "
-            f"({result['age']} seconds old)"
-        )
+    tabs = st.tabs(["Commodities", "Crypto", "All matches"])
+    category_map = {
+        "Commodities": ("Gold", "WTI Oil"),
+        "Crypto": ("Bitcoin",),
+        "All matches": ("Gold", "WTI Oil", "Bitcoin"),
+    }
 
-st.markdown("---")
-st.write("**Pyth:** underlying asset price candles.")
-st.write("**Kalshi:** contract quotes, not JARVIS predictions.")
-st.write("**Timing:** asset candle time and contract close time are separate.")
+    for tab, category in zip(tabs, category_map):
+        with tab:
+            matched = []
+            for asset_name in category:
+                asset_markets = [
+                    market for market in kalshi_markets
+                    if isinstance(market, dict) and market_matches(market, asset_name)
+                ]
+                asset_markets.sort(key=market_close_sort)
+                for market in asset_markets[:8]:
+                    matched.append((asset_name, market))
 
-st.warning(
-    "Experimental only. No score guarantees a profitable outcome. "
-    "Verify contract settlement rules and test signals against historical "
-    "outcomes before making any financial decision."
-)
+            if not matched:
+                st.info("No clearly matching open contracts were found in the scanned pages.")
+            else:
+                for asset_name, market in matched:
+                    st.markdown(f"**{asset_name}**")
+                    render_market(market)
 
+except requests.RequestException as exc:
+    st.error(f"Kalshi market feed unavailable: {exc}")
+except Exception as exc:
+    st.error(f"Kalshi scanner error: {exc}")
+
+# ------------------------- FOOTER -------------------------
+
+st.divider()
 st.caption(
-    "JARVIS MARKETS • EXPERIMENTAL • READ ONLY • "
-    + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    "Data sources: Pyth Pro REST candles and Kalshi public market data. "
+    "A directional score is not a probability of winning. "
+    "Market-implied YES/NO prices can be stale, wide, or illiquid. "
+    "This dashboard does not place trades."
 )
