@@ -303,6 +303,116 @@ def update_predictions(history, asset, horizon, prediction):
 
 
 # =====================================================
+# HISTORICAL BACKTEST ENGINE
+# =====================================================
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def historical_frame(ticker):
+    try:
+        df = yf.download(
+            ticker,
+            period="60d",
+            interval="15m",
+            auto_adjust=True,
+            progress=False,
+            threads=False
+        )
+
+        if df is None or df.empty:
+            return pd.DataFrame()
+
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.get_level_values(0)
+
+        return df.dropna(subset=["Close"])
+
+    except Exception:
+        return pd.DataFrame()
+
+
+def run_backtest(ticker, horizon):
+    df = historical_frame(ticker)
+
+    if df.empty or len(df) < 100:
+        return None
+
+    close = df["Close"].astype(float).dropna()
+
+    ema_fast = close.ewm(span=12).mean()
+    ema_slow = close.ewm(span=26).mean()
+    rsi = calculate_rsi(close)
+
+    bars = 1 if horizon == "15m" else 4
+
+    momentum = (
+        close / close.shift(bars) - 1
+    ) * 100
+
+    trend = (
+        ema_fast / ema_slow - 1
+    ) * 100
+
+    score = (
+        0.50 * np.tanh(momentum / 0.35)
+        + 0.30 * np.tanh(trend / 0.25)
+        + 0.20 * np.tanh((rsi - 50) / 15)
+    )
+
+    if horizon == "1h":
+        score = score * 0.8
+
+    yes_probability = np.clip(
+        50 + 30 * np.tanh(score),
+        20,
+        80
+    )
+
+    prediction = np.where(
+        yes_probability >= 55, 1,
+        np.where(yes_probability <= 45, -1, 0)
+    )
+
+    future_return = (
+        close.shift(-bars) / close - 1
+    ) * 100
+
+    actual = np.where(future_return > 0, 1, -1)
+
+    results = pd.DataFrame({
+        "prediction": prediction,
+        "actual": actual,
+        "future_return": future_return,
+        "yes_probability": yes_probability
+    }).dropna()
+
+    results = results[results["prediction"] != 0]
+
+    if results.empty:
+        return None
+
+    results["correct"] = (
+        results["prediction"] == results["actual"]
+    )
+
+    accuracy = results["correct"].mean() * 100
+
+    return {
+        "accuracy": accuracy,
+        "samples": len(results),
+        "wins": int(results["correct"].sum()),
+        "losses": int((~results["correct"]).sum()),
+        "coverage": (
+            len(results) / len(future_return.dropna()) * 100
+        ),
+        "brier": np.mean(
+            (
+                results["yes_probability"] / 100
+                - (results["actual"] == 1).astype(float)
+            ) ** 2
+        )
+    }
+
+# =====================================================
 # KALSHI RADAR
 # =====================================================
 
