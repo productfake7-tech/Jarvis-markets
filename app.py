@@ -175,13 +175,6 @@ if results_file.exists():
     st.caption(f"Last scan: {scan_data.get('timestamp', 'Unknown')}")
     st.metric("Markets scanned", scan_data.get("markets_scanned", 0))
 
-if results_file.exists():
-    with open(results_file, "r", encoding="utf-8") as f:
-        scan_data = json.load(f)
-
-    st.caption(f"Last scan: {scan_data.get('timestamp', 'Unknown')}")
-    st.metric("Markets scanned", scan_data.get("markets_scanned", 0))
-
     markets = scan_data.get("markets", [])
 
     def get_category(market):
@@ -190,24 +183,27 @@ if results_file.exists():
             market.get("ticker", "")
         ).lower()
 
-        if any(x in text for x in ["bitcoin", "btc"]):
-            return "₿ Bitcoin"
-        if any(x in text for x in ["ethereum", "eth"]):
-            return "◆ Ethereum"
-        if any(x in text for x in ["gold"]):
-            return "🥇 Gold"
-        if any(x in text for x in ["silver"]):
-            return "🥈 Silver"
-        if any(x in text for x in ["crude oil", "oil", "wti"]):
-            return "🛢️ Oil"
-        if any(x in text for x in ["natural gas"]):
-            return "🔥 Natural Gas"
-        if any(x in text for x in ["s&p", "nasdaq", "dow", "stock"]):
-            return "📈 Stocks & Indices"
+        categories = {
+            "₿ Bitcoin": ["bitcoin", "btc"],
+            "◆ Ethereum": ["ethereum", "eth"],
+            "🥇 Gold": ["gold"],
+            "🥈 Silver": ["silver"],
+            "🛢️ Oil": ["crude oil", "wti", "oil"],
+            "🔥 Natural Gas": ["natural gas"],
+            "📈 Stocks & Indices": ["s&p", "nasdaq", "dow", "stock"],
+        }
+
+        for category, words in categories.items():
+            if any(word in text for word in words):
+                return category
+
         return "🌎 Other Markets"
 
     categories = sorted(set(get_category(m) for m in markets))
-    selected = st.selectbox("Choose market category", ["All Categories"] + categories)
+    selected = st.selectbox(
+        "Choose market category",
+        ["All Categories"] + categories
+    )
 
     filtered = markets if selected == "All Categories" else [
         m for m in markets if get_category(m) == selected
@@ -219,7 +215,7 @@ if results_file.exists():
         with st.container(border=True):
             st.subheader(market.get("title", "Untitled market"))
             st.caption(
-                f"{get_category(market)} · {market.get('ticker', 'Unknown ticker')}"
+                f"{get_category(market)} · {market.get('ticker', 'Unknown')}"
             )
 
             c1, c2 = st.columns(2)
@@ -228,11 +224,5 @@ if results_file.exists():
 
             st.warning("NO BET — Prediction model not validated.")
             st.caption(market.get("reason", "No validated prediction available."))
-
 else:
     st.info("Waiting for the first scanner results.")
-
-    
-else:
-    st.info("Waiting for the first scanner results.")
-
