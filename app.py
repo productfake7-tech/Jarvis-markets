@@ -165,7 +165,7 @@ def predict_direction(df, horizon):
     yes_probability = 50 + 30 * np.tanh(score)
 
     yes_probability = float(
-        np.clip(yes_probability, 50, 80)
+        np.clip(yes_probability, 20, 80)
     )
     no_probability = 100 - yes_probability
 
