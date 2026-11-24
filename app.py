@@ -175,12 +175,64 @@ if results_file.exists():
     st.caption(f"Last scan: {scan_data.get('timestamp', 'Unknown')}")
     st.metric("Markets scanned", scan_data.get("markets_scanned", 0))
 
-    for market in scan_data.get("markets", []):
-        with st.expander(market.get("title", "Unknown market")):
-            st.write("Ticker:", market.get("ticker", "Unknown"))
-            st.write("YES bid:", market.get("yes_bid_cents", 0), "¢")
-            st.write("YES ask:", market.get("yes_ask_cents", 0), "¢")
-            st.warning("NO BET — Model not validated.")
+if results_file.exists():
+    with open(results_file, "r", encoding="utf-8") as f:
+        scan_data = json.load(f)
+
+    st.caption(f"Last scan: {scan_data.get('timestamp', 'Unknown')}")
+    st.metric("Markets scanned", scan_data.get("markets_scanned", 0))
+
+    markets = scan_data.get("markets", [])
+
+    def get_category(market):
+        text = (
+            market.get("title", "") + " " +
+            market.get("ticker", "")
+        ).lower()
+
+        if any(x in text for x in ["bitcoin", "btc"]):
+            return "₿ Bitcoin"
+        if any(x in text for x in ["ethereum", "eth"]):
+            return "◆ Ethereum"
+        if any(x in text for x in ["gold"]):
+            return "🥇 Gold"
+        if any(x in text for x in ["silver"]):
+            return "🥈 Silver"
+        if any(x in text for x in ["crude oil", "oil", "wti"]):
+            return "🛢️ Oil"
+        if any(x in text for x in ["natural gas"]):
+            return "🔥 Natural Gas"
+        if any(x in text for x in ["s&p", "nasdaq", "dow", "stock"]):
+            return "📈 Stocks & Indices"
+        return "🌎 Other Markets"
+
+    categories = sorted(set(get_category(m) for m in markets))
+    selected = st.selectbox("Choose market category", ["All Categories"] + categories)
+
+    filtered = markets if selected == "All Categories" else [
+        m for m in markets if get_category(m) == selected
+    ]
+
+    st.write(f"Showing {len(filtered)} markets")
+
+    for market in filtered:
+        with st.container(border=True):
+            st.subheader(market.get("title", "Untitled market"))
+            st.caption(
+                f"{get_category(market)} · {market.get('ticker', 'Unknown ticker')}"
+            )
+
+            c1, c2 = st.columns(2)
+            c1.metric("YES bid", f"{market.get('yes_bid_cents', 0):.1f}¢")
+            c2.metric("YES ask", f"{market.get('yes_ask_cents', 0):.1f}¢")
+
+            st.warning("NO BET — Prediction model not validated.")
+            st.caption(market.get("reason", "No validated prediction available."))
+
+else:
+    st.info("Waiting for the first scanner results.")
+
+    
 else:
     st.info("Waiting for the first scanner results.")
 
